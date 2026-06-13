@@ -3,7 +3,7 @@ Status: DRAFT — not yet frozen
 
 ## 1. Purpose and scope
 
-This study tests whether measured holonomy in the Gemma residual stream is explained by activation magnitude alone, by semantic structure associated with Gemma Scope SAE feature directions, or by a graded combination of both. The model is Gemma 2 2B with Gemma Scope SAEs, measured in the residual stream at layer TODO. This is a confirmatory study, not exploratory analysis; hypotheses, thresholds, factors, exclusions, and stopping rules are to be frozen before data collection.
+This study tests whether measured holonomy in the Gemma residual stream is explained by activation magnitude alone, by semantic structure associated with Gemma Scope SAE feature directions, or by a graded combination of both. The model is Gemma 2 2B with Gemma Scope SAEs, measured in the residual stream at layer 12. This is a confirmatory study, not exploratory analysis; hypotheses, thresholds, factors, exclusions, and stopping rules are to be frozen before data collection.
 
 ## 2. Design
 
@@ -173,8 +173,10 @@ H = theta / A_enclosed
   maps the two directions toward collinear), making H ill-defined. det M is the correct
   degeneracy quantity under the pullback metric; the earlier Euclidean phi floor (pi/8) is
   retired as primary and may be kept only as a cheap pre-filter before the JVP step.
-- tau_detM: TODO value (set from the throwaway bench distribution of det M on synthetic points,
-  NOT from the experiment sample).
+- tau_detM = 0.413. This is the lowest probed candidate from the throwaway det M bench; it excludes
+  0% of real-feature, 3.1% of shuffled-feature, and 0% of random planes in that throwaway probe,
+  catching degeneracy without asymmetrically thinning any arm. Calibrated blind on throwaway
+  synthetic points (bench/, gitignored), never on the experiment sample.
 - Application point, all-arms uniformity, and exclusion-rate reporting: unchanged from prior
   7.2.1 (enforced at pair selection, before any holonomy observed, reported per arm).
 
@@ -200,8 +202,11 @@ Center-placement for magnitude level m:
 - c = (h - v) + m * (v / mag(h)).
   Preserves out-of-plane context exactly, preserves in-plane direction, sets in-plane G-magnitude
   to m.
-- Degeneracy floor: if mag(h) < eps_mag (TODO value), set the in-plane offset direction to the
-  G-normalized d1 instead of v/mag(h). Record when this fallback fires.
+- Degeneracy floor: if mag(h) < eps_mag = 2.66, set the in-plane offset direction to the
+  G-normalized d1 instead of v/mag(h). Record when this fallback fires. This value gives a
+  real-feature fallback rate of 0% in the throwaway bench; fallback is driven only by the floor/random
+  arm. Calibrated blind on throwaway synthetic points (bench/, gitignored), never on the experiment
+  sample.
 
 ### 7.x Semantic contrast: covariate-adjusted by default (pre-registered)
 
@@ -228,3 +233,22 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
 - Code release plan: TODO
 - Seed handling: TODO. Seeds fixed and recorded; bitwise reproducibility guaranteed within a single compute backend only.
 - Hardware: Apple Silicon / MPS, the sole backend for this study. All results are produced on MPS; no CUDA alternative is part of this pre-registration. The reproducibility claim is bitwise-within-MPS. See ENVIRONMENT.md.
+
+## 9. Base-point corpus and sampling (pre-registered)
+
+- Corpus: WikiText-103 (declarative English prose; license CC BY-SA). Chosen over instruction-style
+  data (e.g. Alpaca) so base-point activations match the declarative prose on which the degeneracy
+  floors and the exploratory variance (tau) were calibrated. Scope of the resulting claim is
+  therefore English natural prose; cross-lingual holonomy is named as future work (limitation).
+- Selection rule (fully reproducible):
+  1. Fix random seed SEED_CORPUS = 20260613 (set before any run; record value).
+  2. Draw candidate passages from WikiText-103 (record exact dataset version/revision).
+  3. Truncate each passage to the first 64 tokens (Gemma tokenizer). Passages shorter than 64
+     tokens are DROPPED (recorded), never padded.
+  4. Base point = the layer-12 residual-stream activation at the final (64th) token position.
+  5. Oversample candidates (target ~130) so that >= 96 base points survive the degeneracy floors
+     (Section 7.2.1) and short-passage drops.
+  6. Record: dataset version, seed, drawn indices, dropped indices with reason, and the final
+     96 retained indices. The first 96 survivors in seed order are the experiment sample;
+     surplus survivors are held in reserve, in recorded order, for stage 2 (Section 6).
+- Language: English only (pre-registered scope boundary).
