@@ -142,6 +142,31 @@ H = theta / A_enclosed
   narrows the real-vs-shuffled phi range. Noted as an accepted trade (well-defined response over
   observing the near-parallel corner); flagged here so it is disclosed, not stumbled into.
 
+### 7.3 In-plane magnitude and magnitude-matching (pullback metric)
+
+All geometric quantities use the model's pullback metric G = J^T J at the base point, where J is
+the local Jacobian already computed for loop transport (cf. pullback-metric interpretability
+literature: FishBack 2026; Curved Inference 2025). G is never materialized; only J applied to
+d1, d2, h is needed.
+
+Let D = [d1 d2] (raw normalized decoder directions, NOT orthogonalized).
+
+- Compute JD = [J d1, J d2] and Jh (three Jacobian-vector products).
+- Plane metric Gram: M = (JD)^T (JD)   (2x2).
+- G-projection coefficients of h onto the plane: a = M^{-1} (JD)^T (Jh).
+- IN-PLANE MAGNITUDE (the matched scalar): mag(h) = sqrt(a^T M a) = G-norm of h's G-orthogonal
+  projection onto the plane. This is the scalar Factor B percentiles are cut on AND the scalar
+  the center-placement resets.
+
+Center-placement for magnitude level m:
+
+- In-plane vector v = D a; out-of-plane part = h - v (G-orthogonal to the plane by construction).
+- c = (h - v) + m * (v / mag(h)).
+  Preserves out-of-plane context exactly, preserves in-plane direction, sets in-plane G-magnitude
+  to m.
+- Degeneracy floor: if mag(h) < eps_mag (TODO value), set the in-plane offset direction to the
+  G-normalized d1 instead of v/mag(h). Record when this fallback fires.
+
 ### 7.x Semantic contrast: covariate-adjusted by default (pre-registered)
 
 The load-bearing semantic contrast is real-feature vs shuffled-feature (NOT real vs random).
