@@ -11,6 +11,16 @@ Factorial design, shared blocked base points.
 
 - Factor A — Plane type (3 levels): random; magnitude-matched shuffled-feature; magnitude-matched real-feature.
 - Factor B — Magnitude (2 levels): low = 25th percentile, high = 75th percentile of the in-plane activation magnitude distribution, computed across the 96 base points. Percentile cut points are fixed in advance from the base-point sample and not adjusted after holonomy is observed.
+- Magnitude levels are the 25th (low) and 75th (high) percentiles of the pullback-metric in-plane
+  magnitude (Section 7.3) computed over the REAL-FEATURE arm: i.e. mag(h) evaluated for every
+  real-feature plane across all 96 base points, pooled, then percentiles taken. The resulting two
+  absolute m values are applied identically to all three plane arms (shuffled and random included;
+  random may be extrapolated, acceptable as it serves only as the floor).
+- Sequencing constraint: because mag(h) depends on each plane's Jacobian, the m levels cannot be
+  computed until real-feature planes are selected and their JVPs evaluated. The run pipeline must
+  (1) select planes under the degeneracy floor, (2) evaluate real-arm magnitudes, (3) fix m_low,
+  m_high from real-arm percentiles, (4) only then run all three arms at those m. This ordering is
+  pre-registered.
 - Response variable: holonomy (loop transport rotation); operational definition in Section 7.
 - Blocking unit: base point. Each of 96 fresh base points is evaluated across all 3 plane types × 2 magnitude levels.
 - Full design: 96 base points × 3 plane types × 2 magnitude levels = 576 plane evaluations.
@@ -51,11 +61,11 @@ or conditioned upon.
 - Definition: phi is the mutual angle between the two directions spanning a plane, computed from the
   raw (normalized, NOT orthogonalized) decoder directions for feature and shuffled planes, and from
   the raw directions for random planes.
-- Rationale: enclosed loop area scales with sin(phi), so phi feeds the response directly; and the
-  learned angle between feature directions is itself semantically loaded (cf. feature-geometry
+- Rationale: although the primary response uses pullback-metric area (Section 7.2), the learned
+  angle between feature directions is itself semantically loaded (cf. feature-geometry
   literature). phi must therefore be balance-checked so the real-vs-shuffled contrast does not
-  conflate meaning with geometry.
-- Subject to the pi/8 selection floor; see Section 7.2.1.
+  conflate meaning with native Euclidean feature geometry.
+- The Euclidean phi floor is retired as primary; see the det(M) degeneracy floor in Section 7.2.1.
 
 ### 4.3 Balance diagnostics (pre-registered, computed before holonomy is unblinded)
 
@@ -71,8 +81,8 @@ For each covariate (manifold distance; phi) compare real-feature vs shuffled-fea
 - Overlap / common support (positivity): require >= 90% of shuffled-arm covariate values to fall
   within the observed real-arm range, and vice versa. Below this, covariate adjustment is
   extrapolation and must be reported as such.
-- Phi area-channel check (belt-and-suspenders, since the wedge-area normalization already divides
-  out the leading sin(phi) dependence): require
+- Phi Euclidean-geometry check (belt-and-suspenders, since phi remains a native feature-geometry
+  covariate even though the primary response now uses pullback-metric area): require
   |mean(log sin phi_real) - mean(log sin phi_shuffled)| < 0.045
   (~1/5 of the materiality threshold log(1.25) = 0.223).
 
@@ -122,25 +132,25 @@ H = theta / A_enclosed
 
 - theta: rotation angle extracted from the antisymmetric part of the loop transport operator
   (same extraction as the frozen instrument).
-- A_enclosed = rho^2 * sin(phi)  -- the TRUE enclosed area of the loop traced on non-orthogonal
-  directions (wedge / parallelogram area), NOT pi*rho^2.
-- At phi = 90 degrees this reduces to the orthogonal-instrument area up to constant factors,
-  so the definition is continuous with the validated instrument at the orthogonal limit.
+- A_enclosed = rho^2 * sqrt(det M), the pullback-metric (G-)area of the loop, where
+  M = (JD)^T (JD) is the 2x2 plane Gram matrix under the pullback metric (Section 7.3).
+  This supersedes the earlier Euclidean expression rho^2 * sin(phi). All geometric quantities
+  (magnitude, area, transport) are now computed under the single pullback metric G = J^T J,
+  consistent with the one-metric principle (Curved Inference 2025).
+- At the orthogonal Euclidean limit (J = I, phi = 90 deg) this reduces to the prior expression,
+  so continuity with the validated instrument holds at that limit.
 
-### 7.2.1 Phi floor (pre-registered, blind, applied at SELECTION)
+### 7.2.1 Degeneracy floor (pre-registered, blind, applied at SELECTION)
 
-- Floor: phi > pi/8 for every plane, all three arms (real, shuffled, random).
-- Rationale: A_enclosed = rho^2 sin(phi) -> 0 as phi -> 0, so H is ill-defined for near-parallel
-  directions. The floor value is arbitrary but fixed in advance, before any holonomy is observed,
-  and applied identically across arms.
-- Application point: enforced at PAIR SELECTION. Candidate pairs with phi <= pi/8 are rejected
-  before any measurement; sampling continues until the target plane count is reached. The floor
-  shapes the sample; it never filters measured results (no post-hoc row dropping).
-- Reporting: report the fraction of candidate pairs rejected by the floor, separately per arm.
-  Per-arm asymmetry in rejection rate is itself reported as a result.
-- Interaction with phi balance (Section 4.3): the floor truncates the lower tail of phi, which
-  narrows the real-vs-shuffled phi range. Noted as an accepted trade (well-defined response over
-  observing the near-parallel corner); flagged here so it is disclosed, not stumbled into.
+- Floor: det(M) > tau_detM for every plane, all three arms, where M is the pullback-metric plane
+  Gram (Section 7.3). Rationale: A_enclosed = rho^2 sqrt(det M) -> 0 as det M -> 0 (the Jacobian
+  maps the two directions toward collinear), making H ill-defined. det M is the correct
+  degeneracy quantity under the pullback metric; the earlier Euclidean phi floor (pi/8) is
+  retired as primary and may be kept only as a cheap pre-filter before the JVP step.
+- tau_detM: TODO value (set from the throwaway bench distribution of det M on synthetic points,
+  NOT from the experiment sample).
+- Application point, all-arms uniformity, and exclusion-rate reporting: unchanged from prior
+  7.2.1 (enforced at pair selection, before any holonomy observed, reported per arm).
 
 ### 7.3 In-plane magnitude and magnitude-matching (pullback metric)
 
