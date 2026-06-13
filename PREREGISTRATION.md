@@ -124,11 +124,44 @@ All diagnostics are computed and recorded BEFORE the holonomy response is unblin
 - Total base points: 96. Total plane evaluations: 96 × 3 × 2 magnitude levels = 576 total evaluations.
 - Power basis: powered for the thinnest effect (H-sem). H-mag and H-grad inherit equal or greater power.
 
-## 6. Pre-registered thresholds and stopping rules
+## 6. Materiality threshold and stopping rules (pre-registered)
 
-- Materiality thresholds: TODO
-- Positive stopping criterion: TODO
-- Null stopping criterion: TODO (a flat result must be interpretable as absence, not underpower)
+### 6.1 Materiality threshold
+
+A holonomy effect is MATERIAL if it reaches log(1.25) = 0.2231 on the log scale (a 25%
+multiplicative change). This single threshold applies to all three hypotheses (Section 3) and is
+the same threshold the Section 5 power calculation was built on.
+
+### 6.2 Decision rule (per hypothesis)
+
+Using the pre-registered confidence interval for each effect:
+
+- CORROBORATED: CI lower bound > materiality threshold.
+- FALSIFIED: CI upper bound < materiality threshold.
+- INCONCLUSIVE: CI spans the materiality threshold.
+
+(H-sem additionally carries the NULL-ATTRIBUTED branch of Section 7.x.)
+
+### 6.3 Fixed-N, analyze-once
+
+The design is fixed-N. All 96 stage-1 base points are run to completion and analyzed ONCE.
+No peeking, no result-dependent early stopping, no result-dependent extension of stage 1.
+N was fixed in advance (Section 5); the null verdict is interpretable as material absence
+BECAUSE the design was powered at 0.90 for the material effect.
+
+### 6.4 Pre-specified two-stage rule (the ONLY permitted extension)
+
+Decided in advance, before any data:
+
+- TRIGGER: stage-1 H-sem verdict is INCONCLUSIVE (CI spans materiality). No other outcome, for
+  any hypothesis, triggers a second stage.
+- STAGE 2: run a second batch of N2 = 96 fresh base points, drawn by the identical Section 9
+  procedure from the pre-recorded stage-2 reserve (seed-ordered, fixed before stage 1 was seen).
+- ANALYSIS: report the stage-1 result STANDALONE regardless. Then report the pooled
+  (stage 1 + stage 2, N = 192) result alongside, with a stage indicator term so stage-1/stage-2
+  consistency is checkable. The pooled result supplements, never replaces, the standalone stage-1
+  result.
+- N2 and the trigger are fixed here; nothing about stage 2 is sized or decided from stage-1 values.
 
 ## 7. Analysis plan
 
@@ -241,14 +274,14 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
   floors and the exploratory variance (tau) were calibrated. Scope of the resulting claim is
   therefore English natural prose; cross-lingual holonomy is named as future work (limitation).
 - Selection rule (fully reproducible):
-  1. Fix random seed SEED_CORPUS = 20260613 (set before any run; record value).
+  1. Fix random seed SEED_CORPUS = 42 (set before any run; record value).
   2. Draw candidate passages from WikiText-103 (record exact dataset version/revision).
   3. Truncate each passage to the first 64 tokens (Gemma tokenizer). Passages shorter than 64
      tokens are DROPPED (recorded), never padded.
   4. Base point = the layer-12 residual-stream activation at the final (64th) token position.
-  5. Oversample candidates (target ~130) so that >= 96 base points survive the degeneracy floors
-     (Section 7.2.1) and short-passage drops.
+  5. Oversample candidates (target ~240) so that >= 192 base points survive the degeneracy floors
+     (Section 7.2.1) and short-passage drops. Record the actual survivor count.
   6. Record: dataset version, seed, drawn indices, dropped indices with reason, and the final
-     96 retained indices. The first 96 survivors in seed order are the experiment sample;
-     surplus survivors are held in reserve, in recorded order, for stage 2 (Section 6).
+     retained indices. The first 96 survivors in seed order are the stage-1 experiment sample;
+     the next 96 survivors are the stage-2 reserve; any remainder is held unused, in recorded order.
 - Language: English only (pre-registered scope boundary).
