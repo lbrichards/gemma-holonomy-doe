@@ -1,0 +1,1 @@
+This repository contains a pre-registered, factorial design-of-experiments (DOE) confirmatory study of holonomy in the Gemma residual stream. It is deliberately separate from the exploratory `holonomy-probe` work: hypotheses, thresholds, factor definitions, exclusion rules, and analysis gates are to be frozen before any data collection for the confirmatory DOE begins.
