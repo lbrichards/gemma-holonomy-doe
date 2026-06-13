@@ -55,6 +55,7 @@ or conditioned upon.
   learned angle between feature directions is itself semantically loaded (cf. feature-geometry
   literature). phi must therefore be balance-checked so the real-vs-shuffled contrast does not
   conflate meaning with geometry.
+- Subject to the pi/8 selection floor; see Section 7.2.1.
 
 ### 4.3 Balance diagnostics (pre-registered, computed before holonomy is unblinded)
 
@@ -98,6 +99,48 @@ All diagnostics are computed and recorded BEFORE the holonomy response is unblin
 - Primary contrast: TODO
 - Model: factorial ANOVA / regression form TODO
 - What is decided before seeing data vs. reported as-is: TODO
+
+### 7.1 Loop geometry (raw directions, no orthogonalization)
+
+Planes are spanned by the two normalized SAE decoder directions d1, d2 as supplied, at their
+true mutual angle phi. Directions are NOT orthogonalized (departure from the exploratory
+holonomy-probe instrument, which applied Gram-Schmidt; chosen to preserve the native learned
+geometry, consistent with the perturbation-response assay's stated philosophy).
+
+The loop is traced as:
+
+    gamma(t) = c + rho * ( cos(2 pi t) * d1 + sin(2 pi t) * d2 ),   t in [0,1]
+
+where c is the loop center (Section 7.3, magnitude-matching) and rho is the radius.
+
+Radius convention: rho = radius_relative * ||base activation||, with radius_relative = 6.0e-3,
+inherited from the validated Iteration 7/8 instrument for continuity.
+
+### 7.2 Response variable: holonomy
+
+H = theta / A_enclosed
+
+- theta: rotation angle extracted from the antisymmetric part of the loop transport operator
+  (same extraction as the frozen instrument).
+- A_enclosed = rho^2 * sin(phi)  -- the TRUE enclosed area of the loop traced on non-orthogonal
+  directions (wedge / parallelogram area), NOT pi*rho^2.
+- At phi = 90 degrees this reduces to the orthogonal-instrument area up to constant factors,
+  so the definition is continuous with the validated instrument at the orthogonal limit.
+
+### 7.2.1 Phi floor (pre-registered, blind, applied at SELECTION)
+
+- Floor: phi > pi/8 for every plane, all three arms (real, shuffled, random).
+- Rationale: A_enclosed = rho^2 sin(phi) -> 0 as phi -> 0, so H is ill-defined for near-parallel
+  directions. The floor value is arbitrary but fixed in advance, before any holonomy is observed,
+  and applied identically across arms.
+- Application point: enforced at PAIR SELECTION. Candidate pairs with phi <= pi/8 are rejected
+  before any measurement; sampling continues until the target plane count is reached. The floor
+  shapes the sample; it never filters measured results (no post-hoc row dropping).
+- Reporting: report the fraction of candidate pairs rejected by the floor, separately per arm.
+  Per-arm asymmetry in rejection rate is itself reported as a result.
+- Interaction with phi balance (Section 4.3): the floor truncates the lower tail of phi, which
+  narrows the real-vs-shuffled phi range. Noted as an accepted trade (well-defined response over
+  observing the near-parallel corner); flagged here so it is disclosed, not stumbled into.
 
 ### 7.x Semantic contrast: covariate-adjusted by default (pre-registered)
 
