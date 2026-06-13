@@ -56,12 +56,26 @@ or conditioned upon.
   literature). phi must therefore be balance-checked so the real-vs-shuffled contrast does not
   conflate meaning with geometry.
 
-### 4.3 Balance check (pre-registered, run before holonomy is examined)
+### 4.3 Balance diagnostics (pre-registered, computed before holonomy is unblinded)
 
-- For each covariate (manifold distance, phi), compare the real-feature and shuffled-feature arms.
-- Balance test and threshold: TODO (specify test, e.g. two-sample on covariate distributions,
-  and the equivalence margin that counts as "balanced").
-- The balance check is computed and recorded BEFORE the holonomy response is unblinded.
+Balance is reported as a diagnostic, NOT used as a pass/fail gate. The semantic contrast is
+covariate-adjusted by default (see Section 7), so these diagnostics characterize imbalance and
+verify common support; they do not switch the analysis path.
+
+For each covariate (manifold distance; phi) compare real-feature vs shuffled-feature arms:
+
+- Standardized mean difference (SMD = (mean_real - mean_shuffled) / pooled SD).
+  Reference thresholds from the propensity-score balance literature (Austin; Stuart):
+  |SMD| < 0.10 negligible; |SMD| > 0.25 flagged as material imbalance (reported, then adjusted for).
+- Overlap / common support (positivity): require >= 90% of shuffled-arm covariate values to fall
+  within the observed real-arm range, and vice versa. Below this, covariate adjustment is
+  extrapolation and must be reported as such.
+- Phi area-channel check (belt-and-suspenders, since the wedge-area normalization already divides
+  out the leading sin(phi) dependence): require
+  |mean(log sin phi_real) - mean(log sin phi_shuffled)| < 0.045
+  (~1/5 of the materiality threshold log(1.25) = 0.223).
+
+All diagnostics are computed and recorded BEFORE the holonomy response is unblinded.
 
 ## 5. Sample size and power
 
@@ -85,24 +99,24 @@ or conditioned upon.
 - Model: factorial ANOVA / regression form TODO
 - What is decided before seeing data vs. reported as-is: TODO
 
-### 7.x Conditioning rule for the semantic contrast (pre-registered)
+### 7.x Semantic contrast: covariate-adjusted by default (pre-registered)
 
-The load-bearing semantic contrast is real-feature vs shuffled-feature (NOT real vs random;
-the random arm is the floor, not the semantic control). Its interpretation follows three
-pre-registered branches, decided by the Section 4.3 balance check:
+The load-bearing semantic contrast is real-feature vs shuffled-feature (NOT real vs random).
+It is estimated by covariate adjustment in all cases, with no balance gate:
 
-1. BALANCED on both manifold distance and phi: report the real-vs-shuffled holonomy contrast at
-   face value as the semantic effect.
-2. UNBALANCED on either covariate: do not report the raw contrast as semantic. Condition on the
-   unbalanced covariate(s) — regression adjustment with the covariate as a term, or matching/
-   stratification — and report the semantic effect ADJUSTED for the covariate(s).
-3. Effect VANISHES after conditioning: report this as the finding — the apparent semantic effect
-   is attributable to the covariate (manifold distance and/or phi), not to meaning. This is a
-   pre-registered, publishable null.
+- PRIMARY estimate: real-vs-shuffled holonomy from a regression including manifold distance and phi
+  as covariate terms. This adjusted estimate is the pre-registered semantic effect.
+- SECONDARY (transparency): report the UNADJUSTED real-vs-shuffled contrast alongside, so the
+  reader sees the effect of adjustment.
+- Balance diagnostics (Section 4.3) are reported to characterize imbalance and confirm common
+  support. If common support fails (positivity < 90%), the adjusted estimate is flagged as
+  partially extrapolated.
+- NULL branch (retained): if the semantic effect is present unadjusted but VANISHES after
+  adjustment, report this as the finding — the apparent semantic effect is attributable to the
+  covariates (manifold distance and/or phi), not to meaning. Pre-registered, publishable null.
 
-The random arm serves only as the noise floor (is there structure above noise at all) and as the
-lower anchor of the random < shuffled < real gradient (H-grad). It is never the comparison from
-which the semantic claim is drawn.
+The random arm is the noise floor and the lower anchor of the random < shuffled < real gradient
+(H-grad) only; the semantic claim is never drawn from a real-vs-random comparison.
 
 ## 8. Reproducibility
 
