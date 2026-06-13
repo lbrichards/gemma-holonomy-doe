@@ -30,9 +30,38 @@ Factorial design, shared blocked base points.
 
 ## 4. Covariates measured (not assumed)
 
-- Manifold proximity, primary proxy: SAE reconstruction error of swept points
-- Manifold proximity, guard: latent-space distance (Mahalanobis / kNN to real activations)
-- Real and shuffled planes will be checked for proximity matching: TODO
+Two nuisance variables are measured per plane and checked for balance across plane types
+before any holonomy contrast is interpreted. Neither is assumed absent; each is verified balanced
+or conditioned upon.
+
+### 4.1 Manifold distance
+
+- Primary proxy: SAE reconstruction error of the points actually visited (loop center and swept loop),
+  computed with the same Gemma Scope SAE used to define feature planes.
+- Guard proxy: latent-space distance to the real-activation distribution (Mahalanobis distance,
+  with kNN distance as a fallback if the covariance estimate is ill-conditioned), to catch points
+  the SAE reconstructs cheaply yet that lie far from where real activations live
+  (the documented low-reconstruction-error / off-data failure mode; cf. Denouden et al. 2018).
+- Interpretation: manifold distance is treated as a continuous, strictly positive scalar.
+  "On-manifold" is not a binary label. The relevant quantity is whether real-feature and
+  shuffled-feature planes share an indistinguishable DISTRIBUTION of manifold distance.
+
+### 4.2 Plane angle (phi)
+
+- Definition: phi is the mutual angle between the two directions spanning a plane, computed from the
+  raw (normalized, NOT orthogonalized) decoder directions for feature and shuffled planes, and from
+  the raw directions for random planes.
+- Rationale: enclosed loop area scales with sin(phi), so phi feeds the response directly; and the
+  learned angle between feature directions is itself semantically loaded (cf. feature-geometry
+  literature). phi must therefore be balance-checked so the real-vs-shuffled contrast does not
+  conflate meaning with geometry.
+
+### 4.3 Balance check (pre-registered, run before holonomy is examined)
+
+- For each covariate (manifold distance, phi), compare the real-feature and shuffled-feature arms.
+- Balance test and threshold: TODO (specify test, e.g. two-sample on covariate distributions,
+  and the equivalence margin that counts as "balanced").
+- The balance check is computed and recorded BEFORE the holonomy response is unblinded.
 
 ## 5. Sample size and power
 
@@ -55,6 +84,25 @@ Factorial design, shared blocked base points.
 - Primary contrast: TODO
 - Model: factorial ANOVA / regression form TODO
 - What is decided before seeing data vs. reported as-is: TODO
+
+### 7.x Conditioning rule for the semantic contrast (pre-registered)
+
+The load-bearing semantic contrast is real-feature vs shuffled-feature (NOT real vs random;
+the random arm is the floor, not the semantic control). Its interpretation follows three
+pre-registered branches, decided by the Section 4.3 balance check:
+
+1. BALANCED on both manifold distance and phi: report the real-vs-shuffled holonomy contrast at
+   face value as the semantic effect.
+2. UNBALANCED on either covariate: do not report the raw contrast as semantic. Condition on the
+   unbalanced covariate(s) — regression adjustment with the covariate as a term, or matching/
+   stratification — and report the semantic effect ADJUSTED for the covariate(s).
+3. Effect VANISHES after conditioning: report this as the finding — the apparent semantic effect
+   is attributable to the covariate (manifold distance and/or phi), not to meaning. This is a
+   pre-registered, publishable null.
+
+The random arm serves only as the noise floor (is there structure above noise at all) and as the
+lower anchor of the random < shuffled < real gradient (H-grad). It is never the comparison from
+which the semantic claim is drawn.
 
 ## 8. Reproducibility
 
