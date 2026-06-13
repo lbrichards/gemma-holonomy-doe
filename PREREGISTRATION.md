@@ -10,7 +10,6 @@ This study tests whether measured holonomy in the Gemma residual stream is expla
 Factorial design, shared blocked base points.
 
 - Factor A — Plane type (3 levels): random; magnitude-matched shuffled-feature; magnitude-matched real-feature.
-- Factor B — Magnitude (2 levels): low = 25th percentile, high = 75th percentile of the in-plane activation magnitude distribution, computed across the 96 base points. Percentile cut points are fixed in advance from the base-point sample and not adjusted after holonomy is observed.
 - Magnitude levels are the 25th (low) and 75th (high) percentiles of the pullback-metric in-plane
   magnitude (Section 7.3) computed over the REAL-FEATURE arm: i.e. mag(h) evaluated for every
   real-feature plane across all 96 base points, pooled, then percentiles taken. The resulting two
@@ -24,19 +23,46 @@ Factorial design, shared blocked base points.
 - Response variable: holonomy (loop transport rotation); operational definition in Section 7.
 - Blocking unit: base point. Each of 96 fresh base points is evaluated across all 3 plane types × 2 magnitude levels.
 - Full design: 96 base points × 3 plane types × 2 magnitude levels = 576 plane evaluations.
-- "In-plane magnitude" = the norm of the base-point activation's component within the 2D loop plane, NOT the global activation norm. (Magnitude-matching construction specified in Section 7.)
 
 ## 3. Hypotheses (frozen predictions)
 
-- H-mag: magnitude main effect — direction and form TODO
-  - Corroborates: TODO
-  - Falsifies: TODO
-- H-sem: semantic main effect (real vs shuffled, manifold-proximity controlled) TODO
-  - Corroborates: TODO
-  - Falsifies: TODO
-- H-grad: monotone gradient random < shuffled < real TODO
-  - Corroborates: TODO
-  - Falsifies: TODO
+All three are evaluated against a single materiality threshold (Section 6). Each hypothesis has a
+three-way verdict: CORROBORATED, FALSIFIED, or INCONCLUSIVE, decided by where the pre-registered
+confidence interval sits relative to the materiality threshold.
+
+### H-mag — magnitude main effect
+
+Prediction: holonomy increases with in-plane pullback-metric magnitude (Section 7.3); the high
+magnitude level shows materially greater holonomy than the low level, pooled across plane types.
+
+- CORROBORATED: estimated magnitude main effect exceeds materiality AND the CI lower bound lies
+  above the materiality threshold.
+- FALSIFIED: CI upper bound lies below the materiality threshold (magnitude does not move holonomy
+  materially).
+- INCONCLUSIVE: CI spans the materiality threshold.
+
+### H-sem — semantic main effect (the powered effect)
+
+Prediction: after covariate adjustment for manifold distance and phi (Section 7.x), real-feature
+planes show materially greater holonomy than magnitude-matched shuffled-feature planes.
+
+- CORROBORATED: adjusted real-vs-shuffled contrast exceeds materiality AND CI lower bound above
+  the materiality threshold.
+- FALSIFIED: CI upper bound below the materiality threshold.
+- NULL-ATTRIBUTED (special case of falsification): an unadjusted effect present but vanishing under
+  covariate adjustment is reported as attributable to covariates, not meaning (Section 7.x null
+  branch).
+- INCONCLUSIVE: CI spans materiality. (Powered to make this outcome unlikely for the material
+  effect size; see Section 5.)
+
+### H-grad — monotone gradient
+
+Prediction: holonomy rises monotonically across plane types, random < shuffled < real.
+
+- CORROBORATED: both ordered steps (shuffled - random; real - shuffled) are positive and the
+  overall trend across the three levels is material.
+- FALSIFIED: the ordering is violated, or the overall trend is immaterial.
+- INCONCLUSIVE: ordering holds in point estimates but the trend CI spans materiality.
 
 ## 4. Covariates measured (not assumed)
 
