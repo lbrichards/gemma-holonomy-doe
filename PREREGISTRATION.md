@@ -34,11 +34,13 @@ Factorial design. Factors and levels:
 
 ## 5. Sample size and power
 
-- Effect size assumed (per hypothesis): TODO
-- Variance estimate source: prior exploratory runs (cite which)
-- N per cell: TODO
-- Power target and alpha: TODO
-- Powered for the thinnest effect (H-sem).
+- Effect size target: material effect, delta = log(1.25) = 0.2231 on the log-scale feature-vs-control contrast. Sub-material observed effect (log(1.103) = 0.098) explicitly NOT the target; see power/power_hsem_results.md for its cost.
+- Variance source: frozen across-base dispersion from exploratory holonomy-probe runs; conservative value tau = 0.649 (Iteration 7), cross-checked against tau = 0.586 (Iteration 8).
+- Test: two-sided, alpha = 0.05, power = 0.90.
+- N per cell (t-corrected): 91; rounded up to 96 base points.
+- Design: shared blocked base points — each of the 96 base points is evaluated on all three plane types (random, shuffled-feature, real-feature). Plane-type contrast is within-base-point; base-point variance differences out of the primary contrast.
+- Total base points: 96. Total plane evaluations: 96 × 3 = 288 (× magnitude levels, per Section 2).
+- Power basis: powered for the thinnest effect (H-sem). H-mag and H-grad inherit equal or greater power.
 
 ## 6. Pre-registered thresholds and stopping rules
 
