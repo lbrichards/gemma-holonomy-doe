@@ -7,12 +7,14 @@ This study tests whether measured holonomy in the Gemma residual stream is expla
 
 ## 2. Design
 
-Factorial design. Factors and levels:
+Factorial design, shared blocked base points.
 
-- Factor A — Plane type: {random, magnitude-matched shuffled-feature, magnitude-matched real-feature} (3 levels)
-- Factor B — Magnitude: {TODO levels}
-- Response variable: holonomy (loop transport rotation), operational definition TODO
-- Blocking unit: base point (fresh, never used in exploratory work)
+- Factor A — Plane type (3 levels): random; magnitude-matched shuffled-feature; magnitude-matched real-feature.
+- Factor B — Magnitude (2 levels): low = 25th percentile, high = 75th percentile of the in-plane activation magnitude distribution, computed across the 96 base points. Percentile cut points are fixed in advance from the base-point sample and not adjusted after holonomy is observed.
+- Response variable: holonomy (loop transport rotation); operational definition in Section 7.
+- Blocking unit: base point. Each of 96 fresh base points is evaluated across all 3 plane types × 2 magnitude levels.
+- Full design: 96 base points × 3 plane types × 2 magnitude levels = 576 plane evaluations.
+- "In-plane magnitude" = the norm of the base-point activation's component within the 2D loop plane, NOT the global activation norm. (Magnitude-matching construction specified in Section 7.)
 
 ## 3. Hypotheses (frozen predictions)
 
@@ -39,7 +41,7 @@ Factorial design. Factors and levels:
 - Test: two-sided, alpha = 0.05, power = 0.90.
 - N per cell (t-corrected): 91; rounded up to 96 base points.
 - Design: shared blocked base points — each of the 96 base points is evaluated on all three plane types (random, shuffled-feature, real-feature). Plane-type contrast is within-base-point; base-point variance differences out of the primary contrast.
-- Total base points: 96. Total plane evaluations: 96 × 3 = 288 (× magnitude levels, per Section 2).
+- Total base points: 96. Total plane evaluations: 96 × 3 × 2 magnitude levels = 576 total evaluations.
 - Power basis: powered for the thinnest effect (H-sem). H-mag and H-grad inherit equal or greater power.
 
 ## 6. Pre-registered thresholds and stopping rules
