@@ -165,5 +165,5 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
 
 - Data release plan: TODO
 - Code release plan: TODO
-- Seed handling: TODO
-- Hardware: Apple Silicon / MPS; cloud GPU conditional.
+- Seed handling: TODO. Seeds fixed and recorded; bitwise reproducibility guaranteed within a single compute backend only.
+- Hardware: Apple Silicon / MPS, the sole backend for this study. All results are produced on MPS; no CUDA alternative is part of this pre-registration. The reproducibility claim is bitwise-within-MPS. See ENVIRONMENT.md.
