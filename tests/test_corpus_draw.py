@@ -13,6 +13,9 @@ class FakeTokenizer:
         del add_special_tokens
         return [idx + 1 for idx, _ in enumerate(text.split())]
 
+    def decode(self, token_ids):
+        return " ".join(f"tok_{token_id}" for token_id in token_ids)
+
 
 def article(title: str, n_words: int) -> list[str]:
     words = " ".join(f"{title.lower()}_{idx}" for idx in range(n_words))

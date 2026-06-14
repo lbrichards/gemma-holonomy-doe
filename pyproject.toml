@@ -21,6 +21,9 @@ reproducibility = "Bitwise reproducibility is claimed only within the Apple Sili
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+markers = [
+    "integration: tests that load pinned external artifacts or full cached datasets",
+]
 
 [dependency-groups]
 dev = [

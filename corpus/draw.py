@@ -62,7 +62,7 @@ class DrawRecord:
     end_row: int
     token_ids: list[int]
     token_count_before_truncation: int
-    passage_text_prefix: str
+    token_prefix_text: str
 
 
 @dataclass(frozen=True)
@@ -197,6 +197,7 @@ def draw_stage_pool(*, rows: list[Any], tokenizer: TokenizerLike, config: DrawCo
                 )
             )
             continue
+        truncated = token_ids[: config.token_length]
         records.append(
             DrawRecord(
                 draw_order=len(records),
@@ -204,9 +205,9 @@ def draw_stage_pool(*, rows: list[Any], tokenizer: TokenizerLike, config: DrawCo
                 article_title=article.title,
                 start_row=article.start_row,
                 end_row=article.end_row,
-                token_ids=token_ids[: config.token_length],
+                token_ids=truncated,
                 token_count_before_truncation=len(token_ids),
-                passage_text_prefix=article.text[:240],
+                token_prefix_text=tokenizer.decode(truncated),
             )
         )
 
