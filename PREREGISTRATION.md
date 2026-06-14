@@ -1,5 +1,5 @@
 # Pre-Registration — Gemma Holonomy DOE
-Status: DRAFT — not yet frozen
+Status: FROZEN 2026-06-14 (prior content commit: 61a0581fdb51be46e411b03705fdee24a60bf2d2)
 
 ## 1. Purpose and scope
 
