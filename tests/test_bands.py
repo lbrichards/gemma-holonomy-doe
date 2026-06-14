@@ -53,9 +53,9 @@ def test_two_arm_terminal_produces_no_m_values_and_marks_h_sem_undefined():
 
 
 def test_width_exactly_equal_to_threshold_is_valid():
-    real = np.linspace(0.0, 12.5, 1001)
-    shuffled = np.linspace(0.0, 12.5, 1001)
-    random = np.linspace(0.0, 12.5, 1001)
+    real = np.linspace(0.0, 100.0, 1001)
+    shuffled = np.linspace(0.0, 100.0, 1001)
+    random = np.linspace(40.0, 53.888888888888886, 1001)
 
     result = compute_common_support_band(real=real, shuffled=shuffled, random=random)
 
