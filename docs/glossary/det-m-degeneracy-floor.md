@@ -1,8 +1,12 @@
 # det M degeneracy floor
 
-**`coined`**
+<span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
 A threshold (tau_detM = 0.413) below which planes are excluded because their pullback-metric area approaches zero, making holonomy ill-defined.
+
+$$
+\det(M) > \tau_{\det M}
+$$
 
 ## Why this term exists
 

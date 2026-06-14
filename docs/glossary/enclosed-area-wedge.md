@@ -1,8 +1,12 @@
 # enclosed area (wedge)
 
-**`coined`**
+<span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
 The pullback-metric area of the loop, computed as A_enclosed = rho^2 * sqrt(det M), which normalizes the rotation angle to yield holonomy.
+
+$$
+A_{\text{enclosed}} = \rho^2 \sqrt{\det M}
+$$
 
 ## Why this term exists
 

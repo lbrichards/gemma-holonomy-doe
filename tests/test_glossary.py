@@ -99,3 +99,17 @@ def test_term_count():
     assert len(terms) == 20, f"Expected 20 terms, got {len(terms)}"
     assert len(coined) == 10, f"Expected 10 coined terms, got {len(coined)}"
     assert len(inherited) == 10, f"Expected 10 inherited terms, got {len(inherited)}"
+
+
+def test_formula_is_optional_but_nonempty_if_present():
+    """Formula field is optional; if present, must be a non-empty string."""
+    terms = load_terms()
+
+    invalid_formulas = []
+    for term in terms:
+        if "formula" in term:
+            formula = term["formula"]
+            if not isinstance(formula, str) or not formula.strip():
+                invalid_formulas.append(term["name"])
+
+    assert not invalid_formulas, f"Terms with invalid formula (must be non-empty string): {invalid_formulas}"

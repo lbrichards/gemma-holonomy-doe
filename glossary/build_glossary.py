@@ -17,6 +17,10 @@ import yaml
 GLOSSARY_YAML = Path(__file__).parent / "glossary.yaml"
 OUTPUT_DIR = Path(__file__).parent.parent / "docs" / "glossary"
 
+# Badge HTML for coined vs inherited (visible styling)
+BADGE_COINED = '<span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>'
+BADGE_INHERITED = '<span style="background-color: #448aff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">INHERITED</span>'
+
 
 def slugify(name: str) -> str:
     """Convert term name to a URL-safe slug."""
@@ -45,7 +49,7 @@ def build_index(terms: list[dict]) -> str:
         "",
         "---",
         "",
-        "## Coined Terms",
+        f"## {BADGE_COINED} Coined Terms",
         "",
         "*Terms introduced by this project.*",
         "",
@@ -59,7 +63,7 @@ def build_index(terms: list[dict]) -> str:
         "",
         "---",
         "",
-        "## Inherited Terms",
+        f"## {BADGE_INHERITED} Inherited Terms",
         "",
         "*Standard terms from prior literature.*",
         "",
@@ -74,17 +78,26 @@ def build_index(terms: list[dict]) -> str:
 
 
 def build_term_page(term: dict, all_names: set[str]) -> str:
-    """Build a single term's page with cross-links."""
-    kind_badge = "**`coined`**" if term["kind"] == "coined" else "**`inherited`**"
+    """Build a single term's page with cross-links, badge, and formula."""
+    badge = BADGE_COINED if term["kind"] == "coined" else BADGE_INHERITED
 
     lines = [
         f"# {term['name']}",
         "",
-        f"{kind_badge}",
+        badge,
         "",
         f"{term['one_line']}",
         "",
     ]
+
+    # Add formula as block math if present
+    if term.get("formula"):
+        lines.extend([
+            "$$",
+            term["formula"],
+            "$$",
+            "",
+        ])
 
     if term["kind"] == "coined" and term.get("why"):
         lines.extend([

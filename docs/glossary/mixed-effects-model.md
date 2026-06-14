@@ -1,8 +1,12 @@
 # mixed-effects model
 
-**`inherited`**
+<span style="background-color: #448aff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">INHERITED</span>
 
 A regression model containing both fixed effects (population-level coefficients) and random effects (group-level variation), used here to model base-point blocking.
+
+$$
+y = X\beta + Zu + \varepsilon
+$$
 
 ## Source
 

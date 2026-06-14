@@ -1,6 +1,6 @@
 # pairing rule
 
-**`coined`**
+<span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
 The fixed procedure for constructing plane arms before holonomy computation, specifying how SAE features are selected and combined for each plane type.
 

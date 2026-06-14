@@ -1,5 +1,6 @@
 # Glossary of terms for the Gemma Holonomy DOE project
 # Each term has: name, kind (coined/inherited), one_line, why, source, depends_on
+# Optional: formula (LaTeX string, no surrounding $)
 
 terms:
   # ============================================================================
@@ -43,6 +44,7 @@ terms:
   - name: det M degeneracy floor
     kind: coined
     one_line: A threshold (tau_detM = 0.413) below which planes are excluded because their pullback-metric area approaches zero, making holonomy ill-defined.
+    formula: \det(M) > \tau_{\det M}
     why: >-
       When det(M) approaches zero, the Jacobian maps the two plane directions toward collinear,
       causing A_enclosed to vanish. This floor catches geometric degeneracy under the pullback metric,
@@ -79,6 +81,7 @@ terms:
   - name: holonomy-magnitude response
     kind: coined
     one_line: The measured relationship between in-plane magnitude and holonomy (rotation per enclosed area), the primary response variable testing H-mag.
+    formula: H = \frac{|\theta|}{A_{\text{enclosed}}}
     why: >-
       Quantifies how holonomy scales with magnitude to disentangle magnitude effects from semantic
       structure effects, enabling the factorial design to isolate each factor's contribution.
@@ -91,6 +94,7 @@ terms:
   - name: in-plane magnitude (pullback)
     kind: coined
     one_line: The G-norm of a vector's G-orthogonal projection onto a plane, computed as mag(h) = sqrt(a^T M a) where M is the plane Gram matrix under the pullback metric.
+    formula: \operatorname{mag}(h) = \sqrt{a^\top M a}
     why: >-
       Factor B (magnitude level) must be cut using a geometrically meaningful scalar. The pullback-metric
       in-plane magnitude respects the model's learned geometry rather than imposing Euclidean assumptions.
@@ -112,6 +116,7 @@ terms:
   - name: enclosed area (wedge)
     kind: coined
     one_line: The pullback-metric area of the loop, computed as A_enclosed = rho^2 * sqrt(det M), which normalizes the rotation angle to yield holonomy.
+    formula: A_{\text{enclosed}} = \rho^2 \sqrt{\det M}
     why: >-
       Using pullback-metric area rather than Euclidean area (rho^2 sin phi) ensures all geometric
       quantities are computed under a single consistent metric, following the one-metric principle.
@@ -127,6 +132,7 @@ terms:
   - name: pullback metric
     kind: inherited
     one_line: The induced metric G = J^T J on the input space, pulled back from the output space via the Jacobian J, measuring distances as the model perceives them.
+    formula: G = J^\top J
     why: null
     source: "Curved Inference (2025); FishBack (2026)"
     depends_on:
@@ -136,6 +142,7 @@ terms:
   - name: holonomy
     kind: inherited
     one_line: The rotation angle accumulated by parallel-transporting a vector around a closed loop, divided by the enclosed area, measuring local curvature.
+    formula: H = \frac{\theta}{A}
     why: null
     source: "Differential geometry (Riemannian holonomy); Ambrose-Singer theorem"
     depends_on:
@@ -153,6 +160,7 @@ terms:
   - name: Gram matrix
     kind: inherited
     one_line: A matrix M = D^T G D encoding inner products of a set of vectors D under a metric G, whose determinant gives the squared volume of the parallelepiped they span.
+    formula: M = D^\top G D
     why: null
     source: "Linear algebra (Gramian matrix)"
     depends_on: []
@@ -160,6 +168,7 @@ terms:
   - name: Jacobian-vector product (JVP)
     kind: inherited
     one_line: The product J*v of the Jacobian matrix J with a vector v, computed efficiently via forward-mode automatic differentiation without materializing J.
+    formula: Jv = \frac{\partial f}{\partial x} v
     why: null
     source: "Automatic differentiation (forward mode); JAX/PyTorch documentation"
     depends_on: []
@@ -167,6 +176,7 @@ terms:
   - name: standardized mean difference (SMD)
     kind: inherited
     one_line: The difference in group means divided by the pooled standard deviation, a scale-free measure of effect size used in balance diagnostics.
+    formula: \text{SMD} = \frac{\bar{x}_1 - \bar{x}_2}{s_{\text{pooled}}}
     why: null
     source: "Cohen's d; propensity-score balance literature (Austin; Stuart)"
     depends_on: []
@@ -174,6 +184,7 @@ terms:
   - name: Mahalanobis distance
     kind: inherited
     one_line: A distance metric that accounts for correlations in the data by scaling by the inverse covariance matrix, measuring how many standard deviations a point lies from a distribution.
+    formula: d_M(x) = \sqrt{(x - \mu)^\top \Sigma^{-1} (x - \mu)}
     why: null
     source: "Mahalanobis (1936); multivariate statistics"
     depends_on: []
@@ -181,6 +192,7 @@ terms:
   - name: mixed-effects model
     kind: inherited
     one_line: A regression model containing both fixed effects (population-level coefficients) and random effects (group-level variation), used here to model base-point blocking.
+    formula: y = X\beta + Zu + \varepsilon
     why: null
     source: "Laird & Ware (1982); lme4/statsmodels"
     depends_on: []
@@ -195,6 +207,7 @@ terms:
   - name: SAE reconstruction error
     kind: inherited
     one_line: The L2 distance between an activation and its reconstruction through a sparse autoencoder, serving as a proxy for how well the SAE captures the activation.
+    formula: \|x - \hat{x}\|_2
     why: null
     source: "Sparse autoencoders (Olshausen & Field 1996); Gemma Scope (Google DeepMind)"
     depends_on: []

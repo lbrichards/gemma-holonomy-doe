@@ -1,6 +1,6 @@
 # common-support band
 
-**`coined`**
+<span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
 The magnitude range where all three plane-type arms (random, shuffled-feature, real-feature) have overlapping in-plane magnitude distributions, enabling matched comparisons.
 

@@ -1,6 +1,6 @@
 # band-collapse contingency
 
-**`coined`**
+<span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
 The pre-registered fallback procedure when the three-arm common-support band is empty or too narrow to support matched magnitude comparisons.
 

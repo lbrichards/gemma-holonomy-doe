@@ -4,7 +4,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 
 ---
 
-## Coined Terms
+## <span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span> Coined Terms
 
 *Terms introduced by this project.*
 
@@ -21,7 +21,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 
 ---
 
-## Inherited Terms
+## <span style="background-color: #448aff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">INHERITED</span> Inherited Terms
 
 *Standard terms from prior literature.*
 
