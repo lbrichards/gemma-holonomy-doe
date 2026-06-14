@@ -194,7 +194,8 @@ topics:
       a [[WikiText-103]] passage. The [[corpus draw]] procedure is fully deterministic:
       [[article reconstruction]] joins raw WikiText rows between top-level headers into
       coherent articles, a seed-42 shuffle assigns [[draw order]], and the
-      [[survivor-targeted draw]] continues until 240 candidates pass the 64-token filter.
+      [[survivor-targeted draw]] continues until ≥700 candidates pass the 64-token filter
+      (sufficient for the 390-point [[experiment sample]] plus [[reserve pool]]).
 
 
       Not every article yields a usable base point. Articles too short after tokenization
@@ -215,7 +216,6 @@ topics:
       - 97% deviation metric
       - holonomy-magnitude response
       - fixed-N design
-      - two-stage rule
       - materiality threshold
       - resid_post
       - burned pilot points
@@ -235,7 +235,8 @@ topics:
 
 
       The [[fixed-N design]] commits to running all 390 points before analysis, with no
-      peeking or early stopping. If [[H-sem]] lands [[INCONCLUSIVE verdict]] after
-      stage-1 (N₁ = 96), the [[two-stage rule]] triggers a second batch (N₂ = 96) with
-      both results reported. This preserves error control while allowing recovery from
-      an unexpectedly small effect — all pre-specified, not result-dependent.
+      peeking or early stopping. v1 included a [[two-stage rule (retired)]] that would
+      trigger a second batch if H-sem was inconclusive at N = 96 — but with the corrected
+      variance and N = 390, this rescue mechanism became unnecessary and was removed in v2.
+      The governing design is single-stage: all 390 base points run to completion, then
+      analyzed once.

@@ -2,11 +2,11 @@
 
 <span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
-A draw procedure that continues drawing candidates until a target number (240) pass the 64-token filter, rather than drawing a fixed number of candidates.
+A draw procedure that continues drawing candidates until ≥700 pass the 64-token filter, sufficient for the 390-point experiment sample plus reserve.
 
 ## Why this term exists
 
-Targeting survivors ensures the pool contains exactly the needed number after filtering, avoiding both over-draw waste and under-draw sample size shortfalls.
+Targeting survivors ensures the pool contains enough points after filtering for the N = 390 experiment sample plus reserve, avoiding under-draw sample size shortfalls.
 
 ## Source
 

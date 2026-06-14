@@ -245,25 +245,26 @@ terms:
 
   - name: survivor-targeted draw
     kind: coined
-    one_line: A draw procedure that continues drawing candidates until a target number (240) pass the 64-token filter, rather than drawing a fixed number of candidates.
+    one_line: A draw procedure that continues drawing candidates until ≥700 pass the 64-token filter, sufficient for the 390-point experiment sample plus reserve.
     why: >-
-      Targeting survivors ensures the pool contains exactly the needed number after filtering,
-      avoiding both over-draw waste and under-draw sample size shortfalls.
+      Targeting survivors ensures the pool contains enough points after filtering for the
+      N = 390 experiment sample plus reserve, avoiding under-draw sample size shortfalls.
     source: corpus/draw.py
     depends_on:
       - corpus draw
       - seed-42 determinism
 
-  - name: stage-1 / stage-2 partition
+  - name: stage-1 / stage-2 partition (retired)
     kind: coined
-    one_line: The pre-registered split of the draw pool into 96 stage-1 points, 96 stage-2 reserve, and 48 unused reserve, determined by draw order before any holonomy.
+    one_line: "[RETIRED in v2] The v1 split of the draw pool into 96 stage-1 + 96 stage-2 points; superseded by the single-stage N = 390 design."
     why: >-
-      Fixed stage boundaries allow the two-stage rule to be fully pre-specified — which points
-      constitute stage 1 vs stage 2 is determined by seed-42 draw order, not by any response values.
-    source: PREREGISTRATION_v2.md Section 6.4
+      This partition supported the v1 two-stage rule at N = 96. When the hook-site correction
+      required re-deriving N to 390, the two-stage mechanism was retired and the partition
+      became moot. v2 uses a single-stage design with 390 experiment-sample points.
+    source: PREREGISTRATION_v2.md Section 6.3 (RETIRED)
     depends_on:
       - draw order
-      - two-stage rule
+      - two-stage rule (retired)
 
   # ============================================================================
   # COINED TERMS — Ordinary Words with Special Meanings
@@ -647,25 +648,26 @@ terms:
 
   - name: fixed-N design
     kind: coined
-    one_line: An experimental design where sample size is determined in advance and all observations are collected before analysis, with no peeking or early stopping.
+    one_line: An experimental design where sample size (N = 390) is determined in advance and all observations are collected before analysis, with no peeking or early stopping.
     why: >-
-      The N = 390 (or 96 per stage) is fixed before data collection. This prevents optional-stopping
-      problems that inflate false positives, making the null verdict interpretable as material absence.
+      The N = 390 is fixed before data collection. This prevents optional-stopping problems
+      that inflate false positives, making the null verdict interpretable as material absence.
+      Single-stage: all 390 points run to completion, then analyzed once.
     source: PREREGISTRATION_v2.md Section 6.3
     depends_on:
       - power
 
-  - name: two-stage rule
+  - name: two-stage rule (retired)
     kind: coined
-    one_line: The pre-specified procedure where a second batch of N₂ = 96 base points is run only if stage-1 H-sem is INCONCLUSIVE, with both results reported.
+    one_line: "[RETIRED in v2] The v1 rescue mechanism where a second batch of N₂ = 96 would run if stage-1 H-sem was INCONCLUSIVE; removed when N was re-derived to 390."
     why: >-
-      If H-sem lands inconclusive after stage 1, the true effect may be smaller than planned for.
-      The second stage is pre-declared with fixed trigger and size, avoiding optional-stopping bias.
-    source: PREREGISTRATION_v2.md Section 6.4
+      v1 was powered at N = 96 with τ = 0.649 (resid_pre). After the hook-site correction,
+      τ rose to 1.30 and N was re-derived to 390 for adequate power. At this sample size,
+      the two-stage rescue became unnecessary and was retired in v2 §6.3.
+    source: PREREGISTRATION_v2.md Section 6.3 (RETIRED)
     depends_on:
       - fixed-N design
       - INCONCLUSIVE verdict
-      - H-sem
 
   - name: pre-data clarification
     kind: coined

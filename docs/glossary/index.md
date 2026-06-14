@@ -35,7 +35,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [Factor A (plane type)](factor-a-plane-type.md) — The first factor in the factorial design, with three levels (random, shuffled-feature, real-feature) representing a semantic gradient from noise floor to intact structure.
 - [Factor B (magnitude level)](factor-b-magnitude-level.md) — The second factor in the factorial design, with two levels (m_low at p25, m_high at p75) representing different in-plane magnitudes within the common-support band.
 - [FALSIFIED verdict](falsified-verdict.md) — The verdict when the CI upper bound lies below the materiality threshold, indicating the effect is reliably too small to matter.
-- [fixed-N design](fixed-n-design.md) — An experimental design where sample size is determined in advance and all observations are collected before analysis, with no peeking or early stopping.
+- [fixed-N design](fixed-n-design.md) — An experimental design where sample size (N = 390) is determined in advance and all observations are collected before analysis, with no peeking or early stopping.
 - [forward hook](forward-hook.md) — A PyTorch hook registered on a module to capture intermediate activations during the forward pass, used for extraction and JVP computation.
 - [frozen (pre-registration status)](frozen-pre-registration-status.md) — The status indicating that the pre-registration document is locked and no substantive changes may be made, only blind clarifications via addenda.
 - [G-projection coefficients](g-projection-coefficients.md) — The coefficients a = M^{-1}(JD)^T(Jh) expressing the G-orthogonal projection of h onto the plane, used for center placement.
@@ -79,15 +79,15 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [shuffled-feature plane](shuffled-feature-plane.md) — A control plane pairing one active SAE feature with one inactive dictionary feature, magnitude-matched to the real-feature plane.
 - [Stage A](stage-a.md) — The blind setup phase that extracts activations, selects planes, computes the magnitude band, constructs centers, measures covariates, and produces the manifest.
 - [Stage B](stage-b.md) — The measurement phase that reads a Stage A manifest and writes holonomy response values to a separate artifact, never mutating the manifest.
-- [stage-1 / stage-2 partition](stage-1-stage-2-partition.md) — The pre-registered split of the draw pool into 96 stage-1 points, 96 stage-2 reserve, and 48 unused reserve, determined by draw order before any holonomy.
+- [stage-1 / stage-2 partition (retired)](stage-1-stage-2-partition-retired.md) — [RETIRED in v2] The v1 split of the draw pool into 96 stage-1 + 96 stage-2 points; superseded by the single-stage N = 390 design.
 - [survivor](survivor.md) — A base point that passes all filters (64-token minimum, det M floor, valid plane selection) and enters the experiment sample or reserve.
-- [survivor-targeted draw](survivor-targeted-draw.md) — A draw procedure that continues drawing candidates until a target number (240) pass the 64-token filter, rather than drawing a fixed number of candidates.
+- [survivor-targeted draw](survivor-targeted-draw.md) — A draw procedure that continues drawing candidates until ≥700 pass the 64-token filter, sufficient for the 390-point experiment sample plus reserve.
 - [symmetric residual](symmetric-residual.md) — The Frobenius norm of the symmetric part of (H - I), a diagnostic for non-rotational distortion in the transport operator.
 - [three-arm band](three-arm-band.md) — The overlap of the [p5, p95] magnitude ranges across all three plane arms (real, shuffled, random), required to have width >= 0.5 × pooled IQR.
 - [transport operator](transport-operator.md) — The 2×2 matrix H accumulating the effect of parallel-transporting a probe frame around the loop via iterated restricted Jacobian steps.
 - [two-arm band](two-arm-band.md) — The overlap of the [p5, p95] magnitude ranges for real and shuffled arms only, used as a fallback when the three-arm band collapses.
 - [two-arm terminal collapse](two-arm-terminal-collapse.md) — The fallback case where even the two-arm real+shuffled common-support band fails the minimum width requirement, making matched semantic comparison impossible.
-- [two-stage rule](two-stage-rule.md) — The pre-specified procedure where a second batch of N₂ = 96 base points is run only if stage-1 H-sem is INCONCLUSIVE, with both results reported.
+- [two-stage rule (retired)](two-stage-rule-retired.md) — [RETIRED in v2] The v1 rescue mechanism where a second batch of N₂ = 96 would run if stage-1 H-sem was INCONCLUSIVE; removed when N was re-derived to 390.
 - [undefined at matched magnitude](undefined-at-matched-magnitude.md) — The status assigned to H-grad (and H-sem under terminal collapse) when the common-support band is too narrow to support matched comparison.
 - [φ (plane angle)](plane-angle.md) — The mutual Euclidean angle between the two raw normalized plane directions, computed as arccos(d₁ · d₂).
 

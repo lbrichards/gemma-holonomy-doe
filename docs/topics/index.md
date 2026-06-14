@@ -10,7 +10,7 @@ Connective articles bundling related glossary terms into explanatory narratives.
 - **[Hypotheses and Verdicts](hypotheses-and-verdicts.md)** — bundles 11 terms
 - **[The Blind Apparatus](the-blind-apparatus.md)** — bundles 10 terms
 - **[The Corpus Pipeline](the-corpus-pipeline.md)** — bundles 12 terms
-- **[The Variance and Power Story](the-variance-and-power-story.md)** — bundles 8 terms
+- **[The Variance and Power Story](the-variance-and-power-story.md)** — bundles 7 terms
 
 ---
 
