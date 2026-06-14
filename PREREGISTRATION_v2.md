@@ -1,5 +1,5 @@
 # Pre-Registration v2 — Gemma Holonomy DOE
-Status: DRAFT — not yet frozen
+Status: FROZEN 2026-06-14 (supersedes v1; resid_post correction, tau=1.30, N=390)
 
 This document supersedes PREREGISTRATION.md (v1). v1 was frozen, then a hook-site error was
 discovered during implementation: the Gemma Scope SAE for layer 12 is trained on resid_post
