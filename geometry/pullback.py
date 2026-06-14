@@ -71,7 +71,10 @@ def in_plane_magnitude(
 def enclosed_area(rho: torch.Tensor | float, gram: torch.Tensor) -> torch.Tensor:
     """Return A_enclosed = rho^2 * sqrt(det M), the Section 7.2 G-area."""
 
-    rho_tensor = torch.as_tensor(rho, dtype=gram.dtype, device=gram.device)
+    if isinstance(rho, torch.Tensor):
+        rho_tensor = rho.detach().cpu().to(dtype=gram.dtype, device=gram.device)
+    else:
+        rho_tensor = torch.as_tensor(rho, dtype=gram.dtype, device=gram.device)
     det_value = torch.clamp(det_m(gram), min=0)
     return rho_tensor * rho_tensor * torch.sqrt(det_value)
 
