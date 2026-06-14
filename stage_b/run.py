@@ -44,10 +44,11 @@ def load_manifest(path: Path, *, allow_smoke: bool = False) -> RunManifest:
     """Load and guard a manifest for Stage B measurement."""
 
     manifest = manifest_from_json(path.read_text())
-    if manifest.band_decision.status == BandStatus.TWO_ARM_TERMINAL:
-        raise RuntimeError("Stage B refuses TERMINAL manifest: no matched centers to measure")
     if manifest.metadata.manifest_kind != "official" and not allow_smoke:
         raise RuntimeError("Stage B refuses non-official manifest unless --allow-smoke is set")
+    if manifest.band_decision.status == BandStatus.TWO_ARM_TERMINAL:
+        if not (allow_smoke and manifest.metadata.manifest_kind == "smoke" and manifest.metadata.smoke_magnitude_source):
+            raise RuntimeError("Stage B refuses TERMINAL manifest: no matched centers to measure")
     if manifest.metadata.manifest_kind == "official" and len(manifest.base_points) != manifest.metadata.n_base_points:
         raise RuntimeError("Stage B official manifest is incomplete")
     return manifest
@@ -157,11 +158,25 @@ def rows_for_base(
     base: BasePointRecord,
     *,
     measure_fn: TransportMeasureFn,
+    verbose: bool = False,
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for plane in base.planes:
         for magnitude_level in ["low", "high"]:
+            started = time.time()
+            if verbose:
+                print(
+                    f"    measuring arm={plane.arm} magnitude={magnitude_level}",
+                    flush=True,
+                )
             values = measure_fn(base, plane, magnitude_level)
+            if verbose:
+                print(
+                    f"    done arm={plane.arm} magnitude={magnitude_level} "
+                    f"H={values['H']:.6g} theta={values['theta']:.6g} "
+                    f"seconds={time.time() - started:.2f}",
+                    flush=True,
+                )
             row = {
                 "base_point_id": base.base_point_id,
                 "arm": plane.arm,
@@ -200,24 +215,37 @@ def run_stage_b(
     rows = load_checkpoint_rows(checkpoint_path)
     completed = completed_base_points(rows)
     if measure_fn is None:
+        print("loading model for Stage B transport", flush=True)
         model, _tokenizer = load_model_and_tokenizer()
         measure_fn = make_model_transport_measure(model, manifest)
+        print("model loaded; starting/resuming measurements", flush=True)
 
     started = time.time()
     processed_now = 0
     for idx, base in enumerate(manifest.base_points):
         if base.base_point_id in completed:
-            print(f"[stage_b {idx + 1}/{len(manifest.base_points)}] {base.base_point_id} already complete; skipping")
+            print(f"[stage_b {idx + 1}/{len(manifest.base_points)}] {base.base_point_id} already complete; skipping", flush=True)
             continue
         if max_new_base_points is not None and processed_now >= max_new_base_points:
             break
-        print(f"[stage_b {idx + 1}/{len(manifest.base_points)}] measuring {base.base_point_id}")
-        base_rows = rows_for_base(base, measure_fn=measure_fn)
+        base_started = time.time()
+        print(
+            f"[stage_b {idx + 1}/{len(manifest.base_points)}] measuring {base.base_point_id} "
+            f"(completed={len(completed)}/{len(manifest.base_points)})",
+            flush=True,
+        )
+        base_rows = rows_for_base(base, measure_fn=measure_fn, verbose=True)
         append_checkpoint_rows(checkpoint_path, base_rows)
         rows.extend(base_rows)
         completed.add(base.base_point_id)
         processed_now += 1
         write_result_artifacts(rows, results_path)
+        print(
+            f"[stage_b {idx + 1}/{len(manifest.base_points)}] complete {base.base_point_id}; "
+            f"base_seconds={time.time() - base_started:.2f} rows_written={len(rows)} "
+            f"checkpoint={checkpoint_path}",
+            flush=True,
+        )
 
     nonfinite = [
         row
@@ -244,7 +272,7 @@ def run_stage_b(
         "nonfinite_rows": len(nonfinite),
         "elapsed_seconds": time.time() - started,
     }
-    print(json.dumps(summary, indent=2))
+    print(json.dumps(summary, indent=2), flush=True)
     return summary
 
 

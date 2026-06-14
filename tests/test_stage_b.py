@@ -98,6 +98,22 @@ def test_stage_b_refuses_terminal_manifest_without_measuring(tmp_path):
     assert not (tmp_path / "results.parquet").exists()
 
 
+def test_stage_b_allows_terminal_only_for_smoke_override_manifest(tmp_path):
+    manifest_path = write_manifest(
+        tmp_path / "terminal_smoke.json",
+        synthetic_manifest(n_base_points=2, kind="smoke", terminal=True, smoke_override=True),
+    )
+
+    summary = run_stage_b(
+        manifest_path=manifest_path,
+        results_path=tmp_path / "results.parquet",
+        allow_smoke=True,
+        measure_fn=synthetic_measure,
+    )
+
+    assert summary["rows_written"] == 12
+
+
 def test_stage_b_resumes_without_recomputing_completed_base_points(tmp_path):
     manifest_path = write_manifest(tmp_path / "manifest.json", synthetic_manifest(n_base_points=2, kind="smoke"))
     interrupted_results = tmp_path / "interrupted.parquet"
@@ -146,7 +162,7 @@ def test_stage_b_requires_explicit_allow_smoke_for_smoke_manifest(tmp_path):
         load_manifest(manifest_path, allow_smoke=False)
 
 
-def synthetic_manifest(*, n_base_points: int, kind: str, terminal: bool = False) -> RunManifest:
+def synthetic_manifest(*, n_base_points: int, kind: str, terminal: bool = False, smoke_override: bool = False) -> RunManifest:
     if terminal:
         band = compute_common_support_band(
             real=[63, 64, 65, 66, 67, 68, 69, 70],
@@ -179,6 +195,11 @@ def synthetic_manifest(*, n_base_points: int, kind: str, terminal: bool = False)
             n_base_points=390,
             reproducibility_claim="Bitwise within MPS plus deterministic CPU float64 post-processing.",
             manifest_kind=kind,  # type: ignore[arg-type]
+            smoke_magnitude_source=(
+                "SMOKE_ONLY_POOLED_MAG_QUARTILES_DUE_TO_TERMINAL_BAND"
+                if smoke_override
+                else None
+            ),
         ),
         band_decision=band,
         balance_diagnostics=synthetic_balance(),

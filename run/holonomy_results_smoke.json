@@ -1,0 +1,200 @@
+[
+  {
+    "base_point_id": "bp-000",
+    "arm": "real",
+    "magnitude_level": "low",
+    "H": 1.9638094327944866e-05,
+    "log_H": -10.838039289891057,
+    "theta": -1.2655258617814348e-05,
+    "signed_holonomy": -1.9638094327944866e-05,
+    "A_enclosed": 0.6444239653032936,
+    "det_M": 1.5207426990509387
+  },
+  {
+    "base_point_id": "bp-000",
+    "arm": "real",
+    "magnitude_level": "high",
+    "H": 4.608970742434453e-06,
+    "log_H": -12.287505992166542,
+    "theta": 3.0254781487188565e-06,
+    "signed_holonomy": 4.608970742434453e-06,
+    "A_enclosed": 0.6564324917195726,
+    "det_M": 1.577947367005913
+  },
+  {
+    "base_point_id": "bp-000",
+    "arm": "shuffled",
+    "magnitude_level": "low",
+    "H": 5.523667053145164e-06,
+    "log_H": -12.106468597016985,
+    "theta": 2.9997105364626565e-06,
+    "signed_holonomy": 5.523667053145164e-06,
+    "A_enclosed": 0.5430650521838799,
+    "det_M": 1.0799809264572826
+  },
+  {
+    "base_point_id": "bp-000",
+    "arm": "shuffled",
+    "magnitude_level": "high",
+    "H": 2.9102996946565222e-05,
+    "log_H": -10.444669401235238,
+    "theta": 1.755154212684953e-05,
+    "signed_holonomy": 2.9102996946565222e-05,
+    "A_enclosed": 0.6030836672620065,
+    "det_M": 1.3318873939251321
+  },
+  {
+    "base_point_id": "bp-000",
+    "arm": "random",
+    "magnitude_level": "low",
+    "H": 3.256089809959787e-05,
+    "log_H": -10.332398434298854,
+    "theta": 1.4327868276275782e-05,
+    "signed_holonomy": 3.256089809959787e-05,
+    "A_enclosed": 0.44003295709010964,
+    "det_M": 0.7090596701841191
+  },
+  {
+    "base_point_id": "bp-000",
+    "arm": "random",
+    "magnitude_level": "high",
+    "H": 3.130034578625974e-05,
+    "log_H": -10.371881412994853,
+    "theta": 1.4328278949837125e-05,
+    "signed_holonomy": 3.130034578625974e-05,
+    "A_enclosed": 0.45776743323158325,
+    "det_M": 0.767365305051528
+  },
+  {
+    "base_point_id": "bp-001",
+    "arm": "real",
+    "magnitude_level": "low",
+    "H": 1.6514657619994814e-05,
+    "log_H": -11.011262230792987,
+    "theta": -1.0262718739699268e-05,
+    "signed_holonomy": -1.6514657619994814e-05,
+    "A_enclosed": 0.6214309116087198,
+    "det_M": 1.1692025403306974
+  },
+  {
+    "base_point_id": "bp-001",
+    "arm": "real",
+    "magnitude_level": "high",
+    "H": 7.349082124497786e-06,
+    "log_H": -11.820935133558523,
+    "theta": 5.23675252232443e-06,
+    "signed_holonomy": 7.349082124497786e-06,
+    "A_enclosed": 0.7125723231297124,
+    "det_M": 1.537311746010624
+  },
+  {
+    "base_point_id": "bp-001",
+    "arm": "shuffled",
+    "magnitude_level": "low",
+    "H": 3.6073253804850615e-05,
+    "log_H": -10.229958859053825,
+    "theta": 1.9282978498773557e-05,
+    "signed_holonomy": 3.6073253804850615e-05,
+    "A_enclosed": 0.5345505732055881,
+    "det_M": 0.865130542590389
+  },
+  {
+    "base_point_id": "bp-001",
+    "arm": "shuffled",
+    "magnitude_level": "high",
+    "H": 2.0991781938094816e-05,
+    "log_H": -10.771379533114075,
+    "theta": -1.2896101126001698e-05,
+    "signed_holonomy": -2.0991781938094816e-05,
+    "A_enclosed": 0.6143404673330048,
+    "det_M": 1.142673861241485
+  },
+  {
+    "base_point_id": "bp-001",
+    "arm": "random",
+    "magnitude_level": "low",
+    "H": 4.994542745928018e-05,
+    "log_H": -9.904579599416723,
+    "theta": 2.3655855835300425e-05,
+    "signed_holonomy": 4.994542745928018e-05,
+    "A_enclosed": 0.47363406499196986,
+    "det_M": 0.6791878470457604
+  },
+  {
+    "base_point_id": "bp-001",
+    "arm": "random",
+    "magnitude_level": "high",
+    "H": 2.347388999432705e-05,
+    "log_H": -10.659621818574607,
+    "theta": 1.1743026691206656e-05,
+    "signed_holonomy": 2.347388999432705e-05,
+    "A_enclosed": 0.5002590833493981,
+    "det_M": 0.7576942848335646
+  },
+  {
+    "base_point_id": "bp-002",
+    "arm": "real",
+    "magnitude_level": "low",
+    "H": 1.1652789126806564e-06,
+    "log_H": -13.662550089574303,
+    "theta": -8.040966334379493e-07,
+    "signed_holonomy": -1.1652789126806564e-06,
+    "A_enclosed": 0.6900464984714876,
+    "det_M": 1.5120208724683142
+  },
+  {
+    "base_point_id": "bp-002",
+    "arm": "real",
+    "magnitude_level": "high",
+    "H": 7.2649025238577e-06,
+    "log_H": -11.832455678257407,
+    "theta": 5.025335619909295e-06,
+    "signed_holonomy": 7.2649025238577e-06,
+    "A_enclosed": 0.6917278798175555,
+    "det_M": 1.5193982911946429
+  },
+  {
+    "base_point_id": "bp-002",
+    "arm": "shuffled",
+    "magnitude_level": "low",
+    "H": 2.479454219409807e-05,
+    "log_H": -10.60488700183154,
+    "theta": 1.4610789941818328e-05,
+    "signed_holonomy": 2.479454219409807e-05,
+    "A_enclosed": 0.5892744390052173,
+    "det_M": 1.1026464399027909
+  },
+  {
+    "base_point_id": "bp-002",
+    "arm": "shuffled",
+    "magnitude_level": "high",
+    "H": 3.134989551168937e-05,
+    "log_H": -10.370299623851366,
+    "theta": 1.9281372765078252e-05,
+    "signed_holonomy": 3.134989551168937e-05,
+    "A_enclosed": 0.6150378637749797,
+    "det_M": 1.2011708379904427
+  },
+  {
+    "base_point_id": "bp-002",
+    "arm": "random",
+    "magnitude_level": "low",
+    "H": 3.678822429732612e-05,
+    "log_H": -10.210332755918214,
+    "theta": 1.77707929125645e-05,
+    "signed_holonomy": 3.678822429732612e-05,
+    "A_enclosed": 0.48305655551458987,
+    "det_M": 0.7409638734197258
+  },
+  {
+    "base_point_id": "bp-002",
+    "arm": "random",
+    "magnitude_level": "high",
+    "H": 1.6701054948782468e-05,
+    "log_H": -11.000038669950966,
+    "theta": 8.329956189421788e-06,
+    "signed_holonomy": 1.6701054948782468e-05,
+    "A_enclosed": 0.498768264338239,
+    "det_M": 0.7899483534057272
+  }
+]
