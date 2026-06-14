@@ -201,6 +201,26 @@ def compute_band(pass1: list[Pass1Base]) -> BandDecision:
     return compute_common_support_band(real=values["real"], shuffled=values["shuffled"], random=values["random"])
 
 
+def summarize_mag_h(pass1: list[Pass1Base]) -> dict[str, dict[str, float]]:
+    """Return human-readable mag(h) summaries for Stage A stdout."""
+
+    values: dict[str, list[float]] = {"real": [], "shuffled": [], "random": []}
+    for base in pass1:
+        for arm, plane in base.planes.items():
+            values[arm_for_manifest(arm)].append(plane.mag_h)
+    summary: dict[str, dict[str, float]] = {}
+    for arm, arm_values in values.items():
+        array = np.asarray(arm_values, dtype=np.float64)
+        summary[arm] = {
+            "min": float(np.min(array)),
+            "p25": float(np.percentile(array, 25)),
+            "median": float(np.percentile(array, 50)),
+            "p75": float(np.percentile(array, 75)),
+            "max": float(np.max(array)),
+        }
+    return summary
+
+
 def build_plane_record(
     *,
     base: Pass1Base,
@@ -430,24 +450,57 @@ def main() -> None:
     records = load_experiment_records(args.corpus, limit=args.limit)
 
     started = time.time()
-    print(f"stage_a manifest_kind={manifest_kind} records={len(records)} output={output}")
+    print(
+        f"stage_a start manifest_kind={manifest_kind} records={len(records)} "
+        f"corpus={args.corpus} output={output}",
+        flush=True,
+    )
+    print(
+        "stage_a constants "
+        f"seed_corpus={SEED_CORPUS} plane_selection_seed={PLANE_SELECTION_SEED} "
+        f"tau_detM={TAU_DETM} eps_mag={EPS_MAG} "
+        f"radius_relative={RADIUS_RELATIVE} n_steps={N_STEPS}",
+        flush=True,
+    )
+    print(f"loading model={MODEL_NAME} and SAE={SAE_REPO}/{SAE_PATH}", flush=True)
     model, _tokenizer = load_model_and_tokenizer()
     sae = load_sae(device=next(model.parameters()).device)
     extractor = ResidPostExtractor(model)
+    print(f"model and SAE loaded on device={next(model.parameters()).device}", flush=True)
 
     pass1: list[Pass1Base] = []
     rejection_totals = {arm.value: {"tested": 0, "rejected": 0, "accepted": 0} for arm in Arm}
     for idx, record in enumerate(records):
         base_started = time.time()
-        print(f"[pass1 {idx + 1}/{len(records)}] draw_order={record['draw_order']} title={record.get('article_title', '')!r}")
+        print(
+            f"[pass1 {idx + 1}/{len(records)}] draw_order={record['draw_order']} "
+            f"article_index={record['article_index']} title={record.get('article_title', '')!r}",
+            flush=True,
+        )
         base = pass1_select_and_magnitude(model=model, sae=sae, extractor=extractor, record=record, local_index=idx)
         pass1.append(base)
         for arm, plane in base.planes.items():
             rejection_totals[arm.value]["tested"] += plane.selection.candidates_tested
             rejection_totals[arm.value]["rejected"] += plane.selection.candidates_rejected_detm
             rejection_totals[arm.value]["accepted"] += 1
-        print(f"  pass1_seconds={time.time() - base_started:.3f}")
+            feature_text = "" if plane.selection.feature_ids is None else f" features={plane.selection.feature_ids}"
+            print(
+                f"  arm={arm.value} tested={plane.selection.candidates_tested} "
+                f"rejected_detM={plane.selection.candidates_rejected_detm} "
+                f"detM={plane.selection.det_m:.6g} mag_h={plane.mag_h:.6g}{feature_text}",
+                flush=True,
+            )
+        elapsed = time.time() - started
+        avg_base = elapsed / (idx + 1)
+        remaining = len(records) - (idx + 1)
+        print(
+            f"  pass1_seconds={time.time() - base_started:.3f} "
+            f"elapsed={elapsed / 60:.2f}m eta_pass1={remaining * avg_base / 60:.2f}m",
+            flush=True,
+        )
 
+    print(f"pass1 complete rejection_totals={json.dumps(rejection_totals, sort_keys=True)}", flush=True)
+    print(f"pass1 mag_h_summary={json.dumps(summarize_mag_h(pass1), sort_keys=True)}", flush=True)
     band_decision = compute_band(pass1)
     magnitude_resolution = resolve_magnitudes_for_centers(
         band_decision=band_decision,
@@ -462,18 +515,24 @@ def main() -> None:
     if magnitude_resolution.smoke_magnitude_source is not None:
         print(
             "smoke-only terminal-band center override "
-            f"m_low={m_low:.6g} m_high={m_high:.6g}; band_decision remains {band_decision.status.value}"
+            f"m_low={m_low:.6g} m_high={m_high:.6g}; band_decision remains {band_decision.status.value}",
+            flush=True,
         )
     print(
         "band_decision "
-        f"status={band_decision.status.value} m_low={m_low:.6g} m_high={m_high:.6g}"
+        f"status={band_decision.status.value} m_low={m_low:.6g} m_high={m_high:.6g} "
+        f"h_sem_matched={band_decision.h_sem_matched} h_grad_matched={band_decision.h_grad_matched}",
+        flush=True,
     )
 
+    print(f"fitting reference distribution from {len(pass1)} extracted activations (k={REFERENCE_K})", flush=True)
     reference = ReferenceDistribution.fit(torch.stack([base.activation.detach().cpu() for base in pass1]), k=REFERENCE_K)
+    print(f"reference distribution ready method={reference.method}", flush=True)
     base_records: list[BasePointRecord] = []
     eps_fallback_count = 0
     for idx, base in enumerate(pass1):
-        print(f"[pass2 {idx + 1}/{len(pass1)}] base_point_id={base.base_point_id}")
+        base_started = time.time()
+        print(f"[pass2 {idx + 1}/{len(pass1)}] base_point_id={base.base_point_id}", flush=True)
         plane_records = []
         for arm in [Arm.REAL_FEATURE, Arm.SHUFFLED_FEATURE, Arm.RANDOM]:
             record = build_plane_record(
@@ -486,6 +545,15 @@ def main() -> None:
             )
             eps_fallback_count += int(record.eps_mag_fallback_fired)
             plane_records.append(record)
+            print(
+                f"  arm={record.arm} center_low_norm={np.linalg.norm(record.center_low):.6g} "
+                f"center_high_norm={np.linalg.norm(record.center_high):.6g} "
+                f"phi={record.covariates.phi:.6g} "
+                f"recon={record.covariates.manifold_distance_recon:.6g} "
+                f"refdist={record.covariates.manifold_distance_mahalanobis:.6g} "
+                f"eps_fallback={record.eps_mag_fallback_fired}",
+                flush=True,
+            )
         base_records.append(
             BasePointRecord(
                 base_point_id=base.base_point_id,
@@ -496,6 +564,14 @@ def main() -> None:
                 activation=_tensor_to_float_list(base.activation),
                 planes=plane_records,
             )
+        )
+        elapsed = time.time() - started
+        avg_all = elapsed / (len(pass1) + idx + 1)
+        remaining_units = len(pass1) - (idx + 1)
+        print(
+            f"  pass2_seconds={time.time() - base_started:.3f} "
+            f"elapsed={elapsed / 60:.2f}m eta_pass2={remaining_units * avg_all / 60:.2f}m",
+            flush=True,
         )
 
     balance = build_balance_diagnostics(base_records)
@@ -524,7 +600,8 @@ def main() -> None:
         "eps_mag_fallback_count": eps_fallback_count,
         "elapsed_seconds": time.time() - started,
     }
-    print(json.dumps(summary, indent=2))
+    print("stage_a complete", flush=True)
+    print(json.dumps(summary, indent=2), flush=True)
 
 
 if __name__ == "__main__":
