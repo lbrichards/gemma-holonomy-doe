@@ -27,6 +27,10 @@ TARGET_SURVIVORS = 240
 TOKEN_LENGTH = 64
 RAW_MIN_WORDS = 64
 OUTPUT_PATH = Path("run/corpus_draw_stage_pool.json")
+N390_OUTPUT_PATH = Path("run/corpus_draw_n390.json")
+BURNED_PILOT_DRAW_ORDERS = tuple(range(96, 112))
+N390_TARGET_SURVIVORS = 700
+N390_EXPERIMENT_SIZE = 390
 
 _TOP_LEVEL_HEADER = re.compile(r"^\s*=\s+([^=].*?[^=])\s+=\s*$")
 
@@ -41,6 +45,7 @@ class DrawConfig:
     target_survivors: int = TARGET_SURVIVORS
     raw_min_words: int = RAW_MIN_WORDS
     token_length: int = TOKEN_LENGTH
+    burned_draw_orders: tuple[int, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -83,6 +88,9 @@ class DrawResult:
     seed: int
     target_survivors: int
     token_length: int
+    candidate_count: int
+    burned_draw_orders: tuple[int, ...]
+    burned_records: list[DrawRecord]
 
 
 def is_top_level_header(line: str) -> bool:
@@ -158,6 +166,15 @@ def partition_records(records: list[DrawRecord], stage_size: int = 96) -> dict[s
     }
 
 
+def partition_records_n390(records: list[DrawRecord], experiment_size: int = N390_EXPERIMENT_SIZE) -> dict[str, list[DrawRecord]]:
+    """Return the v2 single-stage experiment/reserve partition."""
+
+    return {
+        "experiment": records[:experiment_size],
+        "reserve": records[experiment_size:],
+    }
+
+
 def draw_stage_pool(*, rows: list[Any], tokenizer: TokenizerLike, config: DrawConfig = DrawConfig()) -> DrawResult:
     """Draw deterministic reconstructed articles and truncate to Gemma tokens."""
 
@@ -182,9 +199,14 @@ def draw_stage_pool(*, rows: list[Any], tokenizer: TokenizerLike, config: DrawCo
     rng.shuffle(shuffled)
 
     records: list[DrawRecord] = []
+    burned_records: list[DrawRecord] = []
+    burned_draw_orders = set(config.burned_draw_orders)
+    survivor_draw_order = 0
+    candidate_count = 0
     for article in shuffled:
         if len(records) >= config.target_survivors:
             break
+        candidate_count += 1
         token_ids = tokenizer.encode(article.text, add_special_tokens=False)
         if len(token_ids) < config.token_length:
             drops.append(
@@ -198,18 +220,21 @@ def draw_stage_pool(*, rows: list[Any], tokenizer: TokenizerLike, config: DrawCo
             )
             continue
         truncated = token_ids[: config.token_length]
-        records.append(
-            DrawRecord(
-                draw_order=len(records),
-                article_index=article.article_index,
-                article_title=article.title,
-                start_row=article.start_row,
-                end_row=article.end_row,
-                token_ids=truncated,
-                token_count_before_truncation=len(token_ids),
-                token_prefix_text=tokenizer.decode(truncated),
-            )
+        record = DrawRecord(
+            draw_order=survivor_draw_order,
+            article_index=article.article_index,
+            article_title=article.title,
+            start_row=article.start_row,
+            end_row=article.end_row,
+            token_ids=truncated,
+            token_count_before_truncation=len(token_ids),
+            token_prefix_text=tokenizer.decode(truncated),
         )
+        survivor_draw_order += 1
+        if record.draw_order in burned_draw_orders:
+            burned_records.append(record)
+            continue
+        records.append(record)
 
     return DrawResult(
         records=records,
@@ -219,6 +244,9 @@ def draw_stage_pool(*, rows: list[Any], tokenizer: TokenizerLike, config: DrawCo
         seed=config.seed,
         target_survivors=config.target_survivors,
         token_length=config.token_length,
+        candidate_count=candidate_count,
+        burned_draw_orders=tuple(config.burned_draw_orders),
+        burned_records=burned_records,
     )
 
 
@@ -237,6 +265,9 @@ def _result_to_json(result: DrawResult) -> dict[str, Any]:
             "raw_prefilter_survivors": result.raw_prefilter_survivors,
             "survivor_count": len(result.records),
             "drop_count": len(result.drops),
+            "candidate_count": result.candidate_count,
+            "excluded_burned_draw_orders": list(result.burned_draw_orders),
+            "excluded_burned_article_indices": [record.article_index for record in result.burned_records],
         },
         "partitions": {
             "stage_1_draw_orders": [record.draw_order for record in partitions["stage_1"]],
@@ -251,6 +282,40 @@ def _result_to_json(result: DrawResult) -> dict[str, Any]:
     }
 
 
+def _result_to_json_n390(result: DrawResult, experiment_size: int = N390_EXPERIMENT_SIZE) -> dict[str, Any]:
+    partitions = partition_records_n390(result.records, experiment_size=experiment_size)
+    return {
+        "metadata": {
+            "dataset_name": DATASET_NAME,
+            "config_name": CONFIG_NAME,
+            "revision": REVISION,
+            "tokenizer_name": TOKENIZER_NAME,
+            "seed": result.seed,
+            "target_survivors": result.target_survivors,
+            "token_length": result.token_length,
+            "total_articles": result.total_articles,
+            "raw_prefilter_survivors": result.raw_prefilter_survivors,
+            "survivor_count": len(result.records),
+            "drop_count": len(result.drops),
+            "candidate_count": result.candidate_count,
+            "excluded_burned_draw_orders": list(result.burned_draw_orders),
+            "excluded_burned_article_indices": [record.article_index for record in result.burned_records],
+            "excluded_burned_records": [asdict(record) for record in result.burned_records],
+            "experiment_size": experiment_size,
+            "reserve_count": len(partitions["reserve"]),
+            "partition": "single_stage_experiment_plus_reserve",
+        },
+        "partitions": {
+            "experiment_draw_orders": [record.draw_order for record in partitions["experiment"]],
+            "experiment_article_indices": [record.article_index for record in partitions["experiment"]],
+            "reserve_draw_orders": [record.draw_order for record in partitions["reserve"]],
+            "reserve_article_indices": [record.article_index for record in partitions["reserve"]],
+        },
+        "records": [asdict(record) for record in result.records],
+        "drops": [asdict(drop) for drop in result.drops],
+    }
+
+
 def write_stage_pool(result: DrawResult, path: Path = OUTPUT_PATH) -> None:
     """Write the blind corpus draw artifact."""
 
@@ -258,29 +323,53 @@ def write_stage_pool(result: DrawResult, path: Path = OUTPUT_PATH) -> None:
     path.write_text(json.dumps(_result_to_json(result), indent=2, sort_keys=True) + "\n")
 
 
+def write_n390_pool(result: DrawResult, path: Path = N390_OUTPUT_PATH) -> None:
+    """Write the v2 N=390 blind corpus draw artifact."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(_result_to_json_n390(result), indent=2, sort_keys=True) + "\n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=OUTPUT_PATH)
     parser.add_argument("--target-survivors", type=int, default=TARGET_SURVIVORS)
+    parser.add_argument("--n390", action="store_true", help="Write the v2 N=390 artifact with burned pilot points excluded.")
     args = parser.parse_args()
 
     dataset = load_dataset(DATASET_NAME, CONFIG_NAME, revision=REVISION, split="train")
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_NAME)
+    config = DrawConfig(target_survivors=args.target_survivors)
+    if args.n390:
+        config = DrawConfig(target_survivors=args.target_survivors, burned_draw_orders=BURNED_PILOT_DRAW_ORDERS)
+        if args.output == OUTPUT_PATH:
+            args.output = N390_OUTPUT_PATH
     result = draw_stage_pool(
         rows=list(dataset),
         tokenizer=tokenizer,
-        config=DrawConfig(target_survivors=args.target_survivors),
+        config=config,
     )
-    write_stage_pool(result, args.output)
-    partitions = partition_records(result.records)
+    if args.n390:
+        write_n390_pool(result, args.output)
+        partitions = partition_records_n390(result.records)
+    else:
+        write_stage_pool(result, args.output)
+        partitions = partition_records(result.records)
     print(f"dataset_revision: {REVISION}")
     print(f"total_articles: {result.total_articles}")
     print(f"raw_prefilter_survivors: {result.raw_prefilter_survivors}")
+    print(f"candidate_count: {result.candidate_count}")
     print(f"survivor_count: {len(result.records)}")
     print(f"drop_count: {len(result.drops)}")
-    print(f"stage_1_count: {len(partitions['stage_1'])}")
-    print(f"stage_2_reserve_count: {len(partitions['stage_2_reserve'])}")
-    print(f"unused_reserve_count: {len(partitions['unused_reserve'])}")
+    if args.n390:
+        print(f"excluded_burned_draw_orders: {list(result.burned_draw_orders)}")
+        print(f"excluded_burned_count: {len(result.burned_records)}")
+        print(f"experiment_count: {len(partitions['experiment'])}")
+        print(f"reserve_count: {len(partitions['reserve'])}")
+    else:
+        print(f"stage_1_count: {len(partitions['stage_1'])}")
+        print(f"stage_2_reserve_count: {len(partitions['stage_2_reserve'])}")
+        print(f"unused_reserve_count: {len(partitions['unused_reserve'])}")
     print(f"output: {args.output}")
     if len(result.records) < args.target_survivors:
         print("DRAW: FAIL")
