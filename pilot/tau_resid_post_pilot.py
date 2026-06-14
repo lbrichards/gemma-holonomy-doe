@@ -14,7 +14,6 @@ import math
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-import sys
 from typing import Any
 
 import numpy as np
@@ -22,8 +21,6 @@ import torch
 from huggingface_hub import hf_hub_download
 from scipy.stats import chi2
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from geometry import enclosed_area, pullback_gram
 
