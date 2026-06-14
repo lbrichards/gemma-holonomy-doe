@@ -372,3 +372,13 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
   active feature paired with one inactive real dictionary feature; random = two random unit
   directions) is also recorded here as the operational definition used by planes/, fixed before
   any holonomy computation.
+- 2026-06-14: Passage construction from WikiText-103 raw (refines Section 9 "draw candidate
+  passages"). WikiText-103 raw is stored as line-level rows (1,801,350 train rows, many blank or
+  fragmentary, with articles delimited by " = Title = " header lines). A "passage" is constructed
+  by ARTICLE RECONSTRUCTION: lines between consecutive top-level article headers are joined into a
+  single article; each article is one candidate passage. The seed-42 draw selects among
+  reconstructed articles; each selected article is then truncated to the first 64 Gemma tokens per
+  Section 9. Rationale: faithful to "declarative prose passage", yields text that reliably clears
+  the 64-token threshold, and avoids the length/format bias of raw-row sampling. Outcome-
+  independent: occurs before any holonomy computation. Dataset pinned to Salesforce/wikitext
+  revision b08601e04326c79dfdd32d625aee71d232d685c3.
