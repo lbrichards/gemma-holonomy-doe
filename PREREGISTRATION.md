@@ -69,14 +69,14 @@ magnitude level shows materially greater holonomy than the low level, pooled acr
 
 ### H-sem — semantic main effect (the powered effect)
 
-Prediction: after covariate adjustment for manifold distance and phi (Section 7.x), real-feature
+Prediction: after covariate adjustment for manifold distance and phi (Section 7.4), real-feature
 planes show materially greater holonomy than magnitude-matched shuffled-feature planes.
 
 - CORROBORATED: adjusted real-vs-shuffled contrast exceeds materiality AND CI lower bound above
   the materiality threshold.
 - FALSIFIED: CI upper bound below the materiality threshold.
 - NULL-ATTRIBUTED (special case of falsification): an unadjusted effect present but vanishing under
-  covariate adjustment is reported as attributable to covariates, not meaning (Section 7.x null
+  covariate adjustment is reported as attributable to covariates, not meaning (Section 7.4 null
   branch).
 - INCONCLUSIVE: CI spans materiality. (Powered to make this outcome unlikely for the material
   effect size; see Section 5.)
@@ -166,7 +166,7 @@ Using the pre-registered confidence interval for each effect:
 - FALSIFIED: CI upper bound < materiality threshold.
 - INCONCLUSIVE: CI spans the materiality threshold.
 
-(H-sem additionally carries the NULL-ATTRIBUTED branch of Section 7.x.)
+(H-sem additionally carries the NULL-ATTRIBUTED branch of Section 7.4.)
 
 ### 6.3 Fixed-N, analyze-once
 
@@ -202,8 +202,10 @@ the primary test and the power basis are the same object.
 
 ### Model / regression form
 
-- PRIMARY (H-sem): paired within-base-point contrast. Per base point, d_b = H_real,b - H_shuffled,b
-  on the log scale; regress d_b on the per-base covariate differences (manifold distance, phi);
+- PRIMARY (H-sem): paired within-base-point contrast. Per base point,
+  d_b = log H_real,b - log H_shuffled,b (the contrast is taken on LOG holonomy, so a difference of
+  log(1.25) is a 25% multiplicative change in H and matches the log-scale tau = 0.649 the power
+  calc is built on); regress d_b on the per-base covariate differences (manifold distance, phi);
   test whether the adjusted mean of d_b exceeds the materiality threshold. One-sample structure on
   96 paired differences.
 - SECONDARY (full factorial, reported alongside): mixed-effects model
@@ -247,6 +249,8 @@ H = theta / A_enclosed
 
 - theta: rotation angle extracted from the antisymmetric part of the loop transport operator
   (same extraction as the frozen instrument).
+- All contrasts and the materiality threshold are defined on log H. Holonomy H is strictly positive
+  by construction (theta and A_enclosed are positive), so log H is well-defined.
 - A_enclosed = rho^2 * sqrt(det M), the pullback-metric (G-)area of the loop, where
   M = (JD)^T (JD) is the 2x2 plane Gram matrix under the pullback metric (Section 7.3).
   This supersedes the earlier Euclidean expression rho^2 * sin(phi). All geometric quantities
@@ -297,7 +301,7 @@ Center-placement for magnitude level m:
   arm. Calibrated blind on throwaway synthetic points (bench/, gitignored), never on the experiment
   sample.
 
-### 7.x Semantic contrast: covariate-adjustment principle (pre-registered)
+### 7.4 Semantic contrast: covariate-adjustment principle (pre-registered)
 
 The load-bearing semantic contrast is real-feature vs shuffled-feature (NOT real vs random).
 It is estimated by covariate adjustment in all cases, with no balance gate:
