@@ -1,0 +1,724 @@
+{
+  "purpose": "tau re-pilot at corrected resid_post site; reserve only; blind to stage-1",
+  "model": "google/gemma-2-2b",
+  "model_library": "transformers.AutoModelForCausalLM",
+  "sae_repo": "google/gemma-scope-2b-pt-res",
+  "sae_path": "layer_12/width_16k/average_l0_82/params.npz",
+  "extraction_site": "HF model.model.layers[12] forward-hook output; TransformerLens blocks.12.hook_resid_post",
+  "downstream_readout": "HF model.model.layers[13] forward-hook output after patching layer-12 resid_post",
+  "reserve_record_indices": [
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111
+  ],
+  "draw_orders": [
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111
+  ],
+  "stage_1_touched": false,
+  "n_bases": 16,
+  "n_steps": 200,
+  "radius_relative": 0.006,
+  "tau_pilot": 1.1119353953698976,
+  "tau_ci_lo": 0.8213920780645119,
+  "tau_ci_hi": 1.7209326516412757,
+  "frozen_tau_iter7": 0.649,
+  "frozen_tau_iter8": 0.586,
+  "mean_l0": 103.375,
+  "sd_l0": 23.009780529157595,
+  "min_l0": 72,
+  "max_l0": 148,
+  "detm_floor": 0.413,
+  "detm_rejections": {
+    "real": 13,
+    "shuffled": 1616,
+    "real_candidates_tested": 29,
+    "shuffled_candidates_tested": 1632
+  },
+  "elapsed_seconds": 1814.311450958252,
+  "results": [
+    {
+      "reserve_record_index": 96,
+      "draw_order": 96,
+      "article_index": 10854,
+      "article_title": "California State Route 188",
+      "base_norm": 118.48542022705078,
+      "l0": 72,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          10543,
+          10762
+        ],
+        "theta": -1.7145264157758492e-05,
+        "holonomy": 2.3120973301345795e-05,
+        "log_holonomy": -10.674770417237111,
+        "area": 0.7415459519933152,
+        "det_m": 2.152838654924233,
+        "condition_max": 1.2995362524810883,
+        "stretch_fro": 1.1627978329193035e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          10543,
+          2745
+        ],
+        "theta": 2.0468808131320883e-05,
+        "holonomy": 2.9634383497502815e-05,
+        "log_holonomy": -10.426575266129564,
+        "area": 0.6907114545860459,
+        "det_m": 1.8677926512214673,
+        "condition_max": 1.354854923953207,
+        "stretch_fro": 1.1906253977985293e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": -0.24819515110754686
+    },
+    {
+      "reserve_record_index": 97,
+      "draw_order": 97,
+      "article_index": 3180,
+      "article_title": "The Voice Within",
+      "base_norm": 153.60943603515625,
+      "l0": 127,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          3371,
+          13295
+        ],
+        "theta": -1.592678988566835e-05,
+        "holonomy": 1.655604263300539e-05,
+        "log_holonomy": -11.008759409002257,
+        "area": 0.961992563000376,
+        "det_m": 1.282527981036543,
+        "condition_max": 1.0187728705290704,
+        "stretch_fro": 4.604748303666693e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          3371,
+          13871
+        ],
+        "theta": 1.7462563864722068e-06,
+        "holonomy": 2.1764363405013886e-06,
+        "log_holonomy": -13.037821724945378,
+        "area": 0.8023466406878317,
+        "det_m": 0.8921697563080484,
+        "condition_max": 1.1879807997875687,
+        "stretch_fro": 9.8593765773914e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": 2.0290623159431203
+    },
+    {
+      "reserve_record_index": 98,
+      "draw_order": 98,
+      "article_index": 9389,
+      "article_title": "Trial of Lord George Gordon",
+      "base_norm": 142.7725830078125,
+      "l0": 79,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          10762,
+          12220
+        ],
+        "theta": -3.976073894264914e-06,
+        "holonomy": 4.701897262717272e-06,
+        "log_holonomy": -12.267544457783686,
+        "area": 0.845631810331624,
+        "det_m": 1.3279396996569024,
+        "condition_max": 1.112513714839818,
+        "stretch_fro": 1.840048394259833e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          10762,
+          7883
+        ],
+        "theta": -2.6939681749596146e-06,
+        "holonomy": 3.6730554443183626e-06,
+        "log_holonomy": -12.5144866961363,
+        "area": 0.7334406506514238,
+        "det_m": 0.9989544486463884,
+        "condition_max": 1.0814647913846303,
+        "stretch_fro": 1.2767099717580693e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": 0.24694223835261475
+    },
+    {
+      "reserve_record_index": 99,
+      "draw_order": 99,
+      "article_index": 2174,
+      "article_title": "Smoothtooth blacktip shark",
+      "base_norm": 134.05967712402344,
+      "l0": 115,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          10762,
+          13295
+        ],
+        "theta": 5.6194146833473966e-05,
+        "holonomy": 8.17622433910272e-05,
+        "log_holonomy": -9.41169499314966,
+        "area": 0.6872872428992188,
+        "det_m": 1.1284410796074071,
+        "condition_max": 1.0899699611394726,
+        "stretch_fro": 6.854953361901325e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          10762,
+          6122
+        ],
+        "theta": 1.063294052410758e-05,
+        "holonomy": 1.5854034595122683e-05,
+        "log_holonomy": -11.052086541444798,
+        "area": 0.6706772626432066,
+        "det_m": 1.0745570759603682,
+        "condition_max": 1.0438381412141777,
+        "stretch_fro": 2.78549497888389e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": 1.6403915482951383
+    },
+    {
+      "reserve_record_index": 100,
+      "draw_order": 100,
+      "article_index": 29252,
+      "article_title": "R. K. Narayan",
+      "base_norm": 136.65760803222656,
+      "l0": 103,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          14744,
+          15030
+        ],
+        "theta": 2.1577331734347135e-05,
+        "holonomy": 3.430410868381408e-05,
+        "log_holonomy": -10.280245424266115,
+        "area": 0.629001380949102,
+        "det_m": 0.8753121099094298,
+        "condition_max": 1.1636544770111108,
+        "stretch_fro": 6.295523244903642e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          14744,
+          16220
+        ],
+        "theta": 1.3523027814054454e-05,
+        "holonomy": 1.911014842407695e-05,
+        "log_holonomy": -10.865291032914575,
+        "area": 0.7076359384533477,
+        "det_m": 1.107846274105772,
+        "condition_max": 1.0413176068517784,
+        "stretch_fro": 2.7688209899026244e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": 0.5850456086484606
+    },
+    {
+      "reserve_record_index": 101,
+      "draw_order": 101,
+      "article_index": 24184,
+      "article_title": "Battle of Albuera",
+      "base_norm": 130.4973602294922,
+      "l0": 81,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          12358,
+          12342
+        ],
+        "theta": 1.8978006505653218e-05,
+        "holonomy": 2.3473352342245407e-05,
+        "log_holonomy": -10.659644723096998,
+        "area": 0.8084915281358498,
+        "det_m": 1.7391580003450977,
+        "condition_max": 1.238040158470754,
+        "stretch_fro": 1.3622090637924322e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          12358,
+          12232
+        ],
+        "theta": 3.3350662548846865e-05,
+        "holonomy": 4.40730747267728e-05,
+        "log_holonomy": -10.029661512386593,
+        "area": 0.7567128627989175,
+        "det_m": 1.5235275940092095,
+        "condition_max": 1.3265105371351706,
+        "stretch_fro": 1.7143923167665598e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": -0.6299832107104049
+    },
+    {
+      "reserve_record_index": 102,
+      "draw_order": 102,
+      "article_index": 17761,
+      "article_title": "Wish You Were Here ( Pink Floyd album )",
+      "base_norm": 137.5301055908203,
+      "l0": 111,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          6810,
+          6795
+        ],
+        "theta": 9.275413883256208e-06,
+        "holonomy": 2.094646753213219e-05,
+        "log_holonomy": -10.773540540031137,
+        "area": 0.44281518442322493,
+        "det_m": 0.4229109228634461,
+        "condition_max": 1.8484168160817285,
+        "stretch_fro": 8.265076413409989e-06,
+        "candidates_tested": 5,
+        "candidates_rejected_detm": 4
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          6810,
+          838
+        ],
+        "theta": 3.817607339815703e-05,
+        "holonomy": 8.583461725822403e-05,
+        "log_holonomy": -9.363088168292228,
+        "area": 0.4447631342411477,
+        "det_m": 0.4266398881659204,
+        "condition_max": 1.7990243202870237,
+        "stretch_fro": 4.228825089643892e-05,
+        "candidates_tested": 81,
+        "candidates_rejected_detm": 80
+      },
+      "d_b": -1.4104523717389092
+    },
+    {
+      "reserve_record_index": 103,
+      "draw_order": 103,
+      "article_index": 29136,
+      "article_title": "Battle of the \u00celes Saint @-@ Marcouf",
+      "base_norm": 137.5460205078125,
+      "l0": 81,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          10762,
+          15030
+        ],
+        "theta": -1.0825590688740358e-05,
+        "holonomy": 1.701370619768668e-05,
+        "log_holonomy": -10.981491291827773,
+        "area": 0.6362864482879275,
+        "det_m": 0.8727869145044331,
+        "condition_max": 1.1410633636712064,
+        "stretch_fro": 4.114969804895182e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          10762,
+          14366
+        ],
+        "theta": -2.5369423807354635e-05,
+        "holonomy": 4.82314746126949e-05,
+        "log_holonomy": -9.939498749756241,
+        "area": 0.5259931198677721,
+        "det_m": 0.5964348423507075,
+        "condition_max": 1.3604076570083978,
+        "stretch_fro": 1.1035061923755422e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": -1.0419925420715312
+    },
+    {
+      "reserve_record_index": 104,
+      "draw_order": 104,
+      "article_index": 14564,
+      "article_title": "1907 Tour de France",
+      "base_norm": 129.0951385498047,
+      "l0": 90,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          12027,
+          10762
+        ],
+        "theta": -7.73227753756043e-06,
+        "holonomy": 1.0786199932792737e-05,
+        "log_holonomy": -11.437243024896842,
+        "area": 0.716867625831075,
+        "det_m": 1.4276882402379045,
+        "condition_max": 1.0872351694743083,
+        "stretch_fro": 3.2327078151161914e-06,
+        "candidates_tested": 2,
+        "candidates_rejected_detm": 1
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          12027,
+          11517
+        ],
+        "theta": 3.5499175938190835e-05,
+        "holonomy": 5.795283447386816e-05,
+        "log_holonomy": -9.755881076969713,
+        "area": 0.6125528847807775,
+        "det_m": 1.0424197368929133,
+        "condition_max": 1.2531781871702072,
+        "stretch_fro": 1.2455475987189862e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": -1.6813619479271296
+    },
+    {
+      "reserve_record_index": 105,
+      "draw_order": 105,
+      "article_index": 26811,
+      "article_title": "Saving Private Ryan",
+      "base_norm": 128.6322479248047,
+      "l0": 99,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          6810,
+          6594
+        ],
+        "theta": 1.4229315312010231e-05,
+        "holonomy": 3.6075237653474295e-05,
+        "log_holonomy": -10.229903865565143,
+        "area": 0.3944344164463141,
+        "det_m": 0.43847533257347726,
+        "condition_max": 2.095522317409532,
+        "stretch_fro": 1.3205500978240935e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          6594,
+          15103
+        ],
+        "theta": 1.6428948953507878e-05,
+        "holonomy": 2.5140884582986656e-05,
+        "log_holonomy": -10.591015169144876,
+        "area": 0.6534753739184531,
+        "det_m": 1.203521944141184,
+        "condition_max": 1.2652512976311447,
+        "stretch_fro": 6.246958790648443e-06,
+        "candidates_tested": 513,
+        "candidates_rejected_detm": 512
+      },
+      "d_b": 0.3611113035797331
+    },
+    {
+      "reserve_record_index": 106,
+      "draw_order": 106,
+      "article_index": 1576,
+      "article_title": "Boyce McDaniel",
+      "base_norm": 147.15646362304688,
+      "l0": 148,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          10762,
+          6745
+        ],
+        "theta": 6.838259154847702e-05,
+        "holonomy": 8.137856892376635e-05,
+        "log_holonomy": -9.416398600655127,
+        "area": 0.8403022128901814,
+        "det_m": 1.1618462019534768,
+        "condition_max": 1.0417348123478438,
+        "stretch_fro": 1.0426559338909919e-05,
+        "candidates_tested": 2,
+        "candidates_rejected_detm": 1
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          10762,
+          5748
+        ],
+        "theta": -1.0791000301005252e-05,
+        "holonomy": 1.4160336078444542e-05,
+        "log_holonomy": -11.165065735626927,
+        "area": 0.762058205485092,
+        "det_m": 0.955551097420321,
+        "condition_max": 1.1416594064411605,
+        "stretch_fro": 3.975023928499658e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": 1.7486671349718002
+    },
+    {
+      "reserve_record_index": 107,
+      "draw_order": 107,
+      "article_index": 20679,
+      "article_title": "Pyjama shark",
+      "base_norm": 145.18875122070312,
+      "l0": 139,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          15863,
+          10762
+        ],
+        "theta": 8.657872811143132e-06,
+        "holonomy": 1.0518747271043254e-05,
+        "log_holonomy": -11.46235143844469,
+        "area": 0.8230897261860386,
+        "det_m": 1.1764066768141093,
+        "condition_max": 1.0409633563512681,
+        "stretch_fro": 1.945351603723401e-06,
+        "candidates_tested": 4,
+        "candidates_rejected_detm": 3
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          15863,
+          10030
+        ],
+        "theta": 1.4489662649375479e-05,
+        "holonomy": 2.1689115397932036e-05,
+        "log_holonomy": -10.73870001782384,
+        "area": 0.6680614853825253,
+        "det_m": 0.7749898037196721,
+        "condition_max": 1.280261701502408,
+        "stretch_fro": 1.0892038460491533e-05,
+        "candidates_tested": 513,
+        "candidates_rejected_detm": 512
+      },
+      "d_b": -0.7236514206208504
+    },
+    {
+      "reserve_record_index": 108,
+      "draw_order": 108,
+      "article_index": 25491,
+      "article_title": "Albatross",
+      "base_norm": 128.41624450683594,
+      "l0": 91,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          15596,
+          10762
+        ],
+        "theta": -8.311503489818426e-06,
+        "holonomy": 1.2015729673075423e-05,
+        "log_holonomy": -11.329293960442946,
+        "area": 0.6917185818887601,
+        "det_m": 1.357606859103761,
+        "condition_max": 1.1568966389724573,
+        "stretch_fro": 4.0077945264101476e-06,
+        "candidates_tested": 2,
+        "candidates_rejected_detm": 1
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          15596,
+          7809
+        ],
+        "theta": 4.246419703691763e-06,
+        "holonomy": 6.688682873301483e-06,
+        "log_holonomy": -11.915093583132574,
+        "area": 0.6348663532310305,
+        "det_m": 1.1436147822075682,
+        "condition_max": 1.2169850803333815,
+        "stretch_fro": 4.220061494394556e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": 0.5857996226896276
+    },
+    {
+      "reserve_record_index": 109,
+      "draw_order": 109,
+      "article_index": 17281,
+      "article_title": "2011 \u2013 12 Sheffield United F.C. season",
+      "base_norm": 139.04579162597656,
+      "l0": 98,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          6038,
+          15030
+        ],
+        "theta": 4.5254799984894976e-05,
+        "holonomy": 5.574504726015309e-05,
+        "log_holonomy": -9.794721989953313,
+        "area": 0.8118174117549523,
+        "det_m": 1.360442923699435,
+        "condition_max": 1.425525574355675,
+        "stretch_fro": 2.2881921356625966e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          6038,
+          1091
+        ],
+        "theta": 6.136122352769935e-05,
+        "holonomy": 7.697839407497382e-05,
+        "log_holonomy": -9.471985771914046,
+        "area": 0.7971226766297048,
+        "det_m": 1.3116378202749006,
+        "condition_max": 1.4517287198310234,
+        "stretch_fro": 3.145934282500521e-05,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": -0.32273621803926744
+    },
+    {
+      "reserve_record_index": 110,
+      "draw_order": 110,
+      "article_index": 20473,
+      "article_title": "Shadowrun ( 1993 video game )",
+      "base_norm": 146.36282348632812,
+      "l0": 131,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          15766,
+          10762
+        ],
+        "theta": -1.7353692348707033e-05,
+        "holonomy": 2.031315821228501e-05,
+        "log_holonomy": -10.804241694102217,
+        "area": 0.8543079400726497,
+        "det_m": 1.227158806973923,
+        "condition_max": 1.0146398436608481,
+        "stretch_fro": 3.874680932321844e-06,
+        "candidates_tested": 2,
+        "candidates_rejected_detm": 1
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          15766,
+          12297
+        ],
+        "theta": 1.5043706433489039e-05,
+        "holonomy": 2.0391853868030134e-05,
+        "log_holonomy": -10.800375057058245,
+        "area": 0.7377311808356084,
+        "det_m": 0.9150991718366324,
+        "condition_max": 1.1548948020931171,
+        "stretch_fro": 5.918870431154745e-06,
+        "candidates_tested": 1,
+        "candidates_rejected_detm": 0
+      },
+      "d_b": -0.0038666370439717213
+    },
+    {
+      "reserve_record_index": 111,
+      "draw_order": 111,
+      "article_index": 20527,
+      "article_title": "Selena",
+      "base_norm": 124.6159439086914,
+      "l0": 89,
+      "real": {
+        "arm": "real",
+        "feature_ids": [
+          442,
+          13492
+        ],
+        "theta": -2.2095099154606635e-05,
+        "holonomy": 3.138739708982634e-05,
+        "log_holonomy": -10.369104112185227,
+        "area": 0.7039481194115444,
+        "det_m": 1.5855569985785771,
+        "condition_max": 1.079151385490255,
+        "stretch_fro": 3.5727606615674878e-06,
+        "candidates_tested": 3,
+        "candidates_rejected_detm": 2
+      },
+      "shuffled": {
+        "arm": "shuffled",
+        "feature_ids": [
+          442,
+          2055
+        ],
+        "theta": 6.352465782787329e-06,
+        "holonomy": 1.0919265699343334e-05,
+        "log_holonomy": -11.424981833558348,
+        "area": 0.5817667559064302,
+        "det_m": 1.0829249356515598,
+        "condition_max": 1.2186344789106998,
+        "stretch_fro": 2.717063514764378e-06,
+        "candidates_tested": 513,
+        "candidates_rejected_detm": 512
+      },
+      "d_b": 1.0558777213731219
+    }
+  ]
+}
