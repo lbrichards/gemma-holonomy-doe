@@ -79,6 +79,17 @@ class Pass1Base:
     planes: dict[Arm, Pass1Plane]
 
 
+@dataclass(frozen=True)
+class MagnitudeResolution:
+    """Stage A center-construction decision after the blind band branch."""
+
+    m_low: float | None
+    m_high: float | None
+    smoke_magnitude_source: str | None
+    should_halt: bool
+    message: str
+
+
 def load_experiment_records(path: Path, *, limit: int | None) -> list[dict[str, Any]]:
     artifact = json.loads(path.read_text())
     records = artifact["records"]
@@ -366,6 +377,45 @@ def smoke_m_values_from_pooled_magnitudes(pass1: list[Pass1Base]) -> tuple[float
     return float(m_low), float(m_high)
 
 
+def resolve_magnitudes_for_centers(
+    *,
+    band_decision: BandDecision,
+    pass1: list[Pass1Base],
+    manifest_kind: str,
+) -> MagnitudeResolution:
+    """Return official/fallback/smoke terminal behavior for Stage A centers."""
+
+    if band_decision.m_low is not None and band_decision.m_high is not None:
+        return MagnitudeResolution(
+            m_low=float(band_decision.m_low),
+            m_high=float(band_decision.m_high),
+            smoke_magnitude_source=None,
+            should_halt=False,
+            message=f"{band_decision.status.value}: using pre-registered band m values",
+        )
+
+    if manifest_kind == "smoke":
+        m_low, m_high = smoke_m_values_from_pooled_magnitudes(pass1)
+        return MagnitudeResolution(
+            m_low=m_low,
+            m_high=m_high,
+            smoke_magnitude_source=(
+                "SMOKE_ONLY_POOLED_MAG_QUARTILES_DUE_TO_TERMINAL_BAND;"
+                " band_decision remains terminal and these centers are not interpretable"
+            ),
+            should_halt=False,
+            message="SMOKE_ONLY terminal-band center override",
+        )
+
+    return MagnitudeResolution(
+        m_low=None,
+        m_high=None,
+        smoke_magnitude_source=None,
+        should_halt=True,
+        message=f"Stage A cannot construct centers: band decision has no m values ({band_decision.status})",
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Stage A blind manifest producer")
     parser.add_argument("--limit", type=int, default=None, help="Smoke limit; writes run/manifest_smoke.json")
@@ -399,21 +449,21 @@ def main() -> None:
         print(f"  pass1_seconds={time.time() - base_started:.3f}")
 
     band_decision = compute_band(pass1)
-    smoke_magnitude_source = None
-    if band_decision.m_low is None or band_decision.m_high is None:
-        if manifest_kind != "smoke":
-            raise RuntimeError(f"Stage A cannot construct centers: band decision has no m values ({band_decision.status})")
-        m_low, m_high = smoke_m_values_from_pooled_magnitudes(pass1)
-        smoke_magnitude_source = (
-            "SMOKE_ONLY_POOLED_MAG_QUARTILES_DUE_TO_TERMINAL_BAND;"
-            " band_decision remains terminal and these centers are not interpretable"
-        )
+    magnitude_resolution = resolve_magnitudes_for_centers(
+        band_decision=band_decision,
+        pass1=pass1,
+        manifest_kind=manifest_kind,
+    )
+    if magnitude_resolution.should_halt:
+        raise RuntimeError(magnitude_resolution.message)
+    if magnitude_resolution.m_low is None or magnitude_resolution.m_high is None:
+        raise RuntimeError("internal error: magnitude resolution did not halt but lacks m values")
+    m_low, m_high = magnitude_resolution.m_low, magnitude_resolution.m_high
+    if magnitude_resolution.smoke_magnitude_source is not None:
         print(
             "smoke-only terminal-band center override "
             f"m_low={m_low:.6g} m_high={m_high:.6g}; band_decision remains {band_decision.status.value}"
         )
-    else:
-        m_low, m_high = band_decision.m_low, band_decision.m_high
     print(
         "band_decision "
         f"status={band_decision.status.value} m_low={m_low:.6g} m_high={m_high:.6g}"
@@ -450,7 +500,7 @@ def main() -> None:
 
     balance = build_balance_diagnostics(base_records)
     manifest = RunManifest(
-        metadata=metadata(manifest_kind=manifest_kind, smoke_magnitude_source=smoke_magnitude_source),
+        metadata=metadata(manifest_kind=manifest_kind, smoke_magnitude_source=magnitude_resolution.smoke_magnitude_source),
         band_decision=band_decision,
         balance_diagnostics=balance,
         base_points=base_records,
@@ -464,7 +514,7 @@ def main() -> None:
         "band_status": band_decision.status.value,
         "m_low": m_low,
         "m_high": m_high,
-        "smoke_magnitude_source": smoke_magnitude_source,
+        "smoke_magnitude_source": magnitude_resolution.smoke_magnitude_source,
         "balance": {
             "recon_smd": balance.manifold_distance_recon.smd,
             "guard_smd": balance.manifold_distance_mahalanobis.smd,
