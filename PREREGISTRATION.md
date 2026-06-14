@@ -22,6 +22,26 @@ Factorial design, shared blocked base points.
   of the three arms' [p5, p95] ranges; cut m_low, m_high at the 25th/75th percentiles of the POOLED
   magnitudes restricted to that band. The two absolute m values are applied identically to all
   three arms. Record the band bounds and the resulting m values.
+- Band-collapse contingency (pre-registered, decided blind): the three-arm common-support band may
+  be narrow or empty, because the arms are magnitude-separated (bench: real p50 ~65, random p50
+  ~13). Define the band as the overlap of the three arms' [p5, p95] ranges, with REQUIRED MINIMUM
+  WIDTH >= 0.5 * (pooled IQR of mag(h)). Two cases:
+  1. Band valid (width >= threshold): proceed as specified — cut m_low, m_high at the 25th/75th
+     percentiles of pooled magnitudes within the three-arm band; all three hypotheses evaluated at
+     matched magnitude as planned.
+  2. Band collapsed (empty, or width < threshold): the three plane types do not share a common
+     magnitude regime, which is itself a reported finding. Fall back by hypothesis:
+     - H-sem (real vs shuffled): use the TWO-ARM common-support band of real and shuffled only
+       (the bench shows these overlap: real p50 ~65, shuffled p50 ~59, shuffled tail reaching ~10).
+       Cut m_low, m_high at the 25th/75th percentiles of pooled real+shuffled magnitudes within the
+       two-arm band. H-sem — the powered, load-bearing claim — proceeds normally.
+     - H-grad (random < shuffled < real): reported as UNDEFINED AT MATCHED MAGNITUDE, because no
+       magnitude is shared by all three arms. The natural (unmatched) gradient is reported
+       descriptively only, explicitly flagged as confounded by magnitude and NOT a corroboration
+       of H-grad.
+     - H-mag: unaffected; evaluated across the magnitude levels actually used.
+  Which case obtains is determined by the blind magnitude evaluation (pipeline step 3, before any
+  holonomy is observed) and recorded.
 - Sequencing constraint: because mag(h) depends on each plane's Jacobian, m levels cannot be fixed
   until planes are selected and JVPs evaluated. Pipeline order: (1) select planes under the
   det M degeneracy floor, (2) evaluate mag(h) for all arms, (3) compute the common-support band and
