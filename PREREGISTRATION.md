@@ -10,16 +10,22 @@ This study tests whether measured holonomy in the Gemma residual stream is expla
 Factorial design, shared blocked base points.
 
 - Factor A — Plane type (3 levels): random; magnitude-matched shuffled-feature; magnitude-matched real-feature.
-- Magnitude levels are the 25th (low) and 75th (high) percentiles of the pullback-metric in-plane
-  magnitude (Section 7.3) computed over the REAL-FEATURE arm: i.e. mag(h) evaluated for every
-  real-feature plane across all 96 base points, pooled, then percentiles taken. The resulting two
-  absolute m values are applied identically to all three plane arms (shuffled and random included;
-  random may be extrapolated, acceptable as it serves only as the floor).
-- Sequencing constraint: because mag(h) depends on each plane's Jacobian, the m levels cannot be
-  computed until real-feature planes are selected and their JVPs evaluated. The run pipeline must
-  (1) select planes under the degeneracy floor, (2) evaluate real-arm magnitudes, (3) fix m_low,
-  m_high from real-arm percentiles, (4) only then run all three arms at those m. This ordering is
-  pre-registered.
+- Magnitude levels (Factor B) are the 25th (low) and 75th (high) percentiles of pullback-metric
+  in-plane magnitude mag(h) (Section 7.3), cut NOT over the real-feature arm but over the
+  COMMON-SUPPORT BAND: the magnitude range where all three plane arms have overlapping mass. Rationale:
+  the throwaway mag(h) bench showed the arms are widely separated (real p50 ~65, shuffled ~59,
+  random ~13); cutting levels on the real arm alone would force random planes 4-5x beyond their
+  native magnitude, making the "matched" comparison an extrapolation rather than a match. Matching
+  is only meaningful where the distributions overlap.
+- Construction of the band (pre-registered): after plane selection and magnitude evaluation on the
+  stage-1 sample, compute mag(h) for all three arms; define the common-support band as the overlap
+  of the three arms' [p5, p95] ranges; cut m_low, m_high at the 25th/75th percentiles of the POOLED
+  magnitudes restricted to that band. The two absolute m values are applied identically to all
+  three arms. Record the band bounds and the resulting m values.
+- Sequencing constraint: because mag(h) depends on each plane's Jacobian, m levels cannot be fixed
+  until planes are selected and JVPs evaluated. Pipeline order: (1) select planes under the
+  det M degeneracy floor, (2) evaluate mag(h) for all arms, (3) compute the common-support band and
+  fix m_low, m_high, (4) only then run all three arms at those m. This ordering is pre-registered.
 - Response variable: holonomy (loop transport rotation); operational definition in Section 7.
 - Blocking unit: base point. Each of 96 fresh base points is evaluated across all 3 plane types × 2 magnitude levels.
 - Full design: 96 base points × 3 plane types × 2 magnitude levels = 576 plane evaluations.
@@ -271,15 +277,16 @@ Center-placement for magnitude level m:
   arm. Calibrated blind on throwaway synthetic points (bench/, gitignored), never on the experiment
   sample.
 
-### 7.x Semantic contrast: covariate-adjusted by default (pre-registered)
+### 7.x Semantic contrast: covariate-adjustment principle (pre-registered)
 
 The load-bearing semantic contrast is real-feature vs shuffled-feature (NOT real vs random).
 It is estimated by covariate adjustment in all cases, with no balance gate:
 
-- PRIMARY estimate: real-vs-shuffled holonomy from a regression including manifold distance and phi
-  as covariate terms. This adjusted estimate is the pre-registered semantic effect.
-- SECONDARY (transparency): report the UNADJUSTED real-vs-shuffled contrast alongside, so the
-  reader sees the effect of adjustment.
+- Covariate adjustment: the real-vs-shuffled contrast is adjusted for manifold distance and phi.
+  The PRIMARY (paired within-base-point) and SECONDARY (mixed-effects) tests that carry the
+  verdicts are defined in Section 7 "Model / regression form"; this subsection states only the
+  adjustment principle and the null branch, not a separate primary test.
+- Always report the unadjusted contrast alongside the adjusted one.
 - Balance diagnostics (Section 4.3) are reported to characterize imbalance and confirm common
   support. If common support fails (positivity < 90%), the adjusted estimate is flagged as
   partially extrapolated.
