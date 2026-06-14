@@ -6,7 +6,7 @@ A special FALSIFIED branch for H-sem when an unadjusted effect vanishes under co
 
 ## Why this term exists
 
-If real-vs-shuffled differs unadjusted but not adjusted, the signal came from manifold distance or phi, not from meaning. This is a publishable null, not a failure to detect.
+If real-vs-shuffled differs unadjusted but not adjusted, the signal came from manifold distance or φ, not from meaning. This is a publishable null, not a failure to detect.
 
 ## Source
 

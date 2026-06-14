@@ -2,7 +2,7 @@
 
 <span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
-Pre-unblinding checks (SMD, overlap, log sin phi) comparing real-vs-shuffled covariate distributions to characterize imbalance.
+Pre-unblinding checks (SMD, overlap, log sin φ) comparing real-vs-shuffled covariate distributions to characterize imbalance.
 
 ## Why this term exists
 

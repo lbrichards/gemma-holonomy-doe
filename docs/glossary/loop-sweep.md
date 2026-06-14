@@ -2,7 +2,7 @@
 
 <span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
-The n_steps + 1 points traced along the gamma(t) = c + rho(cos(2πt) d1 + sin(2πt) d2) circle for transport and covariate measurement.
+The n_steps + 1 points traced along the γ(t) = c + ρ(cos(2πt) d₁ + sin(2πt) d₂) circle for transport and covariate measurement.
 
 ## Why this term exists
 
@@ -15,7 +15,7 @@ transport/loop.py
 ## Depends on
 
 - [loop center](loop-center.md)
-- [loop radius](loop-radius.md)
+- [loop radius (ρ)](loop-radius.md)
 
 ---
 

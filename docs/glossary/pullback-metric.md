@@ -2,7 +2,7 @@
 
 <span style="background-color: #448aff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">INHERITED</span>
 
-The induced metric G = J^T J on the input space, pulled back from the output space via the Jacobian J, measuring distances as the model perceives them.
+The induced metric G = JᵀJ on the input space, pulled back from the output space via the Jacobian J; defines how the model "perceives" distances and areas, making it the natural metric for all geometric quantities in this study.
 
 $$
 G = J^\top J

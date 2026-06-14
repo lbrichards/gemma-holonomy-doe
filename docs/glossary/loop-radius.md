@@ -1,8 +1,8 @@
-# loop radius
+# loop radius (ρ)
 
 <span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
-The radius rho = radius_relative × ||base activation|| used for the holonomy loop, scaled to the local activation norm.
+The radius ρ = radius_relative × ||base activation|| used for the holonomy loop, scaled to the local activation norm.
 
 $$
 \rho = 0.006 \times \|h\|

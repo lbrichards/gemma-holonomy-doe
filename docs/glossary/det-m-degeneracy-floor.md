@@ -2,7 +2,7 @@
 
 <span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span>
 
-A threshold (tau_detM = 0.413) below which planes are excluded because their pullback-metric area approaches zero, making holonomy ill-defined.
+A threshold (τ_detM = 0.413) below which planes are excluded because their pullback-metric area approaches zero, making holonomy ill-defined.
 
 $$
 \det(M) > \tau_{\det M}
@@ -10,7 +10,7 @@ $$
 
 ## Why this term exists
 
-When det(M) approaches zero, the Jacobian maps the two plane directions toward collinear, causing A_enclosed to vanish. This floor catches geometric degeneracy under the pullback metric, replacing the earlier Euclidean phi floor.
+When det(M) approaches zero, the Jacobian maps the two plane directions toward collinear, causing A_enclosed to vanish. This floor catches geometric degeneracy under the pullback metric, replacing the earlier Euclidean φ floor.
 
 ## Source
 

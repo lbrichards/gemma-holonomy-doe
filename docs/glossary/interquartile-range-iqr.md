@@ -2,7 +2,7 @@
 
 <span style="background-color: #448aff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">INHERITED</span>
 
-The difference between the 75th and 25th percentiles, a robust measure of spread.
+The difference between the 75th and 25th percentiles; pooled across arms to set the minimum band width threshold (0.5 × pooled IQR).
 
 $$
 \text{IQR} = Q_3 - Q_1
