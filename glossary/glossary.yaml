@@ -265,6 +265,96 @@ terms:
       - draw order
       - two-stage rule
 
+  # ============================================================================
+  # COINED TERMS — Ordinary Words with Special Meanings
+  # ============================================================================
+
+  - name: Factor A (plane type)
+    kind: coined
+    one_line: The first factor in the factorial design, with three levels (random, shuffled-feature, real-feature) representing a semantic gradient from noise floor to intact structure.
+    why: >-
+      Factor A captures the semantic dimension of the experiment — whether the plane directions
+      have any meaningful relationship to the base point's learned representation.
+    source: PREREGISTRATION_v2.md Section 2
+    depends_on:
+      - factorial design
+      - plane arm
+
+  - name: Factor B (magnitude level)
+    kind: coined
+    one_line: The second factor in the factorial design, with two levels (m_low at p25, m_high at p75) representing different in-plane magnitudes within the common-support band.
+    why: >-
+      Factor B captures the magnitude dimension — whether holonomy depends on how far from the
+      base point we probe, independent of semantic structure.
+    source: PREREGISTRATION_v2.md Section 2
+    depends_on:
+      - factorial design
+      - magnitude level
+
+  - name: matched (magnitude-matched)
+    kind: coined
+    one_line: The property that all three plane arms are evaluated at identical absolute in-plane magnitude values, eliminating magnitude as a confound.
+    why: >-
+      Without magnitude matching, any holonomy difference between arms could be attributed to
+      the arms having different typical magnitudes rather than different semantic content.
+    source: PREREGISTRATION_v2.md Section 2
+    depends_on:
+      - common-support band
+      - magnitude level
+
+  - name: survivor
+    kind: coined
+    one_line: A base point that passes all filters (64-token minimum, det M floor, valid plane selection) and enters the experiment sample or reserve.
+    why: >-
+      Not all drawn articles yield usable base points — some are too short, some have degenerate
+      planes. "Survivor" distinguishes points that make it through the full selection pipeline.
+    source: corpus/draw.py
+    depends_on:
+      - corpus draw
+      - det M degeneracy floor
+
+  - name: drop
+    kind: coined
+    one_line: An article or base point that fails a filter (too short, degenerate plane, etc.) and is excluded from the experiment, with the reason logged.
+    why: >-
+      Tracking drops with reasons enables auditing the selection pipeline — verifying that
+      exclusions follow the pre-registered rules rather than being result-dependent.
+    source: corpus/draw.py
+    depends_on:
+      - survivor
+
+  - name: frozen (pre-registration status)
+    kind: coined
+    one_line: The status indicating that the pre-registration document is locked and no substantive changes may be made, only blind clarifications via addenda.
+    why: >-
+      FROZEN status is the guarantee that hypotheses, methods, and analysis plans were committed
+      before any holonomy was observed, preventing post-hoc hypothesis modification.
+    source: PREREGISTRATION_v2.md header
+    depends_on:
+      - pre-registration
+
+  - name: blind (to holonomy)
+    kind: coined
+    one_line: The property that a decision, computation, or artifact is made without access to any holonomy response values, ensuring outcome-independence.
+    why: >-
+      Blindness is the core integrity property — plane selection, band computation, covariate
+      measurement, and manifest creation all occur before any θ or H is computed.
+    source: PREREGISTRATION_v2.md throughout
+    depends_on:
+      - Stage A
+      - blind handoff
+
+  - name: undefined at matched magnitude
+    kind: coined
+    one_line: The status assigned to H-grad (and H-sem under terminal collapse) when the common-support band is too narrow to support matched comparison.
+    why: >-
+      Rather than forcing an invalid comparison, the hypothesis is explicitly marked as
+      unevaluable under the matched-magnitude design, which is itself a reportable finding.
+    source: PREREGISTRATION_v2.md Section 2
+    depends_on:
+      - band-collapse contingency
+      - two-arm terminal collapse
+
   - name: blind manifest boundary
     kind: coined
     one_line: The partition point separating the 390 experiment-sample base points from the reserve, determined by draw order and recorded before any holonomy is observed.

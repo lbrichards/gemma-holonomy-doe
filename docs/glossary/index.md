@@ -15,6 +15,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [band-collapse contingency](band-collapse-contingency.md) — The pre-registered fallback procedure when the three-arm common-support band is empty or too narrow to support matched magnitude comparisons.
 - [BandDecision](banddecision.md) — The structured record returned by bands/ containing band bounds, threshold, status (THREE_ARM_VALID/TWO_ARM_FALLBACK/TWO_ARM_TERMINAL), m_low, m_high, and per-hypothesis matched flags.
 - [base point](base-point.md) — A single layer-12 resid_post activation vector extracted from a WikiText passage, serving as the blocking unit and loop center origin.
+- [blind (to holonomy)](blind-to-holonomy.md) — The property that a decision, computation, or artifact is made without access to any holonomy response values, ensuring outcome-independence.
 - [blind handoff](blind-handoff.md) — The design principle that Stage A outputs are frozen and complete before Stage B begins, with no feedback loop from responses to design.
 - [blind manifest boundary](blind-manifest-boundary.md) — The partition point separating the 390 experiment-sample base points from the reserve, determined by draw order and recorded before any holonomy is observed.
 - [burned pilot points](burned-pilot-points.md) — The 16 reserve points (draw orders 96-111) used in the resid_post variance re-pilot, permanently excluded from both experiment sample and reserve.
@@ -25,12 +26,16 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [covariate adjustment](covariate-adjustment.md) — Regression adjustment for manifold distance and φ in the real-vs-shuffled contrast, applied by default regardless of balance.
 - [det M degeneracy floor](det-m-degeneracy-floor.md) — A threshold (τ_detM = 0.413) below which planes are excluded because their pullback-metric area approaches zero, making holonomy ill-defined.
 - [draw order](draw-order.md) — A sequential integer assigned to each surviving WikiText article after seed-42 shuffling, determining the experiment-vs-reserve partition.
+- [drop](drop.md) — An article or base point that fails a filter (too short, degenerate plane, etc.) and is excluded from the experiment, with the reason logged.
 - [enclosed area (wedge)](enclosed-area-wedge.md) — The pullback-metric area of the loop, computed as A_enclosed = ρ² √(det M), which normalizes the rotation angle to yield holonomy.
 - [eps_mag fallback](eps-mag-fallback.md) — When in-plane magnitude is below eps_mag = 2.66, the offset direction switches to G-normalized d1 instead of the projection direction.
 - [experiment sample](experiment-sample.md) — The first 390 surviving base points (in seed order, excluding burned pilot points), constituting the fixed-N dataset for confirmatory analysis.
+- [Factor A (plane type)](factor-a-plane-type.md) — The first factor in the factorial design, with three levels (random, shuffled-feature, real-feature) representing a semantic gradient from noise floor to intact structure.
+- [Factor B (magnitude level)](factor-b-magnitude-level.md) — The second factor in the factorial design, with two levels (m_low at p25, m_high at p75) representing different in-plane magnitudes within the common-support band.
 - [FALSIFIED verdict](falsified-verdict.md) — The verdict when the CI upper bound lies below the materiality threshold, indicating the effect is reliably too small to matter.
 - [fixed-N design](fixed-n-design.md) — An experimental design where sample size is determined in advance and all observations are collected before analysis, with no peeking or early stopping.
 - [forward hook](forward-hook.md) — A PyTorch hook registered on a module to capture intermediate activations during the forward pass, used for extraction and JVP computation.
+- [frozen (pre-registration status)](frozen-pre-registration-status.md) — The status indicating that the pre-registration document is locked and no substantive changes may be made, only blind clarifications via addenda.
 - [G-projection coefficients](g-projection-coefficients.md) — The coefficients a = M^{-1}(JD)^T(Jh) expressing the G-orthogonal projection of h onto the plane, used for center placement.
 - [H-grad](h-grad.md) — The gradient hypothesis predicting a monotone ordering of holonomy: random < shuffled < real, indicating a semantic gradient.
 - [H-mag](h-mag.md) — The magnitude hypothesis predicting that holonomy increases with in-plane pullback-metric magnitude, pooled across plane types.
@@ -48,6 +53,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [magnitude level](magnitude-level.md) — One of two fixed in-plane magnitudes (m_low at 25th percentile, m_high at 75th percentile) cut from the common-support band and applied identically to all three arms.
 - [magnitude-matched shuffled-feature plane](magnitude-matched-shuffled-feature-plane.md) — A control plane constructed by pairing one active SAE feature with one inactive real dictionary feature, matched to real-feature planes in pullback-metric in-plane magnitude.
 - [manifold distance](manifold-distance.md) — A nuisance covariate measuring how far loop points lie from the learned manifold, via SAE reconstruction error and/or reference distribution distance.
+- [matched (magnitude-matched)](matched-magnitude-matched.md) — The property that all three plane arms are evaluated at identical absolute in-plane magnitude values, eliminating magnitude as a confound.
 - [materiality threshold](materiality-threshold.md) — The minimum effect size log(1.25) = 0.2231 on the log scale (a 25% multiplicative change) below which effects are not considered material.
 - [minimum band width threshold](minimum-band-width-threshold.md) — The requirement that a common-support band have width >= 0.5 × pooled IQR to be considered valid for matched comparisons.
 - [NULL-ATTRIBUTED verdict](null-attributed-verdict.md) — A special FALSIFIED branch for H-sem when an unadjusted effect vanishes under covariate adjustment, attributing the apparent effect to confounds.
@@ -72,6 +78,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [Stage A](stage-a.md) — The blind setup phase that extracts activations, selects planes, computes the magnitude band, constructs centers, measures covariates, and produces the manifest.
 - [Stage B](stage-b.md) — The measurement phase that reads a Stage A manifest and writes holonomy response values to a separate artifact, never mutating the manifest.
 - [stage-1 / stage-2 partition](stage-1-stage-2-partition.md) — The pre-registered split of the draw pool into 96 stage-1 points, 96 stage-2 reserve, and 48 unused reserve, determined by draw order before any holonomy.
+- [survivor](survivor.md) — A base point that passes all filters (64-token minimum, det M floor, valid plane selection) and enters the experiment sample or reserve.
 - [survivor-targeted draw](survivor-targeted-draw.md) — A draw procedure that continues drawing candidates until a target number (240) pass the 64-token filter, rather than drawing a fixed number of candidates.
 - [symmetric residual](symmetric-residual.md) — The Frobenius norm of the symmetric part of (H - I), a diagnostic for non-rotational distortion in the transport operator.
 - [three-arm band](three-arm-band.md) — The overlap of the [p5, p95] magnitude ranges across all three plane arms (real, shuffled, random), required to have width >= 0.5 × pooled IQR.
@@ -79,6 +86,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [two-arm band](two-arm-band.md) — The overlap of the [p5, p95] magnitude ranges for real and shuffled arms only, used as a fallback when the three-arm band collapses.
 - [two-arm terminal collapse](two-arm-terminal-collapse.md) — The fallback case where even the two-arm real+shuffled common-support band fails the minimum width requirement, making matched semantic comparison impossible.
 - [two-stage rule](two-stage-rule.md) — The pre-specified procedure where a second batch of N₂ = 96 base points is run only if stage-1 H-sem is INCONCLUSIVE, with both results reported.
+- [undefined at matched magnitude](undefined-at-matched-magnitude.md) — The status assigned to H-grad (and H-sem under terminal collapse) when the common-support band is too narrow to support matched comparison.
 - [φ (plane angle)](plane-angle.md) — The mutual Euclidean angle between the two raw normalized plane directions, computed as arccos(d₁ · d₂).
 
 ---
