@@ -35,6 +35,14 @@ Factorial design, shared blocked base points.
        (the bench shows these overlap: real p50 ~65, shuffled p50 ~59, shuffled tail reaching ~10).
        Cut m_low, m_high at the 25th/75th percentiles of pooled real+shuffled magnitudes within the
        two-arm band. H-sem — the powered, load-bearing claim — proceeds normally.
+       - Two-arm terminal case (pre-data clarification, added post-freeze but blind to all
+         holonomy): if the two-arm real+shuffled band ALSO fails the minimum width
+         (>= 0.5 * pooled IQR of real+shuffled mag(h)), then real and shuffled features do not
+         share a common magnitude regime either. H-sem is then reported as UNDEFINED AT MATCHED
+         MAGNITUDE — the same honest status H-grad takes under three-arm collapse — and no matched
+         semantic verdict is produced. This outcome is itself a reportable finding. The unmatched
+         real-vs-shuffled contrast is reported descriptively only, explicitly flagged as
+         magnitude-confounded and NOT a corroboration of H-sem.
      - H-grad (random < shuffled < real): reported as UNDEFINED AT MATCHED MAGNITUDE, because no
        magnitude is shared by all three arms. The natural (unmatched) gradient is reported
        descriptively only, explicitly flagged as confounded by magnitude and NOT a corroboration
@@ -352,3 +360,15 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
      retained indices. The first 96 survivors in seed order are the stage-1 experiment sample;
      the next 96 survivors are the stage-2 reserve; any remainder is held unused, in recorded order.
 - Language: English only (pre-registered scope boundary).
+
+## Addenda (post-freeze, blind to holonomy)
+
+- 2026-06-14: Added the two-arm terminal-collapse case for H-sem (Section 2 band-collapse
+  contingency). Justification: the frozen text specified the three-arm collapse fallback but was
+  silent on whether the two-arm fallback could itself fail the width threshold. This addendum
+  defines that bottom case. It is outcome-independent: the band determination occurs at pipeline
+  step 3, before any holonomy is computed, so this clarification cannot have been influenced by
+  results. The pairing rule (real = jointly active features at the base point; shuffled = one
+  active feature paired with one inactive real dictionary feature; random = two random unit
+  directions) is also recorded here as the operational definition used by planes/, fixed before
+  any holonomy computation.
