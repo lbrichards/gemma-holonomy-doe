@@ -1,0 +1,13 @@
+# confidence interval
+
+<span style="background-color: #448aff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">INHERITED</span>
+
+An interval estimate of a parameter such that repeated sampling would capture the true value a specified proportion (e.g., 95%) of the time.
+
+## Source
+
+Frequentist statistics (Neyman)
+
+---
+
+[← Back to Glossary](index.md)

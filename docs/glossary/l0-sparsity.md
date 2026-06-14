@@ -1,16 +1,16 @@
-# SAE reconstruction error
+# L0 sparsity
 
 <span style="background-color: #448aff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">INHERITED</span>
 
-The L2 distance between an activation and its reconstruction through a sparse autoencoder, serving as a proxy for how well the SAE captures the activation.
+The number of non-zero elements in the SAE code vector, measuring how many features are active for a given activation.
 
 $$
-\|x - \hat{x}\|_2
+L_0 = \|\text{code}\|_0
 $$
 
 ## Source
 
-Sparse autoencoders (Olshausen & Field 1996); Gemma Scope (Google DeepMind)
+Compressed sensing; SAE literature
 
 ## Depends on
 

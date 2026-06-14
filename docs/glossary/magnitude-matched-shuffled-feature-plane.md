@@ -16,7 +16,7 @@ PREREGISTRATION_v2.md Section 2.1
 
 - [pairing rule](pairing-rule.md)
 - [in-plane magnitude (pullback)](in-plane-magnitude-pullback.md)
-- [SAE reconstruction error](sae-reconstruction-error.md)
+- [shuffled-feature plane](shuffled-feature-plane.md)
 
 ---
 

@@ -14,7 +14,7 @@ PREREGISTRATION_v2.md Section 2.1
 
 ## Depends on
 
-- [SAE reconstruction error](sae-reconstruction-error.md)
+- [sparse autoencoder (SAE)](sparse-autoencoder-sae.md)
 
 ---
 
