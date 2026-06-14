@@ -243,6 +243,28 @@ terms:
     depends_on:
       - WikiText-103
 
+  - name: survivor-targeted draw
+    kind: coined
+    one_line: A draw procedure that continues drawing candidates until a target number (240) pass the 64-token filter, rather than drawing a fixed number of candidates.
+    why: >-
+      Targeting survivors ensures the pool contains exactly the needed number after filtering,
+      avoiding both over-draw waste and under-draw sample size shortfalls.
+    source: corpus/draw.py
+    depends_on:
+      - corpus draw
+      - seed-42 determinism
+
+  - name: stage-1 / stage-2 partition
+    kind: coined
+    one_line: The pre-registered split of the draw pool into 96 stage-1 points, 96 stage-2 reserve, and 48 unused reserve, determined by draw order before any holonomy.
+    why: >-
+      Fixed stage boundaries allow the two-stage rule to be fully pre-specified — which points
+      constitute stage 1 vs stage 2 is determined by seed-42 draw order, not by any response values.
+    source: PREREGISTRATION_v2.md Section 6.4
+    depends_on:
+      - draw order
+      - two-stage rule
+
   - name: blind manifest boundary
     kind: coined
     one_line: The partition point separating the 390 experiment-sample base points from the reserve, determined by draw order and recorded before any holonomy is observed.
@@ -251,6 +273,30 @@ terms:
       The boundary is set by seed order, excluding the 16 burned pilot points.
     source: PREREGISTRATION_v2.md Section 9
     depends_on: []
+
+  - name: BandDecision
+    kind: coined
+    one_line: The structured record returned by bands/ containing band bounds, threshold, status (THREE_ARM_VALID/TWO_ARM_FALLBACK/TWO_ARM_TERMINAL), m_low, m_high, and per-hypothesis matched flags.
+    why: >-
+      The BandDecision schema captures the full evidence for the band decision — not just which
+      branch fired but the three-arm and two-arm widths that forced it, enabling audit verification.
+    source: bands/support.py
+    depends_on:
+      - common-support band
+      - three-arm band
+      - two-arm band
+
+  - name: seed-42 determinism
+    kind: coined
+    one_line: The property that the corpus draw with SEED_CORPUS = 42 produces bitwise-identical article indices, token sequences, and draw order across independent runs.
+    why: >-
+      Full seed-42 reproducibility means any researcher can regenerate the exact same candidate
+      pool and partition, making the experiment verifiable without access to original artifacts.
+    source: corpus/draw.py
+    depends_on:
+      - random seed
+      - bitwise reproducibility
+      - corpus draw
 
   # ============================================================================
   # COINED TERMS — Geometry and Transport
@@ -508,6 +554,48 @@ terms:
     depends_on:
       - covariate adjustment
       - H-sem
+
+  - name: fixed-N design
+    kind: coined
+    one_line: An experimental design where sample size is determined in advance and all observations are collected before analysis, with no peeking or early stopping.
+    why: >-
+      The N = 390 (or 96 per stage) is fixed before data collection. This prevents optional-stopping
+      problems that inflate false positives, making the null verdict interpretable as material absence.
+    source: PREREGISTRATION_v2.md Section 6.3
+    depends_on:
+      - power
+
+  - name: two-stage rule
+    kind: coined
+    one_line: The pre-specified procedure where a second batch of N₂ = 96 base points is run only if stage-1 H-sem is INCONCLUSIVE, with both results reported.
+    why: >-
+      If H-sem lands inconclusive after stage 1, the true effect may be smaller than planned for.
+      The second stage is pre-declared with fixed trigger and size, avoiding optional-stopping bias.
+    source: PREREGISTRATION_v2.md Section 6.4
+    depends_on:
+      - fixed-N design
+      - INCONCLUSIVE verdict
+      - H-sem
+
+  - name: pre-data clarification
+    kind: coined
+    one_line: A post-freeze addition to the pre-registration that is provably outcome-independent because it is recorded before any response values are computed.
+    why: >-
+      Some operational details (pairing rule, article reconstruction, terminal collapse case) were
+      refined after freeze but before any holonomy was observed. Timestamped addenda preserve integrity.
+    source: PREREGISTRATION_v2.md Addenda section
+    depends_on:
+      - pre-registration
+
+  - name: 97% deviation metric
+    kind: coined
+    one_line: The empirical finding from FishBack that the pullback metric deviates from Euclidean by over 97% in relative spectral norm on GPT-2, justifying metric-aware geometry.
+    why: >-
+      This quantifies why treating activation space as Euclidean is wrong — the model's learned
+      geometry differs drastically from flat space, making pullback-metric magnitude necessary.
+    source: "FishBack (2026); arXiv"
+    depends_on:
+      - pullback metric
 
   - name: holonomy-magnitude response
     kind: coined

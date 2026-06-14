@@ -8,10 +8,12 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 
 *Terms introduced by this project.*
 
+- [97% deviation metric](97-deviation-metric.md) — The empirical finding from FishBack that the pullback metric deviates from Euclidean by over 97% in relative spectral norm on GPT-2, justifying metric-aware geometry.
 - [active feature](active-feature.md) — An SAE feature with positive activation (code > 0) at a given base point, indicating the feature fires on that input.
 - [article reconstruction](article-reconstruction.md) — The process of joining WikiText-103 raw rows between consecutive top-level headers into coherent articles, prior to passage sampling.
 - [balance diagnostic](balance-diagnostic.md) — Pre-unblinding checks (SMD, overlap, log sin φ) comparing real-vs-shuffled covariate distributions to characterize imbalance.
 - [band-collapse contingency](band-collapse-contingency.md) — The pre-registered fallback procedure when the three-arm common-support band is empty or too narrow to support matched magnitude comparisons.
+- [BandDecision](banddecision.md) — The structured record returned by bands/ containing band bounds, threshold, status (THREE_ARM_VALID/TWO_ARM_FALLBACK/TWO_ARM_TERMINAL), m_low, m_high, and per-hypothesis matched flags.
 - [base point](base-point.md) — A single layer-12 resid_post activation vector extracted from a WikiText passage, serving as the blocking unit and loop center origin.
 - [blind handoff](blind-handoff.md) — The design principle that Stage A outputs are frozen and complete before Stage B begins, with no feedback loop from responses to design.
 - [blind manifest boundary](blind-manifest-boundary.md) — The partition point separating the 390 experiment-sample base points from the reserve, determined by draw order and recorded before any holonomy is observed.
@@ -27,6 +29,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [eps_mag fallback](eps-mag-fallback.md) — When in-plane magnitude is below eps_mag = 2.66, the offset direction switches to G-normalized d1 instead of the projection direction.
 - [experiment sample](experiment-sample.md) — The first 390 surviving base points (in seed order, excluding burned pilot points), constituting the fixed-N dataset for confirmatory analysis.
 - [FALSIFIED verdict](falsified-verdict.md) — The verdict when the CI upper bound lies below the materiality threshold, indicating the effect is reliably too small to matter.
+- [fixed-N design](fixed-n-design.md) — An experimental design where sample size is determined in advance and all observations are collected before analysis, with no peeking or early stopping.
 - [forward hook](forward-hook.md) — A PyTorch hook registered on a module to capture intermediate activations during the forward pass, used for extraction and JVP computation.
 - [G-projection coefficients](g-projection-coefficients.md) — The coefficients a = M^{-1}(JD)^T(Jh) expressing the G-orthogonal projection of h onto the plane, used for center placement.
 - [H-grad](h-grad.md) — The gradient hypothesis predicting a monotone ordering of holonomy: random < shuffled < real, indicating a semantic gradient.
@@ -54,6 +57,7 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [plane arm](plane-arm.md) — One of three treatment levels in Factor A—real-feature, shuffled-feature, or random—each constructed according to the pairing rule.
 - [planning tau](planning-tau.md) — The assumed standard deviation (tau = 1.30) of the log-scale paired contrast used to power the study at N = 390.
 - [pooled IQR](pooled-iqr.md) — The interquartile range computed over the concatenated magnitude values from all arms in a band computation, used to set the minimum width threshold.
+- [pre-data clarification](pre-data-clarification.md) — A post-freeze addition to the pre-registration that is provably outcome-independent because it is recorded before any response values are computed.
 - [random plane](random-plane.md) — A noise-floor plane spanned by two random unit directions, providing the lower anchor of the H-grad semantic gradient.
 - [readout map](readout-map.md) — The function F: resid_post_12 → resid_post_13 computed by patching layer-12 output and capturing layer-13 output, whose Jacobian drives transport.
 - [real-feature plane](real-feature-plane.md) — A plane spanned by two jointly active SAE features at the base point, representing intact semantic structure.
@@ -63,14 +67,18 @@ Cross-linked terminology for the Gemma Holonomy DOE project.
 - [restricted Jacobian](restricted-jacobian.md) — The 2-column matrix [J d1, J d2] giving the Jacobian of the readout map restricted to the plane directions, computed via JVP.
 - [rotation angle (θ)](rotation-angle.md) — The signed angle θ extracted from the antisymmetric part of the transport operator, representing the accumulated rotation around the loop.
 - [run manifest](run-manifest.md) — The JSON artifact serializing all Stage A decisions (planes, centers, covariates, band) but structurally forbidding response fields.
+- [seed-42 determinism](seed-42-determinism.md) — The property that the corpus draw with SEED_CORPUS = 42 produces bitwise-identical article indices, token sequences, and draw order across independent runs.
 - [shuffled-feature plane](shuffled-feature-plane.md) — A control plane pairing one active SAE feature with one inactive dictionary feature, magnitude-matched to the real-feature plane.
 - [Stage A](stage-a.md) — The blind setup phase that extracts activations, selects planes, computes the magnitude band, constructs centers, measures covariates, and produces the manifest.
 - [Stage B](stage-b.md) — The measurement phase that reads a Stage A manifest and writes holonomy response values to a separate artifact, never mutating the manifest.
+- [stage-1 / stage-2 partition](stage-1-stage-2-partition.md) — The pre-registered split of the draw pool into 96 stage-1 points, 96 stage-2 reserve, and 48 unused reserve, determined by draw order before any holonomy.
+- [survivor-targeted draw](survivor-targeted-draw.md) — A draw procedure that continues drawing candidates until a target number (240) pass the 64-token filter, rather than drawing a fixed number of candidates.
 - [symmetric residual](symmetric-residual.md) — The Frobenius norm of the symmetric part of (H - I), a diagnostic for non-rotational distortion in the transport operator.
 - [three-arm band](three-arm-band.md) — The overlap of the [p5, p95] magnitude ranges across all three plane arms (real, shuffled, random), required to have width >= 0.5 × pooled IQR.
 - [transport operator](transport-operator.md) — The 2×2 matrix H accumulating the effect of parallel-transporting a probe frame around the loop via iterated restricted Jacobian steps.
 - [two-arm band](two-arm-band.md) — The overlap of the [p5, p95] magnitude ranges for real and shuffled arms only, used as a fallback when the three-arm band collapses.
 - [two-arm terminal collapse](two-arm-terminal-collapse.md) — The fallback case where even the two-arm real+shuffled common-support band fails the minimum width requirement, making matched semantic comparison impossible.
+- [two-stage rule](two-stage-rule.md) — The pre-specified procedure where a second batch of N₂ = 96 base points is run only if stage-1 H-sem is INCONCLUSIVE, with both results reported.
 - [φ (plane angle)](plane-angle.md) — The mutual Euclidean angle between the two raw normalized plane directions, computed as arccos(d₁ · d₂).
 
 ---
