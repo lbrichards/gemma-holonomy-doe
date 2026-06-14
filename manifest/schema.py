@@ -17,6 +17,7 @@ from bands import ArmPercentiles, BandDecision, BandStatus
 
 
 ArmName = Literal["real", "shuffled", "random"]
+ManifestKind = Literal["official", "smoke"]
 ReferenceDistanceMethod = Literal["mahalanobis", "knn"]
 
 FORBIDDEN_RESPONSE_FIELD_TOKENS = ("holonomy", "theta", "transport")
@@ -43,6 +44,31 @@ class ManifestMetadata:
     n_steps: int
     n_base_points: int
     reproducibility_claim: str
+    manifest_kind: ManifestKind = "official"
+    smoke_magnitude_source: str | None = None
+
+
+@dataclass(frozen=True)
+class BalanceMetricRecord:
+    """Blind real-vs-shuffled balance diagnostic for one covariate."""
+
+    smd: float
+    real_min: float
+    real_max: float
+    shuffled_min: float
+    shuffled_max: float
+    real_within_shuffled_range: float
+    shuffled_within_real_range: float
+
+
+@dataclass(frozen=True)
+class BalanceDiagnosticsRecord:
+    """Section 4.3 blind balance diagnostics."""
+
+    manifold_distance_recon: BalanceMetricRecord
+    manifold_distance_mahalanobis: BalanceMetricRecord
+    phi: BalanceMetricRecord
+    log_sin_phi_mean_diff: float
 
 
 @dataclass(frozen=True)
@@ -81,6 +107,7 @@ class BasePointRecord:
     article_index: int
     token_ids: list[int]
     activation_ref: str
+    activation: list[float]
     planes: list[PlaneRecord]
 
 
@@ -90,6 +117,7 @@ class RunManifest:
 
     metadata: ManifestMetadata
     band_decision: BandDecision
+    balance_diagnostics: BalanceDiagnosticsRecord
     base_points: list[BasePointRecord]
 
 
@@ -105,8 +133,10 @@ def validate_manifest(manifest: RunManifest) -> None:
     metadata = manifest.metadata
     if metadata.n_base_points != 390:
         raise ValueError(f"metadata.n_base_points must be 390, got {metadata.n_base_points}")
-    if len(manifest.base_points) != metadata.n_base_points:
+    if metadata.manifest_kind == "official" and len(manifest.base_points) != metadata.n_base_points:
         raise ValueError(f"expected {metadata.n_base_points} base points, got {len(manifest.base_points)}")
+    if metadata.manifest_kind == "smoke" and not (0 < len(manifest.base_points) <= metadata.n_base_points):
+        raise ValueError(f"smoke manifest must contain 1..{metadata.n_base_points} base points")
     if metadata.seed_corpus != 42:
         raise ValueError(f"seed_corpus must be 42, got {metadata.seed_corpus}")
     if metadata.dataset_revision != "b08601e04326c79dfdd32d625aee71d232d685c3":
@@ -125,6 +155,8 @@ def validate_manifest(manifest: RunManifest) -> None:
     for base in manifest.base_points:
         if len(base.token_ids) != 64:
             raise ValueError(f"{base.base_point_id}: token_ids must have length 64")
+        if len(base.activation) == 0:
+            raise ValueError(f"{base.base_point_id}: activation must be present")
         if len(base.planes) != 3:
             raise ValueError(f"{base.base_point_id}: expected exactly 3 planes")
         arms = {plane.arm for plane in base.planes}
@@ -147,6 +179,22 @@ def validate_manifest(manifest: RunManifest) -> None:
                 ("manifold_distance_mahalanobis", plane.covariates.manifold_distance_mahalanobis),
             ]:
                 _finite(f"{base.base_point_id}/{plane.arm}/{name}", value)
+    for name, metric in [
+        ("manifold_distance_recon", manifest.balance_diagnostics.manifold_distance_recon),
+        ("manifold_distance_mahalanobis", manifest.balance_diagnostics.manifold_distance_mahalanobis),
+        ("phi", manifest.balance_diagnostics.phi),
+    ]:
+        for field_name in [
+            "smd",
+            "real_min",
+            "real_max",
+            "shuffled_min",
+            "shuffled_max",
+            "real_within_shuffled_range",
+            "shuffled_within_real_range",
+        ]:
+            _finite(f"balance/{name}/{field_name}", getattr(metric, field_name))
+    _finite("balance/log_sin_phi_mean_diff", manifest.balance_diagnostics.log_sin_phi_mean_diff)
 
 
 def assert_no_response_fields(schema_type: type[Any]) -> None:
@@ -229,6 +277,40 @@ def _plane_covariates_from_dict(value: dict[str, Any]) -> PlaneCovariatesRecord:
     )
 
 
+def _balance_metric_to_dict(value: BalanceMetricRecord) -> dict[str, Any]:
+    return asdict(value)
+
+
+def _balance_metric_from_dict(value: dict[str, Any]) -> BalanceMetricRecord:
+    return BalanceMetricRecord(
+        smd=float(value["smd"]),
+        real_min=float(value["real_min"]),
+        real_max=float(value["real_max"]),
+        shuffled_min=float(value["shuffled_min"]),
+        shuffled_max=float(value["shuffled_max"]),
+        real_within_shuffled_range=float(value["real_within_shuffled_range"]),
+        shuffled_within_real_range=float(value["shuffled_within_real_range"]),
+    )
+
+
+def _balance_diagnostics_to_dict(value: BalanceDiagnosticsRecord) -> dict[str, Any]:
+    return {
+        "manifold_distance_recon": _balance_metric_to_dict(value.manifold_distance_recon),
+        "manifold_distance_mahalanobis": _balance_metric_to_dict(value.manifold_distance_mahalanobis),
+        "phi": _balance_metric_to_dict(value.phi),
+        "log_sin_phi_mean_diff": value.log_sin_phi_mean_diff,
+    }
+
+
+def _balance_diagnostics_from_dict(value: dict[str, Any]) -> BalanceDiagnosticsRecord:
+    return BalanceDiagnosticsRecord(
+        manifold_distance_recon=_balance_metric_from_dict(value["manifold_distance_recon"]),
+        manifold_distance_mahalanobis=_balance_metric_from_dict(value["manifold_distance_mahalanobis"]),
+        phi=_balance_metric_from_dict(value["phi"]),
+        log_sin_phi_mean_diff=float(value["log_sin_phi_mean_diff"]),
+    )
+
+
 def _plane_to_dict(value: PlaneRecord) -> dict[str, Any]:
     return {
         "arm": value.arm,
@@ -267,6 +349,7 @@ def _base_point_to_dict(value: BasePointRecord) -> dict[str, Any]:
         "article_index": value.article_index,
         "token_ids": list(value.token_ids),
         "activation_ref": value.activation_ref,
+        "activation": list(value.activation),
         "planes": [_plane_to_dict(plane) for plane in value.planes],
     }
 
@@ -278,6 +361,7 @@ def _base_point_from_dict(value: dict[str, Any]) -> BasePointRecord:
         article_index=int(value["article_index"]),
         token_ids=[int(item) for item in value["token_ids"]],
         activation_ref=str(value["activation_ref"]),
+        activation=[float(item) for item in value["activation"]],
         planes=[_plane_from_dict(item) for item in value["planes"]],
     )
 
@@ -288,6 +372,7 @@ def manifest_to_dict(manifest: RunManifest) -> dict[str, Any]:
     return {
         "metadata": asdict(manifest.metadata),
         "band_decision": _band_decision_to_dict(manifest.band_decision),
+        "balance_diagnostics": _balance_diagnostics_to_dict(manifest.balance_diagnostics),
         "base_points": [_base_point_to_dict(base) for base in manifest.base_points],
     }
 
@@ -299,6 +384,7 @@ def manifest_from_dict(value: dict[str, Any]) -> RunManifest:
     return RunManifest(
         metadata=metadata,
         band_decision=_band_decision_from_dict(value["band_decision"]),
+        balance_diagnostics=_balance_diagnostics_from_dict(value["balance_diagnostics"]),
         base_points=[_base_point_from_dict(item) for item in value["base_points"]],
     )
 

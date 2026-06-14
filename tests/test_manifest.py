@@ -5,6 +5,8 @@ from typing import get_args, get_origin
 from bands import compute_common_support_band
 from manifest.schema import (
     BasePointRecord,
+    BalanceDiagnosticsRecord,
+    BalanceMetricRecord,
     ManifestMetadata,
     PlaneCovariatesRecord,
     PlaneRecord,
@@ -74,6 +76,7 @@ def synthetic_manifest(n_base_points: int = 390) -> RunManifest:
                 article_index=1000 + base_idx,
                 token_ids=list(range(64)),
                 activation_ref=f"activations/resid_post/{base_idx:03d}",
+                activation=[0.01 * base_idx, 0.02 * base_idx, 0.03 * base_idx],
                 planes=[
                     synthetic_plane("real", base_idx),
                     synthetic_plane("shuffled", base_idx + 100),
@@ -81,7 +84,37 @@ def synthetic_manifest(n_base_points: int = 390) -> RunManifest:
                 ],
             )
         )
-    return RunManifest(metadata=metadata, band_decision=band, base_points=base_points)
+    balance = BalanceDiagnosticsRecord(
+        manifold_distance_recon=BalanceMetricRecord(
+            smd=0.01,
+            real_min=0.0,
+            real_max=1.0,
+            shuffled_min=0.0,
+            shuffled_max=1.0,
+            real_within_shuffled_range=1.0,
+            shuffled_within_real_range=1.0,
+        ),
+        manifold_distance_mahalanobis=BalanceMetricRecord(
+            smd=0.02,
+            real_min=0.0,
+            real_max=1.0,
+            shuffled_min=0.0,
+            shuffled_max=1.0,
+            real_within_shuffled_range=1.0,
+            shuffled_within_real_range=1.0,
+        ),
+        phi=BalanceMetricRecord(
+            smd=0.03,
+            real_min=1.0,
+            real_max=1.5,
+            shuffled_min=1.0,
+            shuffled_max=1.5,
+            real_within_shuffled_range=1.0,
+            shuffled_within_real_range=1.0,
+        ),
+        log_sin_phi_mean_diff=0.001,
+    )
+    return RunManifest(metadata=metadata, band_decision=band, balance_diagnostics=balance, base_points=base_points)
 
 
 def test_manifest_round_trip_fidelity_json_deep_equality():
@@ -100,8 +133,10 @@ def test_manifest_completeness_against_design_full_390_by_3_structure():
 
     assert len(manifest.base_points) == 390
     assert sum(len(base.planes) for base in manifest.base_points) == 390 * 3
+    assert manifest.balance_diagnostics.phi.smd is not None
     for base in manifest.base_points:
         assert len(base.token_ids) == 64
+        assert base.activation
         assert {plane.arm for plane in base.planes} == {"real", "shuffled", "random"}
         for plane in base.planes:
             assert plane.center_low is not None
@@ -137,8 +172,9 @@ def test_serialized_json_is_human_readable_and_keyed():
     parsed = json.loads(encoded)
 
     assert "\n  " in encoded
-    assert list(parsed.keys()) == ["metadata", "band_decision", "base_points"]
+    assert list(parsed.keys()) == ["metadata", "band_decision", "balance_diagnostics", "base_points"]
     assert "status" in parsed["band_decision"]
+    assert "phi" in parsed["balance_diagnostics"]
     assert parsed["base_points"][0]["planes"][0]["arm"] == "real"
     assert isinstance(parsed["base_points"][0]["planes"][0]["direction_1"], list)
 

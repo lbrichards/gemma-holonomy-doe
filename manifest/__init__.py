@@ -2,6 +2,8 @@
 
 from manifest.schema import (
     BasePointRecord,
+    BalanceDiagnosticsRecord,
+    BalanceMetricRecord,
     ManifestMetadata,
     PlaneCovariatesRecord,
     PlaneRecord,
@@ -14,6 +16,8 @@ from manifest.schema import (
 
 __all__ = [
     "BasePointRecord",
+    "BalanceDiagnosticsRecord",
+    "BalanceMetricRecord",
     "ManifestMetadata",
     "PlaneCovariatesRecord",
     "PlaneRecord",
