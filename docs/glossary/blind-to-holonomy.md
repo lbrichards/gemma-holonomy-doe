@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md throughout
 - [Stage A](stage-a.md)
 - [blind handoff](blind-handoff.md)
 
+## Appears in topics
+
+- [The Blind Apparatus](../topics/the-blind-apparatus.md)
+
 ---
 
 [← Back to Glossary](index.md)

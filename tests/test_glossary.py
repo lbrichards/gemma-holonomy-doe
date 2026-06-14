@@ -114,3 +114,79 @@ def test_formula_is_optional_but_nonempty_if_present():
                 invalid_formulas.append(term["name"])
 
     assert not invalid_formulas, f"Terms with invalid formula (must be non-empty string): {invalid_formulas}"
+
+
+# =============================================================================
+# Topic validation tests
+# =============================================================================
+
+TOPICS_YAML = Path(__file__).parent.parent / "glossary" / "topics.yaml"
+
+
+def load_topics() -> list[dict]:
+    """Load topics from YAML."""
+    if not TOPICS_YAML.exists():
+        return []
+    with open(TOPICS_YAML) as f:
+        data = yaml.safe_load(f)
+    return data.get("topics", [])
+
+
+def test_topic_bundles_reference_existing_terms():
+    """Every term name in a topic's bundles must exist in glossary.yaml."""
+    terms = load_terms()
+    topics = load_topics()
+    all_term_names = {t["name"] for t in terms}
+
+    dangling = []
+    for topic in topics:
+        for term_name in topic.get("bundles", []):
+            if term_name not in all_term_names:
+                dangling.append((topic["title"], term_name))
+
+    assert not dangling, f"Topic bundles reference non-existent terms: {dangling}"
+
+
+def test_topic_narrative_refs_resolve():
+    """Every [[term name]] in a topic narrative must resolve to an existing term."""
+    import re
+
+    terms = load_terms()
+    topics = load_topics()
+    all_term_names = {t["name"] for t in terms}
+
+    unresolved = []
+    for topic in topics:
+        narrative = topic.get("narrative", "")
+        refs = re.findall(r"\[\[([^\]]+)\]\]", narrative)
+        for ref in refs:
+            if ref not in all_term_names:
+                unresolved.append((topic["title"], ref))
+
+    assert not unresolved, f"Topic narratives reference non-existent terms: {unresolved}"
+
+
+def test_topic_titles_unique():
+    """All topic titles must be unique."""
+    topics = load_topics()
+    titles = [t["title"] for t in topics]
+    duplicates = [title for title in titles if titles.count(title) > 1]
+
+    assert not duplicates, f"Duplicate topic titles: {set(duplicates)}"
+
+
+def test_topics_have_required_fields():
+    """Every topic must have title, bundles, and narrative."""
+    topics = load_topics()
+
+    missing_fields = []
+    for topic in topics:
+        title = topic.get("title", "<untitled>")
+        if not topic.get("title"):
+            missing_fields.append((title, "title"))
+        if not topic.get("bundles"):
+            missing_fields.append((title, "bundles"))
+        if not topic.get("narrative"):
+            missing_fields.append((title, "narrative"))
+
+    assert not missing_fields, f"Topics missing required fields: {missing_fields}"

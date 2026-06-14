@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 2
 - [in-plane magnitude (pullback)](in-plane-magnitude-pullback.md)
 - [common support / positivity](common-support-positivity.md)
 
+## Appears in topics
+
+- [The Band Machinery](../topics/the-band-machinery.md)
+
 ---
 
 [← Back to Glossary](index.md)

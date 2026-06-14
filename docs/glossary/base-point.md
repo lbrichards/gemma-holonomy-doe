@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 2
 - [resid_post](resid-post.md)
 - [blocking unit](blocking-unit.md)
 
+## Appears in topics
+
+- [The Corpus Pipeline](../topics/the-corpus-pipeline.md)
+
 ---
 
 [← Back to Glossary](index.md)

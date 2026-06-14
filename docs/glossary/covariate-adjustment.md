@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 7.4
 - [manifold distance](manifold-distance.md)
 - [φ (plane angle)](plane-angle.md)
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+
 ---
 
 [← Back to Glossary](index.md)

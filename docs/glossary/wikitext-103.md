@@ -8,6 +8,10 @@ A large-scale language modeling dataset of Wikipedia articles; the corpus from w
 
 Merity et al. (2016); Salesforce/wikitext on Hugging Face
 
+## Appears in topics
+
+- [The Corpus Pipeline](../topics/the-corpus-pipeline.md)
+
 ---
 
 [← Back to Glossary](index.md)

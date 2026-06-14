@@ -8,6 +8,10 @@ An interval estimate of a parameter such that repeated sampling would capture th
 
 Frequentist statistics (Neyman)
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+
 ---
 
 [← Back to Glossary](index.md)

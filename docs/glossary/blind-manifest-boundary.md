@@ -12,6 +12,10 @@ Ensures the sample partition is fixed blind to outcomes, preventing selection bi
 
 PREREGISTRATION_v2.md Section 9
 
+## Appears in topics
+
+- [The Blind Apparatus](../topics/the-blind-apparatus.md)
+
 ---
 
 [← Back to Glossary](index.md)

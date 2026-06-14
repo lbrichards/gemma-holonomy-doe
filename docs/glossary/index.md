@@ -2,6 +2,8 @@
 
 Cross-linked terminology for the Gemma Holonomy DOE project.
 
+**[→ View Topics](../topics/index.md)** — 7 connective articles bundling related terms.
+
 ---
 
 ## <span style="background-color: #4051b5; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">COINED</span> Coined Terms

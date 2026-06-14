@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 3
 - [plane arm](plane-arm.md)
 - [three-arm band](three-arm-band.md)
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+
 ---
 
 [← Back to Glossary](index.md)

@@ -18,6 +18,10 @@ corpus/draw.py
 - [bitwise reproducibility](bitwise-reproducibility.md)
 - [corpus draw](corpus-draw.md)
 
+## Appears in topics
+
+- [The Blind Apparatus](../topics/the-blind-apparatus.md)
+
 ---
 
 [← Back to Glossary](index.md)

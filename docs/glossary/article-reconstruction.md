@@ -16,6 +16,10 @@ corpus/draw.py
 
 - [WikiText-103](wikitext-103.md)
 
+## Appears in topics
+
+- [The Corpus Pipeline](../topics/the-corpus-pipeline.md)
+
 ---
 
 [← Back to Glossary](index.md)

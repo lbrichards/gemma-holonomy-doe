@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 9
 - [base point](base-point.md)
 - [blind manifest boundary](blind-manifest-boundary.md)
 
+## Appears in topics
+
+- [The Corpus Pipeline](../topics/the-corpus-pipeline.md)
+
 ---
 
 [← Back to Glossary](index.md)

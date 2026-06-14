@@ -17,6 +17,10 @@ corpus/draw.py
 - [corpus draw](corpus-draw.md)
 - [det M degeneracy floor](det-m-degeneracy-floor.md)
 
+## Appears in topics
+
+- [The Corpus Pipeline](../topics/the-corpus-pipeline.md)
+
 ---
 
 [← Back to Glossary](index.md)

@@ -16,6 +16,11 @@ Defines "material" for all three hypotheses. An effect below this threshold is t
 
 PREREGISTRATION_v2.md Section 6.1
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+- [The Variance and Power Story](../topics/the-variance-and-power-story.md)
+
 ---
 
 [← Back to Glossary](index.md)

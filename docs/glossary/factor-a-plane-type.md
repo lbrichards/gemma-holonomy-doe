@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 2
 - [factorial design](factorial-design.md)
 - [plane arm](plane-arm.md)
 
+## Appears in topics
+
+- [The Three Plane Arms](../topics/the-three-plane-arms.md)
+
 ---
 
 [← Back to Glossary](index.md)

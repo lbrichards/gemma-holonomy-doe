@@ -1,0 +1,241 @@
+# Topics layer for the Gemma Holonomy DOE glossary
+# Each topic bundles related terms into a connective narrative
+#
+# Markup convention: [[term name]] becomes a hyperlink to that term's glossary page
+# All term names in bundles and [[...]] references must exist in glossary.yaml
+
+topics:
+  - title: The Band Machinery
+    bundles:
+      - common-support band
+      - three-arm band
+      - two-arm band
+      - band-collapse contingency
+      - two-arm terminal collapse
+      - minimum band width threshold
+      - pooled IQR
+      - magnitude level
+      - undefined at matched magnitude
+      - BandDecision
+    narrative: >-
+      The three [[plane arm]]s have wildly different native magnitudes: real-feature planes
+      cluster around p50 ~65, shuffled-feature around ~59, and random planes down at ~13.
+      Comparing holonomy across arms without accounting for this would confound semantic
+      structure with magnitude. The [[common-support band]] solves this by finding the
+      magnitude range where all three distributions overlap.
+
+
+      The [[three-arm band]] is computed as the overlap of each arm's [p5, p95]
+      [[in-plane magnitude (pullback)]] range. For this band to be valid, its width must
+      exceed the [[minimum band width threshold]] — defined as 0.5 × [[pooled IQR]] of the
+      concatenated magnitudes. If it does, [[magnitude level]]s (m_low at p25, m_high at p75)
+      are cut from the pooled distribution within the band and applied identically to all arms.
+
+
+      When the [[three-arm band]] is too narrow or empty, the [[band-collapse contingency]]
+      fires. [[H-grad]] is marked [[undefined at matched magnitude]] because no magnitude
+      is shared by all three arms. [[H-sem]] falls back to the [[two-arm band]] (real +
+      shuffled only), which the bench showed overlap comfortably. If even this narrower
+      band fails the width threshold, [[two-arm terminal collapse]] fires and H-sem also
+      becomes undefined. The full audit evidence — band bounds, widths, thresholds, and
+      per-hypothesis status — is captured in the [[BandDecision]] record.
+
+  - title: The Pullback-Metric Geometry
+    bundles:
+      - pullback metric
+      - Gram matrix
+      - Jacobian-vector product (JVP)
+      - in-plane magnitude (pullback)
+      - enclosed area (wedge)
+      - one-metric principle
+      - restricted Jacobian
+      - G-projection coefficients
+      - det M degeneracy floor
+      - 97% deviation metric
+    narrative: >-
+      The model's learned geometry differs drastically from Euclidean space — the
+      [[97% deviation metric]] from FishBack quantifies this as over 97% deviation in
+      relative spectral norm. This motivates the [[one-metric principle]]: all geometric
+      quantities must be computed under a single consistent metric, the [[pullback metric]]
+      G = JᵀJ induced by the [[readout map]]'s Jacobian.
+
+
+      Computing the full Jacobian is prohibitive, so we use [[Jacobian-vector product (JVP)]]s
+      to build the [[restricted Jacobian]] — the 2-column matrix [J d₁, J d₂] capturing how
+      the readout map acts on the plane directions. From this we derive the [[Gram matrix]]
+      M = DᵀGD, whose entries encode inner products under the pullback metric.
+
+
+      The [[G-projection coefficients]] a = M⁻¹(JD)ᵀ(Jh) express the base activation's
+      G-orthogonal projection onto the plane, yielding [[in-plane magnitude (pullback)]]
+      mag(h) = √(aᵀMa). The [[enclosed area (wedge)]] A = ρ²√(det M) normalizes the
+      rotation angle to produce [[holonomy]]. When det(M) approaches zero the plane
+      directions become G-collinear; the [[det M degeneracy floor]] (τ = 0.413) excludes
+      such degenerate planes before any holonomy is measured.
+
+  - title: The Three Plane Arms
+    bundles:
+      - plane arm
+      - real-feature plane
+      - shuffled-feature plane
+      - random plane
+      - pairing rule
+      - active feature
+      - inactive feature
+      - magnitude-matched shuffled-feature plane
+      - Factor A (plane type)
+    narrative: >-
+      [[Factor A (plane type)]] is the semantic dimension of the factorial design, with
+      three levels forming a gradient from noise floor to intact semantic structure. The
+      [[pairing rule]] specifies exactly how each [[plane arm]] is constructed before any
+      holonomy is computed.
+
+
+      The [[random plane]] uses two random unit directions with no relationship to the
+      base point — pure geometric noise providing the lower anchor. The
+      [[shuffled-feature plane]] pairs one [[active feature]] (code > 0 at the base point)
+      with one [[inactive feature]] (code ≤ 0), breaking joint activation structure while
+      preserving real dictionary directions. The [[real-feature plane]] uses two jointly
+      active SAE features, capturing intact semantic geometry.
+
+
+      This ordering — random < shuffled < real — forms the semantic gradient tested by
+      [[H-grad]]. The key control is the [[magnitude-matched shuffled-feature plane]]:
+      by matching shuffled planes to real planes in [[in-plane magnitude (pullback)]],
+      the [[H-sem]] contrast isolates semantic coherence from the confounding effect
+      of activation magnitude. If shuffled planes had systematically different magnitudes,
+      any holonomy difference might reflect that rather than meaning.
+
+  - title: Hypotheses and Verdicts
+    bundles:
+      - H-sem
+      - H-mag
+      - H-grad
+      - materiality threshold
+      - CORROBORATED verdict
+      - FALSIFIED verdict
+      - INCONCLUSIVE verdict
+      - NULL-ATTRIBUTED verdict
+      - covariate adjustment
+      - log-scale paired contrast
+      - confidence interval
+    narrative: >-
+      Three hypotheses test different aspects of the holonomy signal. [[H-mag]] asks
+      whether holonomy increases with [[in-plane magnitude (pullback)]], pooled across
+      plane types. [[H-sem]] — the powered, load-bearing claim — asks whether
+      [[real-feature plane]]s show materially greater holonomy than magnitude-matched
+      [[shuffled-feature plane]]s after [[covariate adjustment]]. [[H-grad]] asks
+      whether holonomy rises monotonically: random < shuffled < real.
+
+
+      Each hypothesis receives a three-way verdict based on where its [[confidence interval]]
+      sits relative to the [[materiality threshold]] δ = log(1.25) ≈ 0.223 — a 25%
+      multiplicative change on the original scale. [[CORROBORATED verdict]]: CI lower
+      bound above δ. [[FALSIFIED verdict]]: CI upper bound below δ. [[INCONCLUSIVE verdict]]:
+      CI spans δ.
+
+
+      The [[log-scale paired contrast]] d_b = log H_real − log H_shuffled is the primary
+      test statistic for [[H-sem]], computed within each [[base point]] to remove
+      base-point-level variation. The [[NULL-ATTRIBUTED verdict]] is a special falsification
+      branch: if an unadjusted effect vanishes under [[covariate adjustment]], the signal
+      came from [[manifold distance]] or [[φ (plane angle)]], not from meaning.
+
+  - title: The Blind Apparatus
+    bundles:
+      - frozen (pre-registration status)
+      - blind (to holonomy)
+      - blind manifest boundary
+      - run manifest
+      - seed-42 determinism
+      - burned pilot points
+      - pre-data clarification
+      - blind handoff
+      - Stage A
+      - Stage B
+    narrative: >-
+      The integrity of the study rests on decisions being [[blind (to holonomy)]] —
+      made without access to any response values. The pre-registration is
+      [[frozen (pre-registration status)]], meaning only [[pre-data clarification]]s
+      (timestamped addenda provably recorded before any θ is computed) may refine it.
+
+
+      The pipeline enforces blindness structurally. [[Stage A]] extracts activations,
+      selects planes, computes the band, places centers, and measures covariates —
+      producing the [[run manifest]], a JSON artifact that physically cannot carry
+      holonomy fields (the schema rejects them). [[Stage B]] reads this manifest and
+      computes holonomy, writing results to a separate artifact. This [[blind handoff]]
+      makes result-dependent design modification impossible.
+
+
+      [[seed-42 determinism]] ensures the [[corpus draw]] is bitwise reproducible:
+      any researcher with the seed can regenerate the exact same passages and draw order.
+      The [[blind manifest boundary]] partitions the pool into experiment sample and
+      reserve by draw order, fixed before any holonomy. The [[burned pilot points]]
+      (draw orders 96-111) were used in the resid_post variance re-pilot and are
+      permanently excluded, preserving blindness of the experiment sample.
+
+  - title: The Corpus Pipeline
+    bundles:
+      - base point
+      - corpus draw
+      - article reconstruction
+      - draw order
+      - survivor
+      - drop
+      - experiment sample
+      - reserve pool
+      - WikiText-103
+      - resid_post
+      - forward hook
+      - survivor-targeted draw
+    narrative: >-
+      Each [[base point]] is a layer-12 [[resid_post]] activation vector extracted from
+      a [[WikiText-103]] passage. The [[corpus draw]] procedure is fully deterministic:
+      [[article reconstruction]] joins raw WikiText rows between top-level headers into
+      coherent articles, a seed-42 shuffle assigns [[draw order]], and the
+      [[survivor-targeted draw]] continues until 240 candidates pass the 64-token filter.
+
+
+      Not every article yields a usable base point. Articles too short after tokenization
+      become [[drop]]s with logged reasons. Points whose planes fail the
+      [[det M degeneracy floor]] are also dropped. A [[survivor]] is a point that clears
+      all filters and enters the [[experiment sample]] (first 390 by draw order) or
+      [[reserve pool]].
+
+
+      Extraction uses a [[forward hook]] registered on `model.model.layers[12]` to capture
+      the residual-stream output matching the Gemma Scope SAE's training site. The v1→v2
+      correction (resid_pre to [[resid_post]]) was critical: the SAE encodes resid_post,
+      so base points must come from the same site for feature activations to be meaningful.
+
+  - title: The Variance and Power Story
+    bundles:
+      - planning tau
+      - 97% deviation metric
+      - holonomy-magnitude response
+      - fixed-N design
+      - two-stage rule
+      - materiality threshold
+      - resid_post
+      - burned pilot points
+    narrative: >-
+      The v1 pre-registration was frozen with τ = 0.649 and N = 96, derived from pilot
+      data at resid_pre. Then the hook-site error was discovered: the Gemma Scope SAE
+      is trained on [[resid_post]], not resid_pre. The [[97% deviation metric]] from
+      FishBack shows these sites are geometrically different — the pullback metric
+      deviates over 97% from Euclidean.
+
+
+      Correcting the extraction site required re-piloting the contrast variance. The
+      [[burned pilot points]] (draw orders 96-111) yielded τ_pilot = 1.11 with 95% CI
+      [0.82, 1.72]. The [[planning tau]] of 1.30 is a conservative choice near the 72%
+      upper bound, and N was re-derived to 390 for 0.90 [[power]] at the
+      [[materiality threshold]] δ = 0.223.
+
+
+      The [[fixed-N design]] commits to running all 390 points before analysis, with no
+      peeking or early stopping. If [[H-sem]] lands [[INCONCLUSIVE verdict]] after
+      stage-1 (N₁ = 96), the [[two-stage rule]] triggers a second batch (N₂ = 96) with
+      both results reported. This preserves error control while allowing recovery from
+      an unexpectedly small effect — all pre-specified, not result-dependent.

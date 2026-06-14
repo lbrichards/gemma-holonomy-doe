@@ -17,6 +17,11 @@ PREREGISTRATION_v2.md Section 9
 - [reserve pool](reserve-pool.md)
 - [planning tau](planning-tau.md)
 
+## Appears in topics
+
+- [The Blind Apparatus](../topics/the-blind-apparatus.md)
+- [The Variance and Power Story](../topics/the-variance-and-power-story.md)
+
 ---
 
 [← Back to Glossary](index.md)

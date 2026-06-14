@@ -16,6 +16,11 @@ FishBack (2026); arXiv
 
 - [pullback metric](pullback-metric.md)
 
+## Appears in topics
+
+- [The Pullback-Metric Geometry](../topics/the-pullback-metric-geometry.md)
+- [The Variance and Power Story](../topics/the-variance-and-power-story.md)
+
 ---
 
 [← Back to Glossary](index.md)

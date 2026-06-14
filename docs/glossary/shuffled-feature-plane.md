@@ -18,6 +18,10 @@ planes/construct.py
 - [active feature](active-feature.md)
 - [inactive feature](inactive-feature.md)
 
+## Appears in topics
+
+- [The Three Plane Arms](../topics/the-three-plane-arms.md)
+
 ---
 
 [← Back to Glossary](index.md)

@@ -22,6 +22,10 @@ PREREGISTRATION_v2.md Section 3 (H-mag)
 - [in-plane magnitude (pullback)](in-plane-magnitude-pullback.md)
 - [enclosed area (wedge)](enclosed-area-wedge.md)
 
+## Appears in topics
+
+- [The Variance and Power Story](../topics/the-variance-and-power-story.md)
+
 ---
 
 [← Back to Glossary](index.md)

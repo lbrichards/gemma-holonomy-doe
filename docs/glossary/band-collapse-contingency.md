@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 2
 - [common-support band](common-support-band.md)
 - [two-arm terminal collapse](two-arm-terminal-collapse.md)
 
+## Appears in topics
+
+- [The Band Machinery](../topics/the-band-machinery.md)
+
 ---
 
 [← Back to Glossary](index.md)

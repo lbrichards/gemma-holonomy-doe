@@ -17,6 +17,10 @@ corpus/draw.py
 - [corpus draw](corpus-draw.md)
 - [seed-42 determinism](seed-42-determinism.md)
 
+## Appears in topics
+
+- [The Corpus Pipeline](../topics/the-corpus-pipeline.md)
+
 ---
 
 [← Back to Glossary](index.md)

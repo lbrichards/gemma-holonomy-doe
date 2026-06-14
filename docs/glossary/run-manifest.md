@@ -16,6 +16,10 @@ manifest/schema.py
 
 - [Stage A](stage-a.md)
 
+## Appears in topics
+
+- [The Blind Apparatus](../topics/the-blind-apparatus.md)
+
 ---
 
 [← Back to Glossary](index.md)

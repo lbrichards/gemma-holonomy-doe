@@ -18,6 +18,10 @@ PREREGISTRATION_v2.md Section 3
 - [shuffled-feature plane](shuffled-feature-plane.md)
 - [covariate adjustment](covariate-adjustment.md)
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+
 ---
 
 [← Back to Glossary](index.md)

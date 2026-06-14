@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 2
 - [band-collapse contingency](band-collapse-contingency.md)
 - [two-arm terminal collapse](two-arm-terminal-collapse.md)
 
+## Appears in topics
+
+- [The Band Machinery](../topics/the-band-machinery.md)
+
 ---
 
 [← Back to Glossary](index.md)

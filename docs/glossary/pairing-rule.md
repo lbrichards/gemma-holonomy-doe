@@ -16,6 +16,10 @@ PREREGISTRATION_v2.md Section 2.1
 
 - [sparse autoencoder (SAE)](sparse-autoencoder-sae.md)
 
+## Appears in topics
+
+- [The Three Plane Arms](../topics/the-three-plane-arms.md)
+
 ---
 
 [← Back to Glossary](index.md)

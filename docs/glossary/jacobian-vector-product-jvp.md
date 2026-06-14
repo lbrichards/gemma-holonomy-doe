@@ -12,6 +12,10 @@ $$
 
 Automatic differentiation (forward mode); JAX/PyTorch documentation
 
+## Appears in topics
+
+- [The Pullback-Metric Geometry](../topics/the-pullback-metric-geometry.md)
+
 ---
 
 [← Back to Glossary](index.md)

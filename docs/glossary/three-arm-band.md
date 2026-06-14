@@ -17,6 +17,10 @@ bands/support.py
 - [common-support band](common-support-band.md)
 - [pooled IQR](pooled-iqr.md)
 
+## Appears in topics
+
+- [The Band Machinery](../topics/the-band-machinery.md)
+
 ---
 
 [← Back to Glossary](index.md)

@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 6.2
 - [materiality threshold](materiality-threshold.md)
 - [confidence interval](confidence-interval.md)
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+
 ---
 
 [← Back to Glossary](index.md)

@@ -16,6 +16,10 @@ PREREGISTRATION_v2.md header
 
 - [pre-registration](pre-registration.md)
 
+## Appears in topics
+
+- [The Blind Apparatus](../topics/the-blind-apparatus.md)
+
 ---
 
 [← Back to Glossary](index.md)

@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 7.4
 - [covariate adjustment](covariate-adjustment.md)
 - [H-sem](h-sem.md)
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+
 ---
 
 [← Back to Glossary](index.md)

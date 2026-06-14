@@ -21,6 +21,10 @@ geometry/pullback.py
 - [Gram matrix](gram-matrix.md)
 - [Jacobian-vector product (JVP)](jacobian-vector-product-jvp.md)
 
+## Appears in topics
+
+- [The Pullback-Metric Geometry](../topics/the-pullback-metric-geometry.md)
+
 ---
 
 [← Back to Glossary](index.md)

@@ -18,6 +18,10 @@ bands/support.py
 - [three-arm band](three-arm-band.md)
 - [two-arm band](two-arm-band.md)
 
+## Appears in topics
+
+- [The Band Machinery](../topics/the-band-machinery.md)
+
 ---
 
 [← Back to Glossary](index.md)

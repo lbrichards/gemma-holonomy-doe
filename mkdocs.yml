@@ -12,6 +12,8 @@ nav:
   - Home: index.md
   - Glossary:
       - Overview: glossary/index.md
+  - Topics:
+      - Overview: topics/index.md
 
 markdown_extensions:
   - toc:

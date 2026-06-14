@@ -16,6 +16,10 @@ corpus/draw.py
 
 - [corpus draw](corpus-draw.md)
 
+## Appears in topics
+
+- [The Corpus Pipeline](../topics/the-corpus-pipeline.md)
+
 ---
 
 [← Back to Glossary](index.md)

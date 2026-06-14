@@ -21,6 +21,10 @@ PREREGISTRATION_v2.md Section 7
 - [holonomy](holonomy.md)
 - [base point](base-point.md)
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+
 ---
 
 [← Back to Glossary](index.md)

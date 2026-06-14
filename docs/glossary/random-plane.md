@@ -16,6 +16,10 @@ planes/construct.py
 
 - [pairing rule](pairing-rule.md)
 
+## Appears in topics
+
+- [The Three Plane Arms](../topics/the-three-plane-arms.md)
+
 ---
 
 [← Back to Glossary](index.md)

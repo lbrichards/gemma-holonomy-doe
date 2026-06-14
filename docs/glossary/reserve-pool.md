@@ -16,6 +16,10 @@ PREREGISTRATION_v2.md Section 9
 
 - [experiment sample](experiment-sample.md)
 
+## Appears in topics
+
+- [The Corpus Pipeline](../topics/the-corpus-pipeline.md)
+
 ---
 
 [← Back to Glossary](index.md)

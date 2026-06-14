@@ -21,6 +21,10 @@ PREREGISTRATION_v2.md Section 7.2
 - [Gram matrix](gram-matrix.md)
 - [pullback metric](pullback-metric.md)
 
+## Appears in topics
+
+- [The Pullback-Metric Geometry](../topics/the-pullback-metric-geometry.md)
+
 ---
 
 [← Back to Glossary](index.md)

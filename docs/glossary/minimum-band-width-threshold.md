@@ -21,6 +21,10 @@ PREREGISTRATION_v2.md Section 2
 - [pooled IQR](pooled-iqr.md)
 - [common-support band](common-support-band.md)
 
+## Appears in topics
+
+- [The Band Machinery](../topics/the-band-machinery.md)
+
 ---
 
 [← Back to Glossary](index.md)

@@ -17,6 +17,10 @@ stage_b/run.py
 - [run manifest](run-manifest.md)
 - [holonomy](holonomy.md)
 
+## Appears in topics
+
+- [The Blind Apparatus](../topics/the-blind-apparatus.md)
+
 ---
 
 [← Back to Glossary](index.md)

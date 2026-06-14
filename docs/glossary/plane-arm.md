@@ -16,6 +16,10 @@ PREREGISTRATION_v2.md Section 2.1
 
 - [pairing rule](pairing-rule.md)
 
+## Appears in topics
+
+- [The Three Plane Arms](../topics/the-three-plane-arms.md)
+
 ---
 
 [← Back to Glossary](index.md)

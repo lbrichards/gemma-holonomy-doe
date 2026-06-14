@@ -17,6 +17,10 @@ stage_a/run.py
 - [center placement](center-placement.md)
 - [base point](base-point.md)
 
+## Appears in topics
+
+- [The Blind Apparatus](../topics/the-blind-apparatus.md)
+
 ---
 
 [← Back to Glossary](index.md)

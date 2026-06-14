@@ -18,6 +18,10 @@ PREREGISTRATION_v2.md Section 2.1
 - [in-plane magnitude (pullback)](in-plane-magnitude-pullback.md)
 - [shuffled-feature plane](shuffled-feature-plane.md)
 
+## Appears in topics
+
+- [The Three Plane Arms](../topics/the-three-plane-arms.md)
+
 ---
 
 [← Back to Glossary](index.md)

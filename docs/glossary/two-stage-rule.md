@@ -18,6 +18,10 @@ PREREGISTRATION_v2.md Section 6.4
 - [INCONCLUSIVE verdict](inconclusive-verdict.md)
 - [H-sem](h-sem.md)
 
+## Appears in topics
+
+- [The Variance and Power Story](../topics/the-variance-and-power-story.md)
+
 ---
 
 [← Back to Glossary](index.md)

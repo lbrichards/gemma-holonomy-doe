@@ -16,6 +16,10 @@ PREREGISTRATION_v2.md Section 2
 
 - [interquartile range (IQR)](interquartile-range-iqr.md)
 
+## Appears in topics
+
+- [The Band Machinery](../topics/the-band-machinery.md)
+
 ---
 
 [← Back to Glossary](index.md)

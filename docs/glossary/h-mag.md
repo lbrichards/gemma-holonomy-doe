@@ -17,6 +17,10 @@ PREREGISTRATION_v2.md Section 3
 - [magnitude level](magnitude-level.md)
 - [holonomy](holonomy.md)
 
+## Appears in topics
+
+- [Hypotheses and Verdicts](../topics/hypotheses-and-verdicts.md)
+
 ---
 
 [← Back to Glossary](index.md)

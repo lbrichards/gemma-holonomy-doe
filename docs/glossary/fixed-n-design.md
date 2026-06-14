@@ -16,6 +16,10 @@ PREREGISTRATION_v2.md Section 6.3
 
 - [power](power.md)
 
+## Appears in topics
+
+- [The Variance and Power Story](../topics/the-variance-and-power-story.md)
+
 ---
 
 [← Back to Glossary](index.md)
