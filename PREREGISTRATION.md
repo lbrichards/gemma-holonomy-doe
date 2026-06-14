@@ -165,9 +165,39 @@ Decided in advance, before any data:
 
 ## 7. Analysis plan
 
-- Primary contrast: TODO
-- Model: factorial ANOVA / regression form TODO
-- What is decided before seeing data vs. reported as-is: TODO
+### Primary contrast
+
+The pre-registered primary semantic estimate is the covariate-adjusted real-feature vs
+shuffled-feature holonomy difference, computed as a PAIRED within-base-point contrast (real minus
+shuffled at each base point), adjusted for the per-base-point differences in manifold distance and
+phi. H-sem's official verdict rests on this paired test. It is the test the Section 5 power
+calculation was built on (tau = 0.649 is the across-base-point SD of this per-base contrast), so
+the primary test and the power basis are the same object.
+
+### Model / regression form
+
+- PRIMARY (H-sem): paired within-base-point contrast. Per base point, d_b = H_real,b - H_shuffled,b
+  on the log scale; regress d_b on the per-base covariate differences (manifold distance, phi);
+  test whether the adjusted mean of d_b exceeds the materiality threshold. One-sample structure on
+  96 paired differences.
+- SECONDARY (full factorial, reported alongside): mixed-effects model
+  H ~ plane_type * magnitude + manifold_distance + phi + (1 | base_point)
+  providing the magnitude main effect (H-mag), the plane-type gradient (H-grad), the
+  plane_type x magnitude interaction, and covariate-adjusted effects in one frame. Reported as
+  corroboration; agreement across primary and secondary is reported as robustness, disagreement is
+  reported and discussed.
+- H-mag and H-grad take their verdicts from the secondary model (they are not within-base paired
+  contrasts), against the same materiality threshold.
+
+### Decided before data vs reported as-is
+
+- DECIDED IN ADVANCE (frozen here): the three hypotheses and their verdict rules; materiality
+  threshold log(1.25); the primary paired test and its covariate adjustment; the secondary model
+  form; all degeneracy floors (tau_detM, eps_mag); corpus seed (42) and selection rule; the
+  two-stage trigger and N2.
+- REPORTED AS-IS (no decision threshold attached): all effect-size point estimates and CIs;
+  balance diagnostics (SMD, overlap); per-arm floor exclusion rates; eps_mag fallback counts;
+  stage-1/stage-2 consistency.
 
 ### 7.1 Loop geometry (raw directions, no orthogonalization)
 
@@ -262,9 +292,15 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
 
 ## 8. Reproducibility
 
-- Data release plan: TODO
-- Code release plan: TODO
-- Seed handling: TODO. Seeds fixed and recorded; bitwise reproducibility guaranteed within a single compute backend only.
+- Data release: the 96 (and any stage-2) base-point activations, plane definitions, per-plane
+  holonomy, det M, mag(h), and covariate values released as artifacts; corpus referenced by
+  WikiText-103 version + seed 42 + recorded indices (passages not redistributed, regenerable from
+  the rule).
+- Code release: full run pipeline, analysis scripts, and bench/probe scripts released; repo public
+  on freeze of results.
+- Seed handling: SEED_CORPUS = 42 for passage draw; all stochastic steps (plane sampling, any RNG
+  in control construction) seeded and recorded. Bitwise reproducibility guaranteed within the MPS
+  backend only (see ENVIRONMENT.md).
 - Hardware: Apple Silicon / MPS, the sole backend for this study. All results are produced on MPS; no CUDA alternative is part of this pre-registration. The reproducibility claim is bitwise-within-MPS. See ENVIRONMENT.md.
 
 ## 9. Base-point corpus and sampling (pre-registered)
