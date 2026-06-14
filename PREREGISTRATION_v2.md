@@ -395,3 +395,15 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
   7. Partition: first 390 surviving base points (in seed order, excluding the burned pilot points)
      are the experiment sample; the remainder is reserve, in recorded order.
 - Language: English only (pre-registered scope boundary).
+
+## Addenda (post-freeze, blind to holonomy)
+
+- 2026-06-14: Response-sign convention clarification. Section 7.2's primary response is the
+  orientation-independent holonomy magnitude H = |theta| / A_enclosed. The signed value
+  theta / A_enclosed is retained as a diagnostic for loop-reversal checks and transport
+  orientation, but primary log-H contrasts use the positive magnitude.
+- 2026-06-14: Deterministic small-matrix arithmetic clarification. Model execution and JVPs run on
+  Apple Silicon / MPS as specified, while the restricted 2x2 pullback Gram, det M, pseudoinverse,
+  and area arithmetic are evaluated deterministically in CPU float64 after JVP outputs are
+  materialized. The reproducibility claim is therefore bitwise within the fixed MPS backend plus
+  this deterministic CPU float64 post-processing path.
