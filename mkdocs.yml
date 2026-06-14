@@ -1,0 +1,19 @@
+site_name: Gemma Holonomy DOE
+site_description: Documentation for the Gemma Holonomy Design of Experiments
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: indigo
+
+nav:
+  - Home: index.md
+  - Glossary:
+      - Overview: glossary/index.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - tables

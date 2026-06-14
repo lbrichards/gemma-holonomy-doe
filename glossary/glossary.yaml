@@ -1,0 +1,200 @@
+# Glossary of terms for the Gemma Holonomy DOE project
+# Each term has: name, kind (coined/inherited), one_line, why, source, depends_on
+
+terms:
+  # ============================================================================
+  # COINED TERMS
+  # ============================================================================
+
+  - name: common-support band
+    kind: coined
+    one_line: The magnitude range where all three plane-type arms (random, shuffled-feature, real-feature) have overlapping in-plane magnitude distributions, enabling matched comparisons.
+    why: >-
+      The three plane arms have widely separated magnitude distributions (real p50 ~65, shuffled ~59, random ~13).
+      Matching is only meaningful where distributions overlap; cutting levels on one arm alone would force
+      extrapolation rather than a true match.
+    source: PREREGISTRATION_v2.md Section 2
+    depends_on:
+      - in-plane magnitude (pullback)
+      - common support / positivity
+
+  - name: band-collapse contingency
+    kind: coined
+    one_line: The pre-registered fallback procedure when the three-arm common-support band is empty or too narrow to support matched magnitude comparisons.
+    why: >-
+      If the arms do not share a common magnitude regime, this is itself a reportable finding.
+      The contingency defines how to proceed with two-arm analysis for H-sem and marks H-grad as undefined.
+    source: PREREGISTRATION_v2.md Section 2
+    depends_on:
+      - common-support band
+      - two-arm terminal collapse
+
+  - name: two-arm terminal collapse
+    kind: coined
+    one_line: The fallback case where even the two-arm real+shuffled common-support band fails the minimum width requirement, making matched semantic comparison impossible.
+    why: >-
+      Added as a pre-data clarification to handle the edge case where real and shuffled features
+      also do not share a common magnitude regime. H-sem is then reported as undefined at matched magnitude.
+    source: PREREGISTRATION_v2.md Section 2
+    depends_on:
+      - common-support band
+      - in-plane magnitude (pullback)
+
+  - name: det M degeneracy floor
+    kind: coined
+    one_line: A threshold (tau_detM = 0.413) below which planes are excluded because their pullback-metric area approaches zero, making holonomy ill-defined.
+    why: >-
+      When det(M) approaches zero, the Jacobian maps the two plane directions toward collinear,
+      causing A_enclosed to vanish. This floor catches geometric degeneracy under the pullback metric,
+      replacing the earlier Euclidean phi floor.
+    source: PREREGISTRATION_v2.md Section 7.2.1
+    depends_on:
+      - Gram matrix
+      - Jacobian-vector product (JVP)
+      - pullback metric
+
+  - name: magnitude-matched shuffled-feature plane
+    kind: coined
+    one_line: A control plane constructed by pairing one active SAE feature with one inactive real dictionary feature, matched to real-feature planes in pullback-metric in-plane magnitude.
+    why: >-
+      Provides a semantically degraded control that preserves magnitude structure, isolating the
+      contribution of semantic coherence to holonomy from the confounding effect of activation magnitude.
+    source: PREREGISTRATION_v2.md Section 2.1
+    depends_on:
+      - pairing rule
+      - in-plane magnitude (pullback)
+      - SAE reconstruction error
+
+  - name: pairing rule
+    kind: coined
+    one_line: The fixed procedure for constructing plane arms before holonomy computation, specifying how SAE features are selected and combined for each plane type.
+    why: >-
+      Ensures reproducible and pre-registered plane construction across the three arms: real-feature
+      uses jointly active features, shuffled-feature uses one active plus one inactive, random uses
+      two random unit directions.
+    source: PREREGISTRATION_v2.md Section 2.1
+    depends_on:
+      - SAE reconstruction error
+
+  - name: holonomy-magnitude response
+    kind: coined
+    one_line: The measured relationship between in-plane magnitude and holonomy (rotation per enclosed area), the primary response variable testing H-mag.
+    why: >-
+      Quantifies how holonomy scales with magnitude to disentangle magnitude effects from semantic
+      structure effects, enabling the factorial design to isolate each factor's contribution.
+    source: PREREGISTRATION_v2.md Section 3 (H-mag)
+    depends_on:
+      - holonomy
+      - in-plane magnitude (pullback)
+      - enclosed area (wedge)
+
+  - name: in-plane magnitude (pullback)
+    kind: coined
+    one_line: The G-norm of a vector's G-orthogonal projection onto a plane, computed as mag(h) = sqrt(a^T M a) where M is the plane Gram matrix under the pullback metric.
+    why: >-
+      Factor B (magnitude level) must be cut using a geometrically meaningful scalar. The pullback-metric
+      in-plane magnitude respects the model's learned geometry rather than imposing Euclidean assumptions.
+    source: PREREGISTRATION_v2.md Section 7.3
+    depends_on:
+      - pullback metric
+      - Gram matrix
+      - Jacobian-vector product (JVP)
+
+  - name: blind manifest boundary
+    kind: coined
+    one_line: The partition point separating the 390 experiment-sample base points from the reserve, determined by draw order and recorded before any holonomy is observed.
+    why: >-
+      Ensures the sample partition is fixed blind to outcomes, preventing selection bias.
+      The boundary is set by seed order, excluding the 16 burned pilot points.
+    source: PREREGISTRATION_v2.md Section 9
+    depends_on: []
+
+  - name: enclosed area (wedge)
+    kind: coined
+    one_line: The pullback-metric area of the loop, computed as A_enclosed = rho^2 * sqrt(det M), which normalizes the rotation angle to yield holonomy.
+    why: >-
+      Using pullback-metric area rather than Euclidean area (rho^2 sin phi) ensures all geometric
+      quantities are computed under a single consistent metric, following the one-metric principle.
+    source: PREREGISTRATION_v2.md Section 7.2
+    depends_on:
+      - Gram matrix
+      - pullback metric
+
+  # ============================================================================
+  # INHERITED TERMS
+  # ============================================================================
+
+  - name: pullback metric
+    kind: inherited
+    one_line: The induced metric G = J^T J on the input space, pulled back from the output space via the Jacobian J, measuring distances as the model perceives them.
+    why: null
+    source: "Curved Inference (2025); FishBack (2026)"
+    depends_on:
+      - Gram matrix
+      - Jacobian-vector product (JVP)
+
+  - name: holonomy
+    kind: inherited
+    one_line: The rotation angle accumulated by parallel-transporting a vector around a closed loop, divided by the enclosed area, measuring local curvature.
+    why: null
+    source: "Differential geometry (Riemannian holonomy); Ambrose-Singer theorem"
+    depends_on:
+      - parallel transport
+      - enclosed area (wedge)
+
+  - name: parallel transport
+    kind: inherited
+    one_line: The procedure for moving a tangent vector along a curve while keeping it as parallel as possible according to the connection, preserving its length under the metric.
+    why: null
+    source: "Differential geometry (affine connections)"
+    depends_on:
+      - pullback metric
+
+  - name: Gram matrix
+    kind: inherited
+    one_line: A matrix M = D^T G D encoding inner products of a set of vectors D under a metric G, whose determinant gives the squared volume of the parallelepiped they span.
+    why: null
+    source: "Linear algebra (Gramian matrix)"
+    depends_on: []
+
+  - name: Jacobian-vector product (JVP)
+    kind: inherited
+    one_line: The product J*v of the Jacobian matrix J with a vector v, computed efficiently via forward-mode automatic differentiation without materializing J.
+    why: null
+    source: "Automatic differentiation (forward mode); JAX/PyTorch documentation"
+    depends_on: []
+
+  - name: standardized mean difference (SMD)
+    kind: inherited
+    one_line: The difference in group means divided by the pooled standard deviation, a scale-free measure of effect size used in balance diagnostics.
+    why: null
+    source: "Cohen's d; propensity-score balance literature (Austin; Stuart)"
+    depends_on: []
+
+  - name: Mahalanobis distance
+    kind: inherited
+    one_line: A distance metric that accounts for correlations in the data by scaling by the inverse covariance matrix, measuring how many standard deviations a point lies from a distribution.
+    why: null
+    source: "Mahalanobis (1936); multivariate statistics"
+    depends_on: []
+
+  - name: mixed-effects model
+    kind: inherited
+    one_line: A regression model containing both fixed effects (population-level coefficients) and random effects (group-level variation), used here to model base-point blocking.
+    why: null
+    source: "Laird & Ware (1982); lme4/statsmodels"
+    depends_on: []
+
+  - name: common support / positivity
+    kind: inherited
+    one_line: The requirement that all treatment groups have overlapping covariate distributions, ensuring covariate adjustment does not extrapolate beyond observed data.
+    why: null
+    source: "Causal inference (Rosenbaum & Rubin); propensity-score methods"
+    depends_on: []
+
+  - name: SAE reconstruction error
+    kind: inherited
+    one_line: The L2 distance between an activation and its reconstruction through a sparse autoencoder, serving as a proxy for how well the SAE captures the activation.
+    why: null
+    source: "Sparse autoencoders (Olshausen & Field 1996); Gemma Scope (Google DeepMind)"
+    depends_on: []

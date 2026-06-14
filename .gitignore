@@ -21,6 +21,7 @@ ENV/
 build/
 dist/
 *.egg-info/
+site/
 
 # Environment and local config
 .env
