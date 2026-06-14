@@ -6,7 +6,7 @@ discovered during implementation: the Gemma Scope SAE for layer 12 is trained on
 (output of block 12), but the exploratory Iteration 7/8 work — and v1's variance estimate —
 used the block-12 pre-hook (resid_pre). v2 corrects the extraction site to resid_post, re-piloted
 the contrast variance at the corrected site (tau rose from 0.649 to 1.30), and re-derived N.
-v1 and its full amendment history are retained in-repo for provenance. The stage-1 experiment
+v1 and its full amendment history are retained in-repo for provenance. The experiment
 sample remained unobserved throughout this correction; only reserve points (draw orders 96-111)
 were used for the variance re-pilot.
 
@@ -35,7 +35,7 @@ Factorial design, shared blocked base points.
   native magnitude, making the "matched" comparison an extrapolation rather than a match. Matching
   is only meaningful where the distributions overlap.
 - Construction of the band (pre-registered): after plane selection and magnitude evaluation on the
-  stage-1 sample, compute mag(h) for all three arms; define the common-support band as the overlap
+  experiment sample, compute mag(h) for all three arms; define the common-support band as the overlap
   of the three arms' [p5, p95] ranges; cut m_low, m_high at the 25th/75th percentiles of the POOLED
   magnitudes restricted to that band. The two absolute m values are applied identically to all
   three arms. Record the band bounds and the resulting m values.
@@ -178,7 +178,7 @@ All diagnostics are computed and recorded BEFORE the holonomy response is unblin
 - Effect size target: material effect, delta = log(1.25) = 0.2231 on the log-scale paired
   feature-vs-shuffled contrast.
 - Variance source: resid_post re-pilot (16 reserve base points, draw orders 96-111, blind to the
-  stage-1 sample). tau_pilot = 1.11, 95% CI [0.82, 1.72]. Planning tau = 1.30, a modestly
+  experiment sample). tau_pilot = 1.11, 95% CI [0.82, 1.72]. Planning tau = 1.30, a modestly
   conservative choice near the ~72% upper confidence bound, covering the realistic upside of the
   pilot without powering to the CI tail.
 - SUPERSEDED: v1 used tau = 0.649 (Iter 7) / 0.586 (Iter 8), measured at the WRONG site (resid_pre).
@@ -268,7 +268,9 @@ The loop is traced as:
 where c is the loop center (Section 7.3, magnitude-matching) and rho is the radius.
 
 Radius convention: rho = radius_relative * ||base activation||, with radius_relative = 6.0e-3,
-inherited from the validated Iteration 7/8 instrument for continuity.
+a small-loop value carried over from the exploratory instrument. This is a parameter choice, not a
+validation claim: per the Section 7.2 note, the exploratory Iter 7/8 instrument ran at the wrong
+site (resid_pre) and is not a trusted numerical reference for v2.
 
 ### 7.2 Response variable: holonomy
 
@@ -368,7 +370,7 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
 
 - Corpus: WikiText-103 (declarative English prose; license CC BY-SA). Chosen over instruction-style
   data (e.g. Alpaca) so base-point activations match the declarative prose on which the degeneracy
-  floors and the exploratory variance (tau) were calibrated. Scope of the resulting claim is
+  floors were calibrated. Scope of the resulting claim is
   therefore English natural prose; cross-lingual holonomy is named as future work (limitation).
 - Dataset pinned to Salesforce/wikitext revision b08601e04326c79dfdd32d625aee71d232d685c3.
 - Passage construction from WikiText-103 raw: WikiText-103 raw is stored as line-level rows
@@ -386,8 +388,8 @@ The random arm is the noise floor and the lower anchor of the random < shuffled 
   4. Base point = the layer-12 resid_post residual-stream activation at the final (64th) token
      position, captured as the output of HF `model.model.layers[12]`.
   5. Oversample candidates so that >= 700 base points survive the degeneracy floors and short-passage
-     drops, providing N = 390 stage-1 plus a reserve with margin (single-stage; reserve is for
-     dropout/safety, NOT a formal second stage). Record actual survivor count.
+     drops, providing the N = 390 experiment sample plus a reserve with margin (single-stage; reserve
+     is for dropout/safety, NOT a formal second stage). Record actual survivor count.
   6. The 16 reserve points used in the resid_post variance re-pilot (draw orders 96-111) are
      PERMANENTLY EXCLUDED from the experiment sample and any reserve — they are "seen" and burned.
   7. Partition: first 390 surviving base points (in seed order, excluding the burned pilot points)
