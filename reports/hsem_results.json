@@ -1,0 +1,322 @@
+{
+  "analysis_plan": "analysis/hsem/ANALYSIS_PLAN_Hsem_v2addendum.md",
+  "balance_diagnostics": {
+    "metrics": {
+      "manifold_distance_mahalanobis": {
+        "partially_extrapolated": false,
+        "positivity_fraction": 0.9923076923076923,
+        "real_max": 126.97872916632517,
+        "real_min": 50.41246621944837,
+        "real_within_shuffled_range": 0.9923076923076923,
+        "shuffled_max": 126.32321931999665,
+        "shuffled_min": 50.79635998946486,
+        "shuffled_within_real_range": 1.0,
+        "smd": -0.13450683169412714
+      },
+      "manifold_distance_recon": {
+        "partially_extrapolated": false,
+        "positivity_fraction": 0.9974358974358974,
+        "real_max": 3.384743462909352,
+        "real_min": 0.7992188208030933,
+        "real_within_shuffled_range": 0.9974358974358974,
+        "shuffled_max": 3.394981796091253,
+        "shuffled_min": 0.930714951320128,
+        "shuffled_within_real_range": 0.9974358974358974,
+        "smd": -0.014290359896740996
+      },
+      "phi": {
+        "partially_extrapolated": false,
+        "positivity_fraction": 0.9871794871794872,
+        "real_max": 1.6636636104875717,
+        "real_min": 1.284835549816524,
+        "real_within_shuffled_range": 0.9974358974358974,
+        "shuffled_max": 1.7108022480177598,
+        "shuffled_min": 1.36651297084889,
+        "shuffled_within_real_range": 0.9871794871794872,
+        "smd": -0.23392787549377753
+      }
+    },
+    "partially_extrapolated": false
+  },
+  "h_grad_status": "UNDEFINED_AT_MATCHED_MAGNITUDE / no verdict",
+  "h_mag_secondary": {
+    "ci_high": 0.03941527237566411,
+    "ci_low": -0.22674923979341932,
+    "estimate": -0.0936669837088776,
+    "se": 0.06789911024721516,
+    "verdict": "FALSIFIED"
+  },
+  "h_sem_primary": {
+    "adjusted_hc3": {
+      "alpha": 0.05,
+      "ci_high": -0.1484440838920001,
+      "ci_low": -0.44033875539529516,
+      "df_resid": 387.0,
+      "intercept": -0.2943914196436476,
+      "se": 0.07423141625765212
+    },
+    "adjusted_ols_t": {
+      "alpha": 0.05,
+      "ci_high": -0.14889482877089733,
+      "ci_low": -0.4398880105163979,
+      "df_resid": 387.0,
+      "intercept": -0.2943914196436476,
+      "se": 0.07400215937838737
+    },
+    "covariate_difference_means": {
+      "manifold_distance_diff": -0.005695233980907233,
+      "manifold_distance_guard_diff": -1.7915002963945927,
+      "phi_diff": -0.008610573965597699
+    },
+    "covariate_difference_sds": {
+      "manifold_distance_diff": 0.05413136449509135,
+      "manifold_distance_guard_diff": 3.8709894944940344,
+      "phi_diff": 0.053109812721217016
+    },
+    "d_b_defined_for_all_bases": true,
+    "hc3_verdict": "FALSIFIED",
+    "influence": {
+      "max_cooks_distance": 0.1048305567616848,
+      "max_leverage": 0.2674779756225826,
+      "top_10_by_cooks_distance": [
+        {
+          "base_point_id": "bp-209",
+          "cooks_distance": 0.1048305567616848,
+          "d_b": 2.7503118314680233,
+          "leverage": 0.06942475911710856,
+          "residual": 2.894513452211232
+        },
+        {
+          "base_point_id": "bp-342",
+          "cooks_distance": 0.03606857195152262,
+          "d_b": -1.1725541990922652,
+          "leverage": 0.11689009198530627,
+          "residual": -1.2417315176336685
+        },
+        {
+          "base_point_id": "bp-369",
+          "cooks_distance": 0.033674005394937284,
+          "d_b": 0.8677342842533173,
+          "leverage": 0.2674779756225826,
+          "residual": 0.6579022704487008
+        },
+        {
+          "base_point_id": "bp-306",
+          "cooks_distance": 0.02845721764519798,
+          "d_b": 5.198792483479683,
+          "leverage": 0.006460157956839106,
+          "residual": 5.278338768218607
+        },
+        {
+          "base_point_id": "bp-246",
+          "cooks_distance": 0.027680799406890756,
+          "d_b": -1.2119863244844717,
+          "leverage": 0.05542697977099937,
+          "residual": -1.6896687307590867
+        },
+        {
+          "base_point_id": "bp-290",
+          "cooks_distance": 0.026002224899842132,
+          "d_b": -0.9450250210734943,
+          "leverage": 0.06443088262103602,
+          "residual": -1.5044280278665032
+        },
+        {
+          "base_point_id": "bp-208",
+          "cooks_distance": 0.018979897993252847,
+          "d_b": 4.708629697568768,
+          "leverage": 0.005151227340567028,
+          "residual": 4.8337698708018
+        },
+        {
+          "base_point_id": "bp-262",
+          "cooks_distance": 0.017847413540284324,
+          "d_b": -5.511528232261721,
+          "leverage": 0.004178450616058204,
+          "residual": -5.209533679438932
+        },
+        {
+          "base_point_id": "bp-026",
+          "cooks_distance": 0.017534133660454247,
+          "d_b": -4.004335378340535,
+          "leverage": 0.00945516458268882,
+          "residual": -3.4144367442883814
+        },
+        {
+          "base_point_id": "bp-331",
+          "cooks_distance": 0.01660996831870082,
+          "d_b": 1.7907435621981564,
+          "leverage": 0.01646468950056499,
+          "residual": 2.500546352407917
+        }
+      ]
+    },
+    "materiality_threshold": 0.2231,
+    "n_base_points": 390,
+    "null_annotation": "NONE",
+    "ols_slopes": {
+      "const": -0.2943914196436476,
+      "manifold_distance_diff": -0.9578718016059629,
+      "phi_diff": -3.3388983256051548
+    },
+    "raw_verdict": "FALSIFIED",
+    "residual_vs_covariate_correlations": {
+      "manifold_distance_diff": 9.890365713468374e-18,
+      "phi_diff": 5.529931346116279e-17
+    },
+    "sensitive_to_se_specification": false,
+    "unadjusted": {
+      "alpha": 0.05,
+      "ci_high": -0.14814639224157997,
+      "ci_low": -0.44063644704571536,
+      "df_resid": 389.0,
+      "intercept": -0.2943914196436477,
+      "se": 0.07438402722879454
+    },
+    "uncentered_effect_at_covariate_parity": {
+      "alpha": 0.05,
+      "ci_high": -0.18025128356084075,
+      "ci_low": -0.4769418257866399,
+      "df_resid": 387.0,
+      "intercept": -0.3285965546737403,
+      "se": 0.07545104892201909
+    },
+    "verdict": "FALSIFIED",
+    "within_magnitude_contrasts": {
+      "high": {
+        "alpha": 0.05,
+        "ci_high": -0.1826234220307789,
+        "ci_low": -0.5125063212808526,
+        "df_resid": 389.0,
+        "intercept": -0.34756487165581573,
+        "se": 0.08389351417969729
+      },
+      "low": {
+        "alpha": 0.05,
+        "ci_high": -0.0876941892066121,
+        "ci_low": -0.39474174605634726,
+        "df_resid": 389.0,
+        "intercept": -0.24121796763147968,
+        "se": 0.07808618944168841
+      }
+    }
+  },
+  "integrity": {
+    "all_real_shuffled_low_high_cells_exist_per_base": true,
+    "current_head": "a1ab257d6f6d38d496726b062ae160f8d770fc2c",
+    "frozen_results_commit": "51931280063d30c8cef2bf05d75a3e44cf996b8c",
+    "manifest_frozen_full_file_sha256": "f8f36b258420e2571c67a2229024402051aeb1d5f4156b853b63a7b33073c6d5",
+    "manifest_frozen_git_pointer_sha256": "eb83fdbd0887b0da18e10b6cbf08a9e98f261776dce8ce73996b929edf18051b",
+    "manifest_full_file_matches_frozen_lfs_oid": true,
+    "manifest_git_pointer_unchanged_since_frozen_commit": true,
+    "manifest_head_git_pointer_sha256": "eb83fdbd0887b0da18e10b6cbf08a9e98f261776dce8ce73996b929edf18051b",
+    "manifest_worktree_full_file_sha256": "f8f36b258420e2571c67a2229024402051aeb1d5f4156b853b63a7b33073c6d5",
+    "origin_main": "a1ab257d6f6d38d496726b062ae160f8d770fc2c",
+    "results_byte_identical_to_frozen_commit": true,
+    "results_frozen_commit_sha256": "4c1a71bcfbf0331b2b5c15e51d33fdcfb21b54304cb0c1192bf61ed77ab8427a",
+    "results_worktree_sha256": "4c1a71bcfbf0331b2b5c15e51d33fdcfb21b54304cb0c1192bf61ed77ab8427a",
+    "structural_receipt": {
+      "arms_present": [
+        "random",
+        "real",
+        "shuffled"
+      ],
+      "complete_three_by_two_per_base": true,
+      "distinct_base_points": 390,
+      "expected_base_points_ok": true,
+      "expected_rows_ok": true,
+      "magnitude_levels_present": [
+        "high",
+        "low"
+      ],
+      "nonfinite_rows": 0,
+      "nonpositive_h_rows": 0,
+      "real_shuffled_low_high_complete": true,
+      "rows": 2340
+    }
+  },
+  "materiality_threshold": 0.2231,
+  "primary_vs_secondary_hsem_agreement": {
+    "agreement": true,
+    "primary_verdict": "FALSIFIED",
+    "secondary_descriptive_verdict": "FALSIFIED"
+  },
+  "secondary_model": {
+    "fixed_effect_terms": {
+      "C(arm, Treatment(reference=\"shuffled\"))[T.random]": 0.19021945629627232,
+      "C(arm, Treatment(reference=\"shuffled\"))[T.random]:C(magnitude_level, Treatment(reference=\"low\"))[T.high]": -0.2258301924239548,
+      "C(arm, Treatment(reference=\"shuffled\"))[T.real]": -0.2764618381608879,
+      "C(arm, Treatment(reference=\"shuffled\"))[T.real]:C(magnitude_level, Treatment(reference=\"low\"))[T.high]": -0.10634690402435366,
+      "C(magnitude_level, Treatment(reference=\"low\"))[T.high]": -0.0936669837088776,
+      "Group Var": 0.38425392207708453,
+      "Intercept": -3.740975218236141,
+      "manifold_distance_recon": -0.32108077244080263,
+      "phi": -3.8807216031210814
+    },
+    "h_grad": {
+      "random_vs_shuffled_high": {
+        "ci_high": 0.11420475948878347,
+        "ci_low": -0.18542623174414843,
+        "estimate": -0.03561073612768248,
+        "se": 0.07643647735533977
+      },
+      "random_vs_shuffled_low": {
+        "ci_high": 0.34003495191273825,
+        "ci_low": 0.040403960679806394,
+        "estimate": 0.19021945629627232,
+        "se": 0.07643647735533976
+      },
+      "real_vs_shuffled_high": {
+        "ci_high": -0.24921518809141263,
+        "ci_low": -0.5164022962790704,
+        "estimate": -0.3828087421852415,
+        "se": 0.06815997657848413
+      },
+      "real_vs_shuffled_low": {
+        "ci_high": -0.142868284067059,
+        "ci_low": -0.41005539225471677,
+        "estimate": -0.2764618381608879,
+        "se": 0.06815997657848412
+      },
+      "status": "UNDEFINED_AT_MATCHED_MAGNITUDE / no verdict"
+    },
+    "h_mag": {
+      "ci_high": 0.03941527237566411,
+      "ci_low": -0.22674923979341932,
+      "estimate": -0.0936669837088776,
+      "se": 0.06789911024721516,
+      "verdict": "FALSIFIED"
+    },
+    "plane_type_x_magnitude_interaction": {
+      "random_x_high": {
+        "ci_high": -0.03762346095798663,
+        "ci_low": -0.41403692388992297,
+        "estimate": -0.2258301924239548,
+        "se": 0.09602384258467764
+      },
+      "real_x_high": {
+        "ci_high": 0.08185982744161448,
+        "ci_low": -0.2945536354903218,
+        "estimate": -0.10634690402435366,
+        "se": 0.09602384258467762
+      }
+    },
+    "secondary_hsem_equal_weight_real_vs_shuffled": {
+      "ci_high": -0.23481021831364018,
+      "ci_low": -0.4244603620324892,
+      "estimate": -0.3296352901730647,
+      "se": 0.04838013870378802,
+      "verdict_descriptive": "FALSIFIED"
+    },
+    "status": {
+      "boundary_random_intercept_variance": false,
+      "converged": true,
+      "fit_method": "MixedLM REML Wald CI",
+      "fixed_effects_fallback_used": false,
+      "formula": "log_H ~ C(arm, Treatment(reference=\"shuffled\")) * C(magnitude_level, Treatment(reference=\"low\")) + manifold_distance_recon + phi",
+      "library": "statsmodels",
+      "library_version": "0.14.6",
+      "random_intercept_variance": 0.3454467307960633
+    }
+  }
+}
