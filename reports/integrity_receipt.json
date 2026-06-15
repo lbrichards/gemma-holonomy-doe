@@ -1,0 +1,39 @@
+{
+  "all_real_shuffled_low_high_cells_exist_per_base": true,
+  "assertions_green_except_stale_head_equals_frozen_check": true,
+  "checkpoint_path": "run/holonomy_results_n390.parquet.checkpoint.jsonl",
+  "checkpoint_rows": 2340,
+  "current_head": "083b6fca0b9975703c5b6e370521509470d7b4a0",
+  "frozen_commit_expected": "51931280063d30c8cef2bf05d75a3e44cf996b8c",
+  "frozen_commit_is_ancestor_of_head": true,
+  "head_equals_frozen_commit_expected": false,
+  "head_matches_origin": true,
+  "head_note": "HEAD has advanced past the frozen results commit because the draft H-sem addendum was committed before this receipt.",
+  "lfs_listing_contains_manifest": true,
+  "manifest_diff_clean_vs_head": true,
+  "manifest_git_blob_pointer": "8ea1a09aa8ab6aaa8555e8bb16f82637cb9e2cc4",
+  "manifest_path": "run/manifest_n390.json",
+  "manifest_sha256_worktree_full_file": "f8f36b258420e2571c67a2229024402051aeb1d5f4156b853b63a7b33073c6d5",
+  "origin_main": "083b6fca0b9975703c5b6e370521509470d7b4a0",
+  "results_path": "run/holonomy_results_n390.parquet",
+  "structural_assertions": {
+    "arms_present": [
+      "random",
+      "real",
+      "shuffled"
+    ],
+    "complete_three_by_two_per_base": true,
+    "distinct_base_points": 390,
+    "expected_base_points_ok": true,
+    "expected_rows_ok": true,
+    "magnitude_levels_present": [
+      "high",
+      "low"
+    ],
+    "nonfinite_rows": 0,
+    "nonpositive_h_rows": 0,
+    "real_shuffled_low_high_complete": true,
+    "rows": 2340
+  },
+  "task": "pre-freeze H-sem structural integrity receipt"
+}
