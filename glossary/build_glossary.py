@@ -26,6 +26,10 @@ BADGE_COINED = '<span style="background-color: #4051b5; color: white; padding: 0
 BADGE_INHERITED = '<span style="background-color: #448aff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">INHERITED</span>'
 BADGE_TOPIC = '<span style="background-color: #7c4dff; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">TOPIC</span>'
 
+# Status badges - superseded/retired are prominent warnings
+BADGE_SUPERSEDED = '<span style="background-color: #ff9800; color: black; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">⚠ SUPERSEDED</span>'
+BADGE_RETIRED = '<span style="background-color: #f44336; color: white; padding: 0.2em 0.6em; border-radius: 0.25em; font-size: 0.85em; font-weight: 600;">⛔ RETIRED</span>'
+
 
 def slugify(name: str) -> str:
     """Convert term/topic name to a URL-safe slug."""
@@ -125,18 +129,45 @@ def build_glossary_index(terms: list[dict], topics: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def build_term_page(term: dict, all_names: set[str], term_to_topics: dict[str, list[str]]) -> str:
+def build_term_page(term: dict, all_names: set[str], term_to_topics: dict[str, list[str]], all_terms: list[dict]) -> str:
     """Build a single term's page with cross-links, badge, formula, and topic backlinks."""
-    badge = BADGE_COINED if term["kind"] == "coined" else BADGE_INHERITED
+    kind_badge = BADGE_COINED if term["kind"] == "coined" else BADGE_INHERITED
+    status = term.get("status", "current")
 
     lines = [
         f"# {term['name']}",
         "",
-        badge,
-        "",
+    ]
+
+    # Show status badge prominently for non-current terms
+    if status == "superseded":
+        lines.extend([
+            BADGE_SUPERSEDED,
+            "",
+            "> **This term is superseded.** It was valid under v1 but has been replaced. See the replacement below.",
+            "",
+            kind_badge,
+            "",
+        ])
+    elif status == "retired":
+        lines.extend([
+            BADGE_RETIRED,
+            "",
+            "> **This term is retired.** It is not part of the current v2 design and has no replacement.",
+            "",
+            kind_badge,
+            "",
+        ])
+    else:
+        lines.extend([
+            kind_badge,
+            "",
+        ])
+
+    lines.extend([
         f"{term['one_line']}",
         "",
-    ]
+    ])
 
     # Add formula as block math if present
     if term.get("formula"):
@@ -296,7 +327,7 @@ def main():
     # Write individual term pages
     for term in terms:
         slug = slugify(term["name"])
-        page_content = build_term_page(term, all_names, term_to_topics)
+        page_content = build_term_page(term, all_names, term_to_topics, terms)
         page_path = GLOSSARY_OUTPUT_DIR / f"{slug}.md"
         page_path.write_text(page_content)
         print(f"Wrote {page_path}")

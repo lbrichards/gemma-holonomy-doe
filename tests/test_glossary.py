@@ -117,6 +117,53 @@ def test_formula_is_optional_but_nonempty_if_present():
 
 
 # =============================================================================
+# Status field validation tests
+# =============================================================================
+
+VALID_STATUSES = {"current", "superseded", "retired"}
+
+
+def test_every_term_has_valid_status():
+    """Every term must have a status field with a valid value."""
+    terms = load_terms()
+
+    missing_status = []
+    invalid_status = []
+
+    for term in terms:
+        if "status" not in term:
+            missing_status.append(term["name"])
+        elif term["status"] not in VALID_STATUSES:
+            invalid_status.append((term["name"], term["status"]))
+
+    assert not missing_status, f"Terms missing 'status' field: {missing_status}"
+    assert not invalid_status, f"Terms with invalid status (must be current/superseded/retired): {invalid_status}"
+
+
+def test_no_current_term_depends_on_dead_term():
+    """Anti-leak: no current term may depend on a retired or superseded term.
+
+    A live concept defined in terms of a dead one is a structural error.
+    This prevents obsolete concepts from seeding further evolution.
+    """
+    terms = load_terms()
+    name_to_status = {t["name"]: t.get("status", "current") for t in terms}
+
+    violations = []
+    for term in terms:
+        if term.get("status") == "current":
+            for dep in term.get("depends_on") or []:
+                dep_status = name_to_status.get(dep, "current")
+                if dep_status in ("retired", "superseded"):
+                    violations.append((term["name"], dep, dep_status))
+
+    assert not violations, (
+        f"Anti-leak violation: current terms depending on retired/superseded terms: "
+        f"{[(v[0], v[1], v[2]) for v in violations]}"
+    )
+
+
+# =============================================================================
 # Topic validation tests
 # =============================================================================
 

@@ -1,1364 +1,1337 @@
 # Glossary of terms for the Gemma Holonomy DOE project
-# Each term has: name, kind (coined/inherited), one_line, why, source, depends_on
+# Each term has: name, kind (coined/inherited), status (current/superseded/retired), one_line, why, source, depends_on
 # Optional: formula (LaTeX string, no surrounding $)
 
 terms:
-  # ============================================================================
-  # COINED TERMS — Experimental Design
-  # ============================================================================
-
-  - name: common-support band
-    kind: coined
-    one_line: The magnitude range where all three plane-type arms (random, shuffled-feature, real-feature) have overlapping in-plane magnitude distributions, enabling matched comparisons.
-    why: >-
-      The three plane arms have widely separated magnitude distributions (real p50 ~65, shuffled ~59, random ~13).
-      Matching is only meaningful where distributions overlap; cutting levels on one arm alone would force
-      extrapolation rather than a true match.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - in-plane magnitude (pullback)
-      - common support / positivity
-
-  - name: band-collapse contingency
-    kind: coined
-    one_line: The pre-registered fallback procedure when the three-arm common-support band is empty or too narrow to support matched magnitude comparisons.
-    why: >-
-      If the arms do not share a common magnitude regime, this is itself a reportable finding.
-      The contingency defines how to proceed with two-arm analysis for H-sem and marks H-grad as undefined.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - common-support band
-      - two-arm terminal collapse
-
-  - name: two-arm terminal collapse
-    kind: coined
-    one_line: The fallback case where even the two-arm real+shuffled common-support band fails the minimum width requirement, making matched semantic comparison impossible.
-    why: >-
-      Added as a pre-data clarification to handle the edge case where real and shuffled features
-      also do not share a common magnitude regime. H-sem is then reported as undefined at matched magnitude.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - common-support band
-      - in-plane magnitude (pullback)
-
-  - name: three-arm band
-    kind: coined
-    one_line: The overlap of the [p5, p95] magnitude ranges across all three plane arms (real, shuffled, random), required to have width >= 0.5 × pooled IQR.
-    why: >-
-      Defines the primary common-support region where magnitude-matched comparisons are valid across
-      all three arms, enabling the full H-grad monotone gradient test.
-    source: bands/support.py
-    depends_on:
-      - common-support band
-      - pooled IQR
-
-  - name: two-arm band
-    kind: coined
-    one_line: The overlap of the [p5, p95] magnitude ranges for real and shuffled arms only, used as a fallback when the three-arm band collapses.
-    why: >-
-      When three-arm matching fails, the two-arm band preserves the ability to test H-sem (the powered
-      semantic hypothesis) at matched magnitude, even though H-grad becomes undefined.
-    source: bands/support.py
-    depends_on:
-      - common-support band
-      - band-collapse contingency
-
-  - name: pooled IQR
-    kind: coined
-    one_line: The interquartile range computed over the concatenated magnitude values from all arms in a band computation, used to set the minimum width threshold.
-    why: >-
-      The band width threshold is defined as 0.5 × pooled IQR to ensure the common-support region is
-      substantive relative to the overall magnitude spread, not just technically non-empty.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - interquartile range (IQR)
-
-  - name: minimum band width threshold
-    kind: coined
-    one_line: The requirement that a common-support band have width >= 0.5 × pooled IQR to be considered valid for matched comparisons.
-    formula: \text{width} \geq 0.5 \times \text{IQR}_{\text{pooled}}
-    why: >-
-      A narrow overlap that is technically non-empty but very thin would force magnitude levels
-      into an artificially compressed range, making the matched comparison meaningless.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - pooled IQR
-      - common-support band
-
-  - name: magnitude level
-    kind: coined
-    one_line: One of two fixed in-plane magnitudes (m_low at 25th percentile, m_high at 75th percentile) cut from the common-support band and applied identically to all three arms.
-    why: >-
-      Factor B of the factorial design; using the same absolute magnitude values across arms ensures
-      any observed holonomy differences reflect plane type, not magnitude confounding.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - common-support band
-      - in-plane magnitude (pullback)
-
-  - name: plane arm
-    kind: coined
-    one_line: One of three treatment levels in Factor A—real-feature, shuffled-feature, or random—each constructed according to the pairing rule.
-    why: >-
-      The factorial design crosses plane type (Factor A) with magnitude level (Factor B). The three
-      arms form a semantic gradient from noise floor (random) through disrupted (shuffled) to intact (real).
-    source: PREREGISTRATION_v2.md Section 2.1
-    depends_on:
-      - pairing rule
-
-  - name: real-feature plane
-    kind: coined
-    one_line: A plane spanned by two jointly active SAE features at the base point, representing intact semantic structure.
-    why: >-
-      Jointly active features capture the model's learned semantic geometry at the base point.
-      This arm is the upper anchor of the semantic gradient tested by H-grad.
-    source: planes/construct.py
-    depends_on:
-      - pairing rule
-      - active feature
-
-  - name: shuffled-feature plane
-    kind: coined
-    one_line: A control plane pairing one active SAE feature with one inactive dictionary feature, magnitude-matched to the real-feature plane.
-    why: >-
-      Disrupts semantic coherence while preserving feature-direction structure. The real-vs-shuffled
-      contrast is the powered H-sem test, isolating meaning from magnitude and feature geometry.
-    source: planes/construct.py
-    depends_on:
-      - pairing rule
-      - active feature
-      - inactive feature
-
-  - name: random plane
-    kind: coined
-    one_line: A noise-floor plane spanned by two random unit directions, providing the lower anchor of the H-grad semantic gradient.
-    why: >-
-      Random directions have no semantic relationship to the base point, serving as a baseline for
-      what holonomy looks like in the absence of any learned structure.
-    source: planes/construct.py
-    depends_on:
-      - pairing rule
-
-  - name: active feature
-    kind: coined
-    one_line: An SAE feature with positive activation (code > 0) at a given base point, indicating the feature fires on that input.
-    why: >-
-      Active features define the semantic content the SAE attributes to the base point. The real-feature
-      arm uses pairs of jointly active features to preserve this semantic structure.
-    source: planes/construct.py
-    depends_on:
-      - sparse autoencoder (SAE)
-
-  - name: inactive feature
-    kind: coined
-    one_line: An SAE feature with zero or negative activation (code <= 0) at a given base point, used as the second direction in shuffled-feature planes.
-    why: >-
-      Pairing an active feature with an inactive one breaks the joint activation structure while
-      still using a real dictionary direction, isolating semantic coherence from feature geometry.
-    source: planes/construct.py
-    depends_on:
-      - sparse autoencoder (SAE)
-
-  - name: pairing rule
-    kind: coined
-    one_line: The fixed procedure for constructing plane arms before holonomy computation, specifying how SAE features are selected and combined for each plane type.
-    why: >-
-      Ensures reproducible and pre-registered plane construction across the three arms: real-feature
-      uses jointly active features, shuffled-feature uses one active plus one inactive, random uses
-      two random unit directions.
-    source: PREREGISTRATION_v2.md Section 2.1
-    depends_on:
-      - sparse autoencoder (SAE)
-
-  - name: base point
-    kind: coined
-    one_line: A single layer-12 resid_post activation vector extracted from a WikiText passage, serving as the blocking unit and loop center origin.
-    why: >-
-      Each base point is evaluated across all 3 plane types × 2 magnitude levels, making it the
-      fundamental unit of the paired within-base-point contrast that powers H-sem.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - resid_post
-      - blocking unit
-
-  - name: experiment sample
-    kind: coined
-    one_line: The first 390 surviving base points (in seed order, excluding burned pilot points), constituting the fixed-N dataset for confirmatory analysis.
-    why: >-
-      The sample size is pre-registered and powered at 0.90 for the material effect. All 390 points
-      are run to completion and analyzed once, with no peeking or result-dependent stopping.
-    source: PREREGISTRATION_v2.md Section 9
-    depends_on:
-      - base point
-      - blind manifest boundary
-
-  - name: reserve pool
-    kind: coined
-    one_line: Base points beyond the 390 experiment sample, held back for dropout replacement or future analysis but never analyzed as part of the confirmatory study.
-    why: >-
-      Provides a safety margin if some experiment-sample points fail extraction or plane selection,
-      without introducing selection bias from result-dependent sampling.
-    source: PREREGISTRATION_v2.md Section 9
-    depends_on:
-      - experiment sample
-
-  - name: burned pilot points
-    kind: coined
-    one_line: The 16 reserve points (draw orders 96-111) used in the resid_post variance re-pilot, permanently excluded from both experiment sample and reserve.
-    why: >-
-      These points were "seen" during the v2 variance correction and must be excluded to preserve
-      blindness of the experiment sample to any pre-freeze observations.
-    source: PREREGISTRATION_v2.md Section 9
-    depends_on:
-      - reserve pool
-      - planning tau
-
-  - name: draw order
-    kind: coined
-    one_line: A sequential integer assigned to each surviving WikiText article after seed-42 shuffling, determining the experiment-vs-reserve partition.
-    why: >-
-      The draw order provides a reproducible, seed-determined sequence that defines which points enter
-      the experiment sample (first 390) versus reserve, independent of any response values.
-    source: corpus/draw.py
-    depends_on:
-      - corpus draw
-
-  - name: corpus draw
-    kind: coined
-    one_line: "The deterministic procedure for selecting WikiText passages: article reconstruction, seed-42 shuffle, raw word filtering, token truncation to 64 Gemma tokens."
-    why: >-
-      Fully reproducible passage selection from WikiText-103 ensures any researcher can regenerate
-      the exact same base-point inputs given the seed, revision, and filtering rules.
-    source: corpus/draw.py
-    depends_on:
-      - WikiText-103
-
-  - name: article reconstruction
-    kind: coined
-    one_line: The process of joining WikiText-103 raw rows between consecutive top-level headers into coherent articles, prior to passage sampling.
-    why: >-
-      Raw WikiText rows are line-level fragments; reconstruction yields contiguous prose passages
-      suitable for 64-token truncation, avoiding the length/format bias of raw-row sampling.
-    source: corpus/draw.py
-    depends_on:
-      - WikiText-103
-
-  - name: survivor-targeted draw
-    kind: coined
-    one_line: A draw procedure that continues drawing candidates until ≥700 pass the 64-token filter, sufficient for the 390-point experiment sample plus reserve.
-    why: >-
-      Targeting survivors ensures the pool contains enough points after filtering for the
-      N = 390 experiment sample plus reserve, avoiding under-draw sample size shortfalls.
-    source: corpus/draw.py
-    depends_on:
-      - corpus draw
-      - seed-42 determinism
-
-  - name: stage-1 / stage-2 partition (retired)
-    kind: coined
-    one_line: "[RETIRED in v2] The v1 split of the draw pool into 96 stage-1 + 96 stage-2 points; superseded by the single-stage N = 390 design."
-    why: >-
-      This partition supported the v1 two-stage rule at N = 96. When the hook-site correction
-      required re-deriving N to 390, the two-stage mechanism was retired and the partition
-      became moot. v2 uses a single-stage design with 390 experiment-sample points.
-    source: PREREGISTRATION_v2.md Section 6.3 (RETIRED)
-    depends_on:
-      - draw order
-      - two-stage rule (retired)
-
-  # ============================================================================
-  # COINED TERMS — Ordinary Words with Special Meanings
-  # ============================================================================
-
-  - name: Factor A (plane type)
-    kind: coined
-    one_line: The first factor in the factorial design, with three levels (random, shuffled-feature, real-feature) representing a semantic gradient from noise floor to intact structure.
-    why: >-
-      Factor A captures the semantic dimension of the experiment — whether the plane directions
-      have any meaningful relationship to the base point's learned representation.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - factorial design
-      - plane arm
-
-  - name: Factor B (magnitude level)
-    kind: coined
-    one_line: The second factor in the factorial design, with two levels (m_low at p25, m_high at p75) representing different in-plane magnitudes within the common-support band.
-    why: >-
-      Factor B captures the magnitude dimension — whether holonomy depends on how far from the
-      base point we probe, independent of semantic structure.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - factorial design
-      - magnitude level
-
-  - name: matched (magnitude-matched)
-    kind: coined
-    one_line: The property that all three plane arms are evaluated at identical absolute in-plane magnitude values, eliminating magnitude as a confound.
-    why: >-
-      Without magnitude matching, any holonomy difference between arms could be attributed to
-      the arms having different typical magnitudes rather than different semantic content.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - common-support band
-      - magnitude level
-
-  - name: survivor
-    kind: coined
-    one_line: A base point that passes all filters (64-token minimum, det M floor, valid plane selection) and enters the experiment sample or reserve.
-    why: >-
-      Not all drawn articles yield usable base points — some are too short, some have degenerate
-      planes. "Survivor" distinguishes points that make it through the full selection pipeline.
-    source: corpus/draw.py
-    depends_on:
-      - corpus draw
-      - det M degeneracy floor
-
-  - name: drop
-    kind: coined
-    one_line: An article or base point that fails a filter (too short, degenerate plane, etc.) and is excluded from the experiment, with the reason logged.
-    why: >-
-      Tracking drops with reasons enables auditing the selection pipeline — verifying that
-      exclusions follow the pre-registered rules rather than being result-dependent.
-    source: corpus/draw.py
-    depends_on:
-      - survivor
-
-  - name: frozen (pre-registration status)
-    kind: coined
-    one_line: The status indicating that the pre-registration document is locked and no substantive changes may be made, only blind clarifications via addenda.
-    why: >-
-      FROZEN status is the guarantee that hypotheses, methods, and analysis plans were committed
-      before any holonomy was observed, preventing post-hoc hypothesis modification.
-    source: PREREGISTRATION_v2.md header
-    depends_on:
-      - pre-registration
-
-  - name: blind (to holonomy)
-    kind: coined
-    one_line: The property that a decision, computation, or artifact is made without access to any holonomy response values, ensuring outcome-independence.
-    why: >-
-      Blindness is the core integrity property — plane selection, band computation, covariate
-      measurement, and manifest creation all occur before any θ or H is computed.
-    source: PREREGISTRATION_v2.md throughout
-    depends_on:
-      - Stage A
-      - blind handoff
-
-  - name: undefined at matched magnitude
-    kind: coined
-    one_line: The status assigned to H-grad (and H-sem under terminal collapse) when the common-support band is too narrow to support matched comparison.
-    why: >-
-      Rather than forcing an invalid comparison, the hypothesis is explicitly marked as
-      unevaluable under the matched-magnitude design, which is itself a reportable finding.
-    source: PREREGISTRATION_v2.md Section 2
-    depends_on:
-      - band-collapse contingency
-      - two-arm terminal collapse
-
-  - name: blind manifest boundary
-    kind: coined
-    one_line: The partition point separating the 390 experiment-sample base points from the reserve, determined by draw order and recorded before any holonomy is observed.
-    why: >-
-      Ensures the sample partition is fixed blind to outcomes, preventing selection bias.
-      The boundary is set by seed order, excluding the 16 burned pilot points.
-    source: PREREGISTRATION_v2.md Section 9
-    depends_on: []
-
-  - name: BandDecision
-    kind: coined
-    one_line: The structured record returned by bands/ containing band bounds, threshold, status (THREE_ARM_VALID/TWO_ARM_FALLBACK/TWO_ARM_TERMINAL), m_low, m_high, and per-hypothesis matched flags.
-    why: >-
-      The BandDecision schema captures the full evidence for the band decision — not just which
-      branch fired but the three-arm and two-arm widths that forced it, enabling audit verification.
-    source: bands/support.py
-    depends_on:
-      - common-support band
-      - three-arm band
-      - two-arm band
-
-  - name: seed-42 determinism
-    kind: coined
-    one_line: The property that the corpus draw with SEED_CORPUS = 42 produces bitwise-identical article indices, token sequences, and draw order across independent runs.
-    why: >-
-      Full seed-42 reproducibility means any researcher can regenerate the exact same candidate
-      pool and partition, making the experiment verifiable without access to original artifacts.
-    source: corpus/draw.py
-    depends_on:
-      - random seed
-      - bitwise reproducibility
-      - corpus draw
-
-  # ============================================================================
-  # COINED TERMS — Geometry and Transport
-  # ============================================================================
-
-  - name: det M degeneracy floor
-    kind: coined
-    one_line: A threshold (τ_detM = 0.413) below which planes are excluded because their pullback-metric area approaches zero, making holonomy ill-defined.
-    formula: \det(M) > \tau_{\det M}
-    why: >-
-      When det(M) approaches zero, the Jacobian maps the two plane directions toward collinear,
-      causing A_enclosed to vanish. This floor catches geometric degeneracy under the pullback metric,
-      replacing the earlier Euclidean φ floor.
-    source: PREREGISTRATION_v2.md Section 7.2.1
-    depends_on:
-      - Gram matrix
-      - Jacobian-vector product (JVP)
-      - pullback metric
-
-  - name: in-plane magnitude (pullback)
-    kind: coined
-    one_line: The G-norm of a vector's G-orthogonal projection onto a plane, computed as mag(h) = sqrt(a^T M a) where M is the plane Gram matrix under the pullback metric.
-    formula: \operatorname{mag}(h) = \sqrt{a^\top M a}
-    why: >-
-      Factor B (magnitude level) must be cut using a geometrically meaningful scalar. The pullback-metric
-      in-plane magnitude respects the model's learned geometry rather than imposing Euclidean assumptions.
-    source: PREREGISTRATION_v2.md Section 7.3
-    depends_on:
-      - pullback metric
-      - Gram matrix
-      - Jacobian-vector product (JVP)
-
-  - name: enclosed area (wedge)
-    kind: coined
-    one_line: The pullback-metric area of the loop, computed as A_enclosed = ρ² √(det M), which normalizes the rotation angle to yield holonomy.
-    formula: A_{\text{enclosed}} = \rho^2 \sqrt{\det M}
-    why: >-
-      Using pullback-metric area rather than Euclidean area (ρ² sin φ) ensures all geometric
-      quantities are computed under a single consistent metric, following the one-metric principle.
-    source: PREREGISTRATION_v2.md Section 7.2
-    depends_on:
-      - Gram matrix
-      - pullback metric
-
-  - name: G-projection coefficients
-    kind: coined
-    one_line: The coefficients a = M^{-1}(JD)^T(Jh) expressing the G-orthogonal projection of h onto the plane, used for center placement.
-    formula: a = M^{-1}(JD)^\top(Jh)
-    why: >-
-      The projection coefficients determine the in-plane component of the base activation under the
-      pullback metric, enabling magnitude-matched center construction that preserves out-of-plane context.
-    source: geometry/pullback.py
-    depends_on:
-      - Gram matrix
-      - Jacobian-vector product (JVP)
-
-  - name: center placement
-    kind: coined
-    one_line: The procedure for constructing a loop center at a target in-plane magnitude while preserving the out-of-plane component of the base activation.
-    formula: c = (h - v) + m \cdot \frac{v}{\|v\|_G}
-    why: >-
-      Magnitude matching requires moving the center along the in-plane direction to hit the target
-      magnitude while keeping the out-of-plane context unchanged, ensuring fair comparison across arms.
-    source: geometry/pullback.py
-    depends_on:
-      - G-projection coefficients
-      - magnitude level
-
-  - name: out-of-plane component
-    kind: coined
-    one_line: The portion of the base activation orthogonal to the plane under the pullback metric, preserved during center placement.
-    formula: h_{\perp} = h - v
-    why: >-
-      Preserving the out-of-plane component ensures the loop center maintains the same "context" as
-      the base point, with only the in-plane magnitude adjusted for Factor B.
-    source: geometry/pullback.py
-    depends_on:
-      - G-projection coefficients
-      - pullback metric
-
-  - name: eps_mag fallback
-    kind: coined
-    one_line: When in-plane magnitude is below eps_mag = 2.66, the offset direction switches to G-normalized d1 instead of the projection direction.
-    why: >-
-      If the base activation has negligible in-plane component, the projection direction is numerically
-      unstable. The fallback uses a deterministic alternative to avoid division-by-near-zero.
-    source: PREREGISTRATION_v2.md Section 7.3
-    depends_on:
-      - in-plane magnitude (pullback)
-      - center placement
-
-  - name: loop center
-    kind: coined
-    one_line: The center point c around which the holonomy loop is traced, positioned at the target in-plane magnitude via center placement.
-    why: >-
-      The loop center determines where in activation space the holonomy measurement occurs. Different
-      centers at m_low vs m_high test whether holonomy varies with in-plane magnitude.
-    source: transport/loop.py
-    depends_on:
-      - center placement
-      - magnitude level
-
-  - name: loop radius (ρ)
-    kind: coined
-    one_line: The radius ρ = radius_relative × ||base activation|| used for the holonomy loop, scaled to the local activation norm.
-    formula: \rho = 0.006 \times \|h\|
-    why: >-
-      A relative radius keeps the loop size proportionate to the activation scale, ensuring the
-      perturbation is "small" in a scale-invariant sense across different base points.
-    source: PREREGISTRATION_v2.md Section 7.1
-    depends_on:
-      - base point
-
-  - name: rotation angle (θ)
-    kind: coined
-    one_line: The signed angle θ extracted from the antisymmetric part of the transport operator, representing the accumulated rotation around the loop.
-    formula: \theta = \frac{1}{2}[(H-I)_{21} - (H-I)_{12}]
-    why: >-
-      The antisymmetric part captures pure rotation, while the symmetric part (diagnostic only)
-      reflects non-rotational distortion. The sign encodes loop orientation.
-    source: transport/loop.py
-    depends_on:
-      - transport operator
-
-  - name: transport operator
-    kind: coined
-    one_line: The 2×2 matrix H accumulating the effect of parallel-transporting a probe frame around the loop via iterated restricted Jacobian steps.
-    formula: H = \prod_{i=1}^{n} J_{i+1}^+ J_i
-    why: >-
-      H encodes how much a tangent frame rotates after traversing the closed loop. The deviation
-      from identity measures local curvature; the holonomy is the rotation angle per enclosed area.
-    source: transport/loop.py
-    depends_on:
-      - restricted Jacobian
-      - parallel transport
-
-  - name: restricted Jacobian
-    kind: coined
-    one_line: The 2-column matrix [J d1, J d2] giving the Jacobian of the readout map restricted to the plane directions, computed via JVP.
-    why: >-
-      Full Jacobian materialization is prohibitive for high-dimensional activations. The restricted
-      Jacobian captures the action of J on the plane subspace, sufficient for pullback metric and transport.
-    source: transport/loop.py
-    depends_on:
-      - Jacobian-vector product (JVP)
-
-  - name: symmetric residual
-    kind: coined
-    one_line: The Frobenius norm of the symmetric part of (H - I), a diagnostic for non-rotational distortion in the transport operator.
-    why: >-
-      A pure rotation yields H - I purely antisymmetric. Non-zero symmetric residual indicates
-      stretching or numerical error; it is reported but never folded into the response.
-    source: transport/loop.py
-    depends_on:
-      - transport operator
-
-  - name: one-metric principle
-    kind: coined
-    one_line: The design choice to compute all geometric quantities (magnitude, area, transport) under a single consistent pullback metric G = J^T J.
-    why: >-
-      Mixing Euclidean and pullback-metric quantities would introduce inconsistent notions of "distance"
-      and "area." A unified metric ensures geometric coherence throughout the measurement pipeline.
-    source: PREREGISTRATION_v2.md Section 7.2
-    depends_on:
-      - pullback metric
-
-  # ============================================================================
-  # COINED TERMS — Hypotheses and Analysis
-  # ============================================================================
-
-  - name: H-sem
-    kind: coined
-    one_line: The powered semantic hypothesis predicting that real-feature planes show materially greater holonomy than magnitude-matched shuffled-feature planes after covariate adjustment.
-    why: >-
-      H-sem is the load-bearing claim of the study: that semantic coherence (joint activation) contributes
-      to holonomy beyond what magnitude and feature geometry alone would explain.
-    source: PREREGISTRATION_v2.md Section 3
-    depends_on:
-      - real-feature plane
-      - shuffled-feature plane
-      - covariate adjustment
-
-  - name: H-mag
-    kind: coined
-    one_line: The magnitude hypothesis predicting that holonomy increases with in-plane pullback-metric magnitude, pooled across plane types.
-    why: >-
-      Tests whether activation magnitude is a main effect on holonomy, independent of semantic structure.
-      A positive H-mag would indicate curvature scales with how far from the base point we probe.
-    source: PREREGISTRATION_v2.md Section 3
-    depends_on:
-      - magnitude level
-      - holonomy
-
-  - name: H-grad
-    kind: coined
-    one_line: "The gradient hypothesis predicting a monotone ordering of holonomy: random < shuffled < real, indicating a semantic gradient."
-    why: >-
-      If H-grad holds, it suggests holonomy increases smoothly with semantic coherence, not just as a
-      binary real-vs-shuffled effect. Requires three-arm band validity to test.
-    source: PREREGISTRATION_v2.md Section 3
-    depends_on:
-      - plane arm
-      - three-arm band
-
-  - name: materiality threshold
-    kind: coined
-    one_line: The minimum effect size log(1.25) = 0.2231 on the log scale (a 25% multiplicative change) below which effects are not considered material.
-    formula: \delta = \log(1.25) = 0.2231
-    why: >-
-      Defines "material" for all three hypotheses. An effect below this threshold is too small to matter
-      scientifically, even if statistically significant. Powers the 0.90 power calculation.
-    source: PREREGISTRATION_v2.md Section 6.1
-    depends_on: []
-
-  - name: CORROBORATED verdict
-    kind: coined
-    one_line: The verdict when the CI lower bound lies above the materiality threshold, indicating the hypothesis is supported by the data.
-    why: >-
-      A pre-registered three-way verdict system (CORROBORATED/FALSIFIED/INCONCLUSIVE) ensures honest
-      reporting of whether the effect is reliably material, reliably immaterial, or uncertain.
-    source: PREREGISTRATION_v2.md Section 6.2
-    depends_on:
-      - materiality threshold
-      - confidence interval
-
-  - name: FALSIFIED verdict
-    kind: coined
-    one_line: The verdict when the CI upper bound lies below the materiality threshold, indicating the effect is reliably too small to matter.
-    why: >-
-      FALSIFIED is not "negative evidence" but positive evidence of absence: the effect is confidently
-      below the materiality bar, making the hypothesis materially false.
-    source: PREREGISTRATION_v2.md Section 6.2
-    depends_on:
-      - materiality threshold
-      - confidence interval
-
-  - name: INCONCLUSIVE verdict
-    kind: coined
-    one_line: The verdict when the CI spans the materiality threshold, indicating insufficient precision to determine materiality.
-    why: >-
-      Distinguishes statistical insignificance from scientific inconclusiveness. The study is powered
-      to make INCONCLUSIVE unlikely for H-sem at the material effect size.
-    source: PREREGISTRATION_v2.md Section 6.2
-    depends_on:
-      - materiality threshold
-      - confidence interval
-
-  - name: NULL-ATTRIBUTED verdict
-    kind: coined
-    one_line: A special FALSIFIED branch for H-sem when an unadjusted effect vanishes under covariate adjustment, attributing the apparent effect to confounds.
-    why: >-
-      If real-vs-shuffled differs unadjusted but not adjusted, the signal came from manifold distance
-      or φ, not from meaning. This is a publishable null, not a failure to detect.
-    source: PREREGISTRATION_v2.md Section 7.4
-    depends_on:
-      - covariate adjustment
-      - H-sem
-
-  - name: fixed-N design
-    kind: coined
-    one_line: An experimental design where sample size (N = 390) is determined in advance and all observations are collected before analysis, with no peeking or early stopping.
-    why: >-
-      The N = 390 is fixed before data collection. This prevents optional-stopping problems
-      that inflate false positives, making the null verdict interpretable as material absence.
-      Single-stage: all 390 points run to completion, then analyzed once.
-    source: PREREGISTRATION_v2.md Section 6.3
-    depends_on:
-      - power
-
-  - name: two-stage rule (retired)
-    kind: coined
-    one_line: "[RETIRED in v2] The v1 rescue mechanism where a second batch of N₂ = 96 would run if stage-1 H-sem was INCONCLUSIVE; removed when N was re-derived to 390."
-    why: >-
-      v1 was powered at N = 96 with τ = 0.649 (resid_pre). After the hook-site correction,
-      τ rose to 1.30 and N was re-derived to 390 for adequate power. At this sample size,
-      the two-stage rescue became unnecessary and was retired in v2 §6.3.
-    source: PREREGISTRATION_v2.md Section 6.3 (RETIRED)
-    depends_on:
-      - fixed-N design
-      - INCONCLUSIVE verdict
-
-  - name: pre-data clarification
-    kind: coined
-    one_line: A post-freeze addition to the pre-registration that is provably outcome-independent because it is recorded before any response values are computed.
-    why: >-
-      Some operational details (pairing rule, article reconstruction, terminal collapse case) were
-      refined after freeze but before any holonomy was observed. Timestamped addenda preserve integrity.
-    source: PREREGISTRATION_v2.md Addenda section
-    depends_on:
-      - pre-registration
-
-  - name: 97% deviation metric
-    kind: coined
-    one_line: The empirical finding from FishBack that the pullback metric deviates from Euclidean by over 97% in relative spectral norm on GPT-2, justifying metric-aware geometry.
-    why: >-
-      This quantifies why treating activation space as Euclidean is wrong — the model's learned
-      geometry differs drastically from flat space, making pullback-metric magnitude necessary.
-    source: "FishBack (2026); arXiv"
-    depends_on:
-      - pullback metric
-
-  - name: holonomy-magnitude response
-    kind: coined
-    one_line: The measured relationship between in-plane magnitude and holonomy (rotation per enclosed area), the primary response variable testing H-mag.
-    formula: H = \frac{|\theta|}{A_{\text{enclosed}}}
-    why: >-
-      Quantifies how holonomy scales with magnitude to disentangle magnitude effects from semantic
-      structure effects, enabling the factorial design to isolate each factor's contribution.
-    source: PREREGISTRATION_v2.md Section 3 (H-mag)
-    depends_on:
-      - holonomy
-      - in-plane magnitude (pullback)
-      - enclosed area (wedge)
-
-  - name: covariate adjustment
-    kind: coined
-    one_line: Regression adjustment for manifold distance and φ in the real-vs-shuffled contrast, applied by default regardless of balance.
-    why: >-
-      Even if balance diagnostics look good, adjustment removes any residual confounding. The adjusted
-      contrast is the primary H-sem test; unadjusted is reported alongside for comparison.
-    source: PREREGISTRATION_v2.md Section 7.4
-    depends_on:
-      - manifold distance
-      - φ (plane angle)
-
-  - name: log-scale paired contrast
-    kind: coined
-    one_line: The within-base-point difference d_b = log H_real - log H_shuffled, the primary test statistic for H-sem.
-    formula: d_b = \log H_{\text{real}} - \log H_{\text{shuffled}}
-    why: >-
-      Taking differences within each base point removes base-point-level variation, maximizing power.
-      The log scale makes the materiality threshold (0.2231) a multiplicative 25% change.
-    source: PREREGISTRATION_v2.md Section 7
-    depends_on:
-      - holonomy
-      - base point
-
-  - name: planning tau
-    kind: coined
-    one_line: The assumed standard deviation (tau = 1.30) of the log-scale paired contrast used to power the study at N = 390.
-    why: >-
-      Derived from the resid_post variance re-pilot on 16 reserve points (tau_pilot = 1.11, 95% CI [0.82, 1.72]).
-      The planning tau of 1.30 is a conservative choice near the 72% upper confidence bound.
-    source: PREREGISTRATION_v2.md Section 5
-    depends_on:
-      - log-scale paired contrast
-
-  - name: magnitude-matched shuffled-feature plane
-    kind: coined
-    one_line: A control plane constructed by pairing one active SAE feature with one inactive real dictionary feature, matched to real-feature planes in pullback-metric in-plane magnitude.
-    why: >-
-      Provides a semantically degraded control that preserves magnitude structure, isolating the
-      contribution of semantic coherence to holonomy from the confounding effect of activation magnitude.
-    source: PREREGISTRATION_v2.md Section 2.1
-    depends_on:
-      - pairing rule
-      - in-plane magnitude (pullback)
-      - shuffled-feature plane
-
-  # ============================================================================
-  # COINED TERMS — Covariates and Balance
-  # ============================================================================
-
-  - name: manifold distance
-    kind: coined
-    one_line: A nuisance covariate measuring how far loop points lie from the learned manifold, via SAE reconstruction error and/or reference distribution distance.
-    why: >-
-      If real-feature loops stay closer to the manifold than shuffled-feature loops, any holonomy
-      difference could be confounded by proximity to learned structure rather than semantic coherence.
-    source: PREREGISTRATION_v2.md Section 4.1
-    depends_on:
-      - SAE reconstruction error
-      - reference distribution
-
-  - name: reference distribution
-    kind: coined
-    one_line: The Mahalanobis (or kNN fallback) distribution fitted to experiment-sample activations, used as a guard proxy for manifold distance.
-    why: >-
-      SAE reconstruction error alone can miss points that reconstruct cheaply but lie far from real
-      activations. The reference distribution catches this documented failure mode.
-    source: covariates/measure.py
-    depends_on:
-      - Mahalanobis distance
-      - kNN distance fallback
-
-  - name: kNN distance fallback
-    kind: coined
-    one_line: A fallback guard-distance method using mean k-nearest-neighbor distance when the covariance matrix is ill-conditioned for Mahalanobis.
-    why: >-
-      In high-dimensional settings, the empirical covariance may be rank-deficient or ill-conditioned.
-      kNN distance provides a robust non-parametric alternative that still measures distance to the reference cloud.
-    source: covariates/measure.py
-    depends_on:
-      - Mahalanobis distance
-
-  - name: φ (plane angle)
-    kind: coined
-    one_line: The mutual Euclidean angle between the two raw normalized plane directions, computed as arccos(d₁ · d₂).
-    formula: \varphi = \arccos(d_1 \cdot d_2)
-    why: >-
-      Although the primary response uses pullback-metric area, φ captures native Euclidean feature
-      geometry, which is semantically loaded and must be balance-checked.
-    source: PREREGISTRATION_v2.md Section 4.2
-    depends_on: []
-
-  - name: log sin φ check
-    kind: coined
-    one_line: A belt-and-suspenders balance diagnostic requiring |mean(log sin φ_real) - mean(log sin φ_shuffled)| < 0.045.
-    why: >-
-      The 0.045 threshold is ~1/5 of the materiality threshold (0.223), ensuring φ imbalance
-      is negligible relative to the effect size of interest.
-    source: PREREGISTRATION_v2.md Section 4.3
-    depends_on:
-      - φ (plane angle)
-      - standardized mean difference (SMD)
-
-  - name: balance diagnostic
-    kind: coined
-    one_line: Pre-unblinding checks (SMD, overlap, log sin φ) comparing real-vs-shuffled covariate distributions to characterize imbalance.
-    why: >-
-      Computed blind before holonomy is observed, balance diagnostics inform interpretation but do not
-      gate the analysis. Adjustment is applied by default regardless of balance.
-    source: PREREGISTRATION_v2.md Section 4.3
-    depends_on:
-      - standardized mean difference (SMD)
-      - common support / positivity
-
-  # ============================================================================
-  # COINED TERMS — Pipeline and Artifacts
-  # ============================================================================
-
-  - name: Stage A
-    kind: coined
-    one_line: The blind setup phase that extracts activations, selects planes, computes the magnitude band, constructs centers, measures covariates, and produces the manifest.
-    why: >-
-      Stage A is structurally incapable of computing or storing response values. This enforces the
-      pre-registration principle that all design decisions are frozen before holonomy is observed.
-    source: stage_a/run.py
-    depends_on:
-      - center placement
-      - base point
-
-  - name: Stage B
-    kind: coined
-    one_line: The measurement phase that reads a Stage A manifest and writes holonomy response values to a separate artifact, never mutating the manifest.
-    why: >-
-      Separation of setup (Stage A) and measurement (Stage B) ensures the blind boundary is maintained.
-      Stage B cannot influence plane selection, band decisions, or covariate measurement.
-    source: stage_b/run.py
-    depends_on:
-      - run manifest
-      - holonomy
-
-  - name: run manifest
-    kind: coined
-    one_line: The JSON artifact serializing all Stage A decisions (planes, centers, covariates, band) but structurally forbidding response fields.
-    why: >-
-      The manifest is the blind handoff between stages. Schema validation rejects any field whose name
-      contains "holonomy", "theta", or "transport", enforcing the blind boundary at the type level.
-    source: manifest/schema.py
-    depends_on:
-      - Stage A
-
-  - name: blind handoff
-    kind: coined
-    one_line: The design principle that Stage A outputs are frozen and complete before Stage B begins, with no feedback loop from responses to design.
-    why: >-
-      Prevents any form of data peeking or result-dependent design modification. The manifest schema
-      physically cannot carry response values, making post-hoc manipulation impossible.
-    source: manifest/schema.py
-    depends_on:
-      - run manifest
-      - Stage A
-      - Stage B
-
-  - name: resid_post
-    kind: coined
-    one_line: The residual-stream activation at the output of a transformer block (post-layernorm, pre-next-block), the extraction site for this study.
-    why: >-
-      The Gemma Scope SAE is trained on layer-12 resid_post, so base points must be extracted at the
-      same site for SAE encoding to be meaningful. v1's resid_pre error motivated the v2 correction.
-    source: extraction/extract.py
-    depends_on:
-      - residual stream
-
-  - name: forward hook
-    kind: coined
-    one_line: A PyTorch hook registered on a module to capture intermediate activations during the forward pass, used for extraction and JVP computation.
-    why: >-
-      Forward hooks provide read access to internal layer outputs without modifying the model.
-      They enable extracting resid_post and computing the readout-map JVP for transport.
-    source: extraction/extract.py
-    depends_on:
-      - forward pass
-
-  - name: readout map
-    kind: coined
-    one_line: "The function F: resid_post_12 → resid_post_13 computed by patching layer-12 output and capturing layer-13 output, whose Jacobian drives transport."
-    why: >-
-      The JVP of the readout map gives the local linear approximation of how layer-13 responds to
-      perturbations at layer-12, defining the pullback metric and connection for transport.
-    source: stage_a/run.py
-    depends_on:
-      - forward hook
-      - Jacobian-vector product (JVP)
-
-  - name: loop sweep
-    kind: coined
-    one_line: The n_steps + 1 points traced along the γ(t) = c + ρ(cos(2πt) d₁ + sin(2πt) d₂) circle for transport and covariate measurement.
-    why: >-
-      The loop discretization must be fine enough for accurate transport accumulation (n_steps = 200)
-      but coarse covariate sampling (32 points) suffices for mean manifold distance.
-    source: transport/loop.py
-    depends_on:
-      - loop center
-      - loop radius (ρ)
-
-  # ============================================================================
-  # INHERITED TERMS — Machine Learning
-  # ============================================================================
-
-  - name: sparse autoencoder (SAE)
-    kind: inherited
-    one_line: A neural network that learns a sparse overcomplete dictionary for reconstructing activations, decomposing them into interpretable feature directions; provides the feature-based planes that define the semantic structure hypothesis.
-    why: null
-    source: "Olshausen & Field (1996); Anthropic (2023); Gemma Scope (Google DeepMind)"
-    depends_on: []
-
-  - name: SAE decoder
-    kind: inherited
-    one_line: The W_dec matrix of the SAE whose rows are the learned dictionary directions; the feature directions from W_dec span real-feature and shuffled-feature planes.
-    why: null
-    source: "SAE architecture; sae-lens"
-    depends_on:
-      - sparse autoencoder (SAE)
-
-  - name: SAE encoder
-    kind: inherited
-    one_line: The W_enc matrix and bias b_enc of the SAE that maps activations to sparse codes; used to identify active vs inactive features at each base point.
-    why: null
-    source: "SAE architecture; sae-lens"
-    depends_on:
-      - sparse autoencoder (SAE)
-
-  - name: JumpReLU
-    kind: inherited
-    one_line: An activation function that outputs zero below a learned threshold and the pre-activation above it, used in Gemma Scope SAEs.
-    formula: \text{JumpReLU}(x) = x \cdot \mathbf{1}[x > \tau]
-    why: null
-    source: "Gemma Scope (Google DeepMind)"
-    depends_on:
-      - sparse autoencoder (SAE)
-
-  - name: SAE reconstruction error
-    kind: inherited
-    one_line: The L2 distance between an activation and its SAE reconstruction; used as a manifold-distance proxy to detect loop points that drift off the learned activation manifold.
-    formula: \|x - \hat{x}\|_2
-    why: null
-    source: "Sparse autoencoders (Olshausen & Field 1996); Gemma Scope (Google DeepMind)"
-    depends_on:
-      - sparse autoencoder (SAE)
-
-  - name: L0 sparsity
-    kind: inherited
-    one_line: The number of non-zero elements in the SAE code vector; determines how many active features are available for forming real-feature plane pairs at each base point.
-    formula: L_0 = \|\text{code}\|_0
-    why: null
-    source: "Compressed sensing; SAE literature"
-    depends_on:
-      - sparse autoencoder (SAE)
-
-  - name: residual stream
-    kind: inherited
-    one_line: The additive information flow through a transformer where each layer adds its contribution to the accumulated hidden state; the resid_post site is where SAEs are trained and base points extracted.
-    why: null
-    source: "Transformer architecture (Vaswani et al. 2017); Elhage et al. (2021)"
-    depends_on: []
-
-  - name: forward pass
-    kind: inherited
-    one_line: A single evaluation of the neural network from inputs to outputs, during which intermediate activations can be captured via hooks.
-    why: null
-    source: "Neural network fundamentals"
-    depends_on: []
-
-  - name: attention mask
-    kind: inherited
-    one_line: A tensor indicating which tokens should attend to which, used to prevent attending to padding or future tokens.
-    why: null
-    source: "Transformer architecture (Vaswani et al. 2017)"
-    depends_on: []
-
-  - name: token
-    kind: inherited
-    one_line: A discrete unit of text (word, subword, or character) produced by the tokenizer and consumed by the model.
-    why: null
-    source: "NLP fundamentals; BPE (Sennrich et al. 2016)"
-    depends_on: []
-
-  - name: tokenizer
-    kind: inherited
-    one_line: The algorithm that converts raw text to token IDs and vice versa, determining the vocabulary and segmentation.
-    why: null
-    source: "NLP fundamentals; Hugging Face transformers"
-    depends_on: []
-
-  # ============================================================================
-  # INHERITED TERMS — Differential Geometry
-  # ============================================================================
-
-  - name: pullback metric
-    kind: inherited
-    one_line: The induced metric G = JᵀJ on the input space, pulled back from the output space via the Jacobian J; defines how the model "perceives" distances and areas, making it the natural metric for all geometric quantities in this study.
-    formula: G = J^\top J
-    why: null
-    source: "Curved Inference (2025); FishBack (2026)"
-    depends_on:
-      - Gram matrix
-      - Jacobian-vector product (JVP)
-
-  - name: holonomy
-    kind: inherited
-    one_line: The rotation angle θ accumulated by parallel-transporting a vector around a closed loop, divided by the enclosed area; the primary response variable measuring local curvature in the model's learned geometry.
-    formula: H = \frac{\theta}{A}
-    why: null
-    source: "Differential geometry (Riemannian holonomy); Ambrose-Singer theorem"
-    depends_on:
-      - parallel transport
-      - enclosed area (wedge)
-
-  - name: parallel transport
-    kind: inherited
-    one_line: The procedure for moving a tangent vector along a curve while keeping it as parallel as possible according to the connection; the mechanism by which holonomy accumulates rotation around the loop.
-    why: null
-    source: "Differential geometry (affine connections)"
-    depends_on:
-      - pullback metric
-
-  - name: tangent vector
-    kind: inherited
-    one_line: A vector in the tangent space at a point, representing an infinitesimal direction of motion on the manifold.
-    why: null
-    source: "Differential geometry"
-    depends_on: []
-
-  - name: connection
-    kind: inherited
-    one_line: A rule for parallel-transporting tangent vectors along curves, defining how to compare vectors at different points.
-    why: null
-    source: "Differential geometry (affine/Levi-Civita connections)"
-    depends_on:
-      - pullback metric
-
-  - name: curvature
-    kind: inherited
-    one_line: A measure of how a manifold deviates from being flat, detected by the failure of parallel transport around closed loops to return vectors unchanged.
-    why: null
-    source: "Differential geometry (Riemann curvature tensor)"
-    depends_on:
-      - connection
-
-  - name: closed loop
-    kind: inherited
-    one_line: A curve that starts and ends at the same point, around which parallel transport may accumulate a non-trivial rotation (holonomy).
-    why: null
-    source: "Differential geometry"
-    depends_on: []
-
-  # ============================================================================
-  # INHERITED TERMS — Linear Algebra
-  # ============================================================================
-
-  - name: Gram matrix
-    kind: inherited
-    one_line: A matrix M = DᵀGD encoding inner products of plane directions D under metric G; its determinant determines the enclosed area and the det M degeneracy floor.
-    formula: M = D^\top G D
-    why: null
-    source: "Linear algebra (Gramian matrix)"
-    depends_on: []
-
-  - name: Jacobian-vector product (JVP)
-    kind: inherited
-    one_line: The product Jv of the Jacobian matrix J with a vector v, computed efficiently via forward-mode autodiff; enables computing the restricted Jacobian and pullback metric without materializing the full Jacobian.
-    formula: Jv = \frac{\partial f}{\partial x} v
-    why: null
-    source: "Automatic differentiation (forward mode); JAX/PyTorch documentation"
-    depends_on: []
-
-  - name: determinant
-    kind: inherited
-    one_line: A scalar value encoding the signed volume scaling factor of a linear transformation, with det = 0 indicating singularity.
-    formula: \det(M)
-    why: null
-    source: "Linear algebra"
-    depends_on: []
-
-  - name: pseudoinverse
-    kind: inherited
-    one_line: A generalization of the matrix inverse that exists for non-square or singular matrices; used to compute the transport-step operator J⁺ᵢ₊₁Jᵢ from the restricted Jacobian.
-    formula: A^+ = (A^\top A)^{-1} A^\top
-    why: null
-    source: "Linear algebra (Moore-Penrose pseudoinverse)"
-    depends_on: []
-
-  - name: matrix condition number
-    kind: inherited
-    one_line: The ratio of the largest to smallest singular value; monitored at each transport step to flag numerical instability in the restricted Jacobian.
-    formula: \kappa(A) = \frac{\sigma_{\max}}{\sigma_{\min}}
-    why: null
-    source: "Numerical linear algebra"
-    depends_on: []
-
-  - name: Frobenius norm
-    kind: inherited
-    one_line: The square root of the sum of squared matrix elements; used to compute the symmetric residual diagnostic for non-rotational distortion in the transport operator.
-    formula: \|A\|_F = \sqrt{\sum_{ij} A_{ij}^2}
-    why: null
-    source: "Linear algebra"
-    depends_on: []
-
-  - name: vector norm
-    kind: inherited
-    one_line: A function assigning a non-negative length to a vector, typically the Euclidean (L2) norm.
-    formula: \|v\|_2 = \sqrt{\sum_i v_i^2}
-    why: null
-    source: "Linear algebra"
-    depends_on: []
-
-  - name: inner product
-    kind: inherited
-    one_line: A generalization of the dot product defining angles and lengths in a vector space, here given by the pullback metric.
-    formula: \langle u, v \rangle_G = u^\top G v
-    why: null
-    source: "Linear algebra"
-    depends_on: []
-
-  - name: orthogonal projection
-    kind: inherited
-    one_line: The closest point in a subspace to a given vector, obtained by minimizing the distance under the chosen metric.
-    why: null
-    source: "Linear algebra"
-    depends_on:
-      - inner product
-
-  - name: unit vector
-    kind: inherited
-    one_line: A vector normalized to have length 1 under the relevant norm, used to represent directions.
-    formula: \hat{v} = \frac{v}{\|v\|}
-    why: null
-    source: "Linear algebra"
-    depends_on:
-      - vector norm
-
-  # ============================================================================
-  # INHERITED TERMS — Statistics
-  # ============================================================================
-
-  - name: standardized mean difference (SMD)
-    kind: inherited
-    one_line: The difference in group means divided by the pooled standard deviation; used to assess covariate balance between real and shuffled arms before unblinding, flagging potential confounding if |SMD| > 0.1.
-    formula: \text{SMD} = \frac{\bar{x}_1 - \bar{x}_2}{s_{\text{pooled}}}
-    why: null
-    source: "Cohen's d; propensity-score balance literature (Austin; Stuart)"
-    depends_on: []
-
-  - name: Mahalanobis distance
-    kind: inherited
-    one_line: A distance metric that accounts for correlations in the data by scaling by the inverse covariance matrix; used to detect loop points that drift far from the reference activation distribution, guarding against off-manifold confounding.
-    formula: d_M(x) = \sqrt{(x - \mu)^\top \Sigma^{-1} (x - \mu)}
-    why: null
-    source: "Mahalanobis (1936); multivariate statistics"
-    depends_on: []
-
-  - name: mixed-effects model
-    kind: inherited
-    one_line: A regression model containing both fixed effects (population-level coefficients) and random effects (group-level variation); models within-base-point blocking to maximize power for H-sem.
-    formula: y = X\beta + Zu + \varepsilon
-    why: null
-    source: "Laird & Ware (1982); lme4/statsmodels"
-    depends_on: []
-
-  - name: common support / positivity
-    kind: inherited
-    one_line: The requirement that all treatment groups have overlapping covariate distributions; the conceptual basis for the common-support band ensuring magnitude matching does not extrapolate.
-    why: null
-    source: "Causal inference (Rosenbaum & Rubin); propensity-score methods"
-    depends_on: []
-
-  - name: confidence interval
-    kind: inherited
-    one_line: An interval estimate of a parameter such that repeated sampling would capture the true value a specified proportion (e.g., 95%) of the time; compared against the materiality threshold to assign verdicts.
-    why: null
-    source: "Frequentist statistics (Neyman)"
-    depends_on: []
-
-  - name: effect size
-    kind: inherited
-    one_line: A standardized measure of the magnitude of a phenomenon, independent of sample size; the materiality threshold δ = 0.2231 defines what effect size counts as scientifically meaningful.
-    why: null
-    source: "Cohen (1988); meta-analysis literature"
-    depends_on: []
-
-  - name: power
-    kind: inherited
-    one_line: The probability of correctly rejecting a false null hypothesis; set at 0.90 for detecting the material effect size δ at the planning τ, determining the required N = 390.
-    formula: 1 - \beta
-    why: null
-    source: "Neyman-Pearson hypothesis testing"
-    depends_on: []
-
-  - name: alpha (significance level)
-    kind: inherited
-    one_line: The pre-specified probability of falsely rejecting a true null hypothesis (Type I error rate), here 0.05.
-    why: null
-    source: "Neyman-Pearson hypothesis testing"
-    depends_on: []
-
-  - name: variance
-    kind: inherited
-    one_line: The expected squared deviation from the mean, measuring the spread of a distribution.
-    formula: \text{Var}(X) = E[(X - \mu)^2]
-    why: null
-    source: "Probability theory"
-    depends_on: []
-
-  - name: standard deviation
-    kind: inherited
-    one_line: The square root of the variance, a measure of spread in the same units as the data.
-    formula: \sigma = \sqrt{\text{Var}(X)}
-    why: null
-    source: "Probability theory"
-    depends_on:
-      - variance
-
-  - name: percentile
-    kind: inherited
-    one_line: The value below which a given percentage of observations fall, used to define magnitude level cutpoints.
-    why: null
-    source: "Descriptive statistics"
-    depends_on: []
-
-  - name: interquartile range (IQR)
-    kind: inherited
-    one_line: The difference between the 75th and 25th percentiles; pooled across arms to set the minimum band width threshold (0.5 × pooled IQR).
-    formula: \text{IQR} = Q_3 - Q_1
-    why: null
-    source: "Descriptive statistics"
-    depends_on:
-      - percentile
-
-  - name: covariance matrix
-    kind: inherited
-    one_line: A matrix whose (i,j) entry is the covariance between variables i and j, capturing the full correlation structure.
-    why: null
-    source: "Multivariate statistics"
-    depends_on: []
-
-  - name: chi-squared distribution
-    kind: inherited
-    one_line: The distribution of the sum of squared standard normal random variables; used to compute the confidence interval on τ_pilot from the reserve sample variance.
-    why: null
-    source: "Probability theory"
-    depends_on: []
-
-  # ============================================================================
-  # INHERITED TERMS — Experimental Design
-  # ============================================================================
-
-  - name: factorial design
-    kind: inherited
-    one_line: An experimental design that crosses multiple factors; here 3 plane types × 2 magnitude levels enables separating H-sem (semantic effect) from H-mag (magnitude effect).
-    why: null
-    source: "Fisher (1935); experimental design"
-    depends_on: []
-
-  - name: blocking unit
-    kind: inherited
-    one_line: The unit within which all treatment combinations are observed; each base point serves as a blocking unit, enabling the powerful within-base-point paired contrast.
-    why: null
-    source: "Experimental design (randomized complete block)"
-    depends_on: []
-
-  - name: randomization
-    kind: inherited
-    one_line: The use of random assignment to treatment conditions, ensuring unbiased estimation and validity of statistical inference.
-    why: null
-    source: "Fisher (1935); experimental design"
-    depends_on: []
-
-  - name: pre-registration
-    kind: inherited
-    one_line: The practice of publicly committing to hypotheses, methods, and analysis plans before observing data, preventing post-hoc hypothesizing.
-    why: null
-    source: "Open science movement; registered reports"
-    depends_on: []
-
-  - name: confounding
-    kind: inherited
-    one_line: A situation where a third variable influences both the treatment and outcome, creating a spurious association.
-    why: null
-    source: "Causal inference"
-    depends_on: []
-
-  - name: treatment effect
-    kind: inherited
-    one_line: The causal difference in outcomes attributable to a treatment, here the holonomy difference between plane types.
-    why: null
-    source: "Causal inference (Rubin causal model)"
-    depends_on: []
-
-  # ============================================================================
-  # INHERITED TERMS — Computing and Reproducibility
-  # ============================================================================
-
-  - name: random seed
-    kind: inherited
-    one_line: An integer initializing a pseudorandom number generator, ensuring reproducible random sequences.
-    why: null
-    source: "Computational statistics"
-    depends_on: []
-
-  - name: bitwise reproducibility
-    kind: inherited
-    one_line: The property that repeated runs produce identical outputs down to the bit level, given the same inputs, code, and hardware.
-    why: null
-    source: "Scientific computing best practices"
-    depends_on: []
-
-  - name: MPS backend
-    kind: inherited
-    one_line: Apple's Metal Performance Shaders backend for PyTorch, enabling GPU-accelerated computation on Apple Silicon.
-    why: null
-    source: "PyTorch documentation"
-    depends_on: []
-
-  - name: PyTorch tensor
-    kind: inherited
-    one_line: A multi-dimensional array supporting automatic differentiation, the fundamental data structure for neural network computation.
-    why: null
-    source: "PyTorch documentation"
-    depends_on: []
-
-  - name: autograd
-    kind: inherited
-    one_line: PyTorch's automatic differentiation engine that records operations on tensors and computes gradients via backpropagation.
-    why: null
-    source: "PyTorch documentation"
-    depends_on: []
-
-  # ============================================================================
-  # INHERITED TERMS — Data Sources
-  # ============================================================================
-
-  - name: WikiText-103
-    kind: inherited
-    one_line: A large-scale language modeling dataset of Wikipedia articles; the corpus from which 64-token passages are drawn to generate base-point activations.
-    why: null
-    source: "Merity et al. (2016); Salesforce/wikitext on Hugging Face"
-    depends_on: []
-
-  - name: Gemma 2 2B
-    kind: inherited
-    one_line: A 2-billion parameter decoder-only language model from Google DeepMind, the model under study.
-    why: null
-    source: "Google DeepMind (2024)"
-    depends_on: []
-
-  - name: Gemma Scope
-    kind: inherited
-    one_line: A suite of sparse autoencoders trained on Gemma model activations, providing interpretable feature dictionaries.
-    why: null
-    source: "Google DeepMind (2024)"
-    depends_on:
-      - sparse autoencoder (SAE)
+- name: common-support band
+  kind: coined
+  status: current
+  one_line: The magnitude range where all three plane-type arms (random, shuffled-feature, real-feature) have overlapping
+    in-plane magnitude distributions, enabling matched comparisons.
+  why: The three plane arms have widely separated magnitude distributions (real p50 ~65, shuffled ~59, random ~13). Matching
+    is only meaningful where distributions overlap; cutting levels on one arm alone would force extrapolation rather than
+    a true match.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - in-plane magnitude (pullback)
+  - common support / positivity
+- name: band-collapse contingency
+  kind: coined
+  status: current
+  one_line: The pre-registered fallback procedure when the three-arm common-support band is empty or too narrow to support
+    matched magnitude comparisons.
+  why: If the arms do not share a common magnitude regime, this is itself a reportable finding. The contingency defines how
+    to proceed with two-arm analysis for H-sem and marks H-grad as undefined.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - common-support band
+  - two-arm terminal collapse
+- name: two-arm terminal collapse
+  kind: coined
+  status: current
+  one_line: The fallback case where even the two-arm real+shuffled common-support band fails the minimum width requirement,
+    making matched semantic comparison impossible.
+  why: Added as a pre-data clarification to handle the edge case where real and shuffled features also do not share a common
+    magnitude regime. H-sem is then reported as undefined at matched magnitude.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - common-support band
+  - in-plane magnitude (pullback)
+- name: three-arm band
+  kind: coined
+  status: current
+  one_line: The overlap of the [p5, p95] magnitude ranges across all three plane arms (real, shuffled, random), required to
+    have width >= 0.5 × pooled IQR.
+  why: Defines the primary common-support region where magnitude-matched comparisons are valid across all three arms, enabling
+    the full H-grad monotone gradient test.
+  source: bands/support.py
+  depends_on:
+  - common-support band
+  - pooled IQR
+- name: two-arm band
+  kind: coined
+  status: current
+  one_line: The overlap of the [p5, p95] magnitude ranges for real and shuffled arms only, used as a fallback when the three-arm
+    band collapses.
+  why: When three-arm matching fails, the two-arm band preserves the ability to test H-sem (the powered semantic hypothesis)
+    at matched magnitude, even though H-grad becomes undefined.
+  source: bands/support.py
+  depends_on:
+  - common-support band
+  - band-collapse contingency
+- name: pooled IQR
+  kind: coined
+  status: current
+  one_line: The interquartile range computed over the concatenated magnitude values from all arms in a band computation, used
+    to set the minimum width threshold.
+  why: The band width threshold is defined as 0.5 × pooled IQR to ensure the common-support region is substantive relative
+    to the overall magnitude spread, not just technically non-empty.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - interquartile range (IQR)
+- name: minimum band width threshold
+  kind: coined
+  status: current
+  one_line: The requirement that a common-support band have width >= 0.5 × pooled IQR to be considered valid for matched comparisons.
+  formula: \text{width} \geq 0.5 \times \text{IQR}_{\text{pooled}}
+  why: A narrow overlap that is technically non-empty but very thin would force magnitude levels into an artificially compressed
+    range, making the matched comparison meaningless.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - pooled IQR
+  - common-support band
+- name: magnitude level
+  kind: coined
+  status: current
+  one_line: One of two fixed in-plane magnitudes (m_low at 25th percentile, m_high at 75th percentile) cut from the common-support
+    band and applied identically to all three arms.
+  why: Factor B of the factorial design; using the same absolute magnitude values across arms ensures any observed holonomy
+    differences reflect plane type, not magnitude confounding.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - common-support band
+  - in-plane magnitude (pullback)
+- name: plane arm
+  kind: coined
+  status: current
+  one_line: One of three treatment levels in Factor A—real-feature, shuffled-feature, or random—each constructed according
+    to the pairing rule.
+  why: The factorial design crosses plane type (Factor A) with magnitude level (Factor B). The three arms form a semantic
+    gradient from noise floor (random) through disrupted (shuffled) to intact (real).
+  source: PREREGISTRATION_v2.md Section 2.1
+  depends_on:
+  - pairing rule
+- name: real-feature plane
+  kind: coined
+  status: current
+  one_line: A plane spanned by two jointly active SAE features at the base point, representing intact semantic structure.
+  why: Jointly active features capture the model's learned semantic geometry at the base point. This arm is the upper anchor
+    of the semantic gradient tested by H-grad.
+  source: planes/construct.py
+  depends_on:
+  - pairing rule
+  - active feature
+- name: shuffled-feature plane
+  kind: coined
+  status: current
+  one_line: A control plane pairing one active SAE feature with one inactive dictionary feature, magnitude-matched to the
+    real-feature plane.
+  why: Disrupts semantic coherence while preserving feature-direction structure. The real-vs-shuffled contrast is the powered
+    H-sem test, isolating meaning from magnitude and feature geometry.
+  source: planes/construct.py
+  depends_on:
+  - pairing rule
+  - active feature
+  - inactive feature
+- name: random plane
+  kind: coined
+  status: current
+  one_line: A noise-floor plane spanned by two random unit directions, providing the lower anchor of the H-grad semantic gradient.
+  why: Random directions have no semantic relationship to the base point, serving as a baseline for what holonomy looks like
+    in the absence of any learned structure.
+  source: planes/construct.py
+  depends_on:
+  - pairing rule
+- name: active feature
+  kind: coined
+  status: current
+  one_line: An SAE feature with positive activation (code > 0) at a given base point, indicating the feature fires on that
+    input.
+  why: Active features define the semantic content the SAE attributes to the base point. The real-feature arm uses pairs of
+    jointly active features to preserve this semantic structure.
+  source: planes/construct.py
+  depends_on:
+  - sparse autoencoder (SAE)
+- name: inactive feature
+  kind: coined
+  status: current
+  one_line: An SAE feature with zero or negative activation (code <= 0) at a given base point, used as the second direction
+    in shuffled-feature planes.
+  why: Pairing an active feature with an inactive one breaks the joint activation structure while still using a real dictionary
+    direction, isolating semantic coherence from feature geometry.
+  source: planes/construct.py
+  depends_on:
+  - sparse autoencoder (SAE)
+- name: pairing rule
+  kind: coined
+  status: current
+  one_line: The fixed procedure for constructing plane arms before holonomy computation, specifying how SAE features are selected
+    and combined for each plane type.
+  why: 'Ensures reproducible and pre-registered plane construction across the three arms: real-feature uses jointly active
+    features, shuffled-feature uses one active plus one inactive, random uses two random unit directions.'
+  source: PREREGISTRATION_v2.md Section 2.1
+  depends_on:
+  - sparse autoencoder (SAE)
+- name: base point
+  kind: coined
+  status: current
+  one_line: A single layer-12 resid_post activation vector extracted from a WikiText passage, serving as the blocking unit
+    and loop center origin.
+  why: Each base point is evaluated across all 3 plane types × 2 magnitude levels, making it the fundamental unit of the paired
+    within-base-point contrast that powers H-sem.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - resid_post
+  - blocking unit
+- name: experiment sample
+  kind: coined
+  status: current
+  one_line: The first 390 surviving base points (in seed order, excluding burned pilot points), constituting the fixed-N dataset
+    for confirmatory analysis.
+  why: The sample size is pre-registered and powered at 0.90 for the material effect. All 390 points are run to completion
+    and analyzed once, with no peeking or result-dependent stopping.
+  source: PREREGISTRATION_v2.md Section 9
+  depends_on:
+  - base point
+  - blind manifest boundary
+- name: reserve pool
+  kind: coined
+  status: current
+  one_line: Base points beyond the 390 experiment sample, held back for dropout replacement or future analysis but never analyzed
+    as part of the confirmatory study.
+  why: Provides a safety margin if some experiment-sample points fail extraction or plane selection, without introducing selection
+    bias from result-dependent sampling.
+  source: PREREGISTRATION_v2.md Section 9
+  depends_on:
+  - experiment sample
+- name: burned pilot points
+  kind: coined
+  status: current
+  one_line: The 16 reserve points (draw orders 96-111) used in the resid_post variance re-pilot, permanently excluded from
+    both experiment sample and reserve.
+  why: These points were "seen" during the v2 variance correction and must be excluded to preserve blindness of the experiment
+    sample to any pre-freeze observations.
+  source: PREREGISTRATION_v2.md Section 9
+  depends_on:
+  - reserve pool
+  - planning tau
+- name: draw order
+  kind: coined
+  status: current
+  one_line: A sequential integer assigned to each surviving WikiText article after seed-42 shuffling, determining the experiment-vs-reserve
+    partition.
+  why: The draw order provides a reproducible, seed-determined sequence that defines which points enter the experiment sample
+    (first 390) versus reserve, independent of any response values.
+  source: corpus/draw.py
+  depends_on:
+  - corpus draw
+- name: corpus draw
+  kind: coined
+  status: current
+  one_line: 'The deterministic procedure for selecting WikiText passages: article reconstruction, seed-42 shuffle, raw word
+    filtering, token truncation to 64 Gemma tokens.'
+  why: Fully reproducible passage selection from WikiText-103 ensures any researcher can regenerate the exact same base-point
+    inputs given the seed, revision, and filtering rules.
+  source: corpus/draw.py
+  depends_on:
+  - WikiText-103
+- name: article reconstruction
+  kind: coined
+  status: current
+  one_line: The process of joining WikiText-103 raw rows between consecutive top-level headers into coherent articles, prior
+    to passage sampling.
+  why: Raw WikiText rows are line-level fragments; reconstruction yields contiguous prose passages suitable for 64-token truncation,
+    avoiding the length/format bias of raw-row sampling.
+  source: corpus/draw.py
+  depends_on:
+  - WikiText-103
+- name: survivor-targeted draw
+  kind: coined
+  status: current
+  one_line: A draw procedure that continues drawing candidates until ≥700 pass the 64-token filter, sufficient for the 390-point
+    experiment sample plus reserve.
+  why: Targeting survivors ensures the pool contains enough points after filtering for the N = 390 experiment sample plus
+    reserve, avoiding under-draw sample size shortfalls.
+  source: corpus/draw.py
+  depends_on:
+  - corpus draw
+  - seed-42 determinism
+- name: stage-1 / stage-2 partition (retired)
+  kind: coined
+  status: retired
+  one_line: '[RETIRED in v2] The v1 split of the draw pool into 96 stage-1 + 96 stage-2 points; superseded by the single-stage
+    N = 390 design.'
+  why: This partition supported the v1 two-stage rule at N = 96. When the hook-site correction required re-deriving N to 390,
+    the two-stage mechanism was retired and the partition became moot. v2 uses a single-stage design with 390 experiment-sample
+    points.
+  source: PREREGISTRATION_v2.md Section 6.3 (RETIRED)
+  depends_on:
+  - draw order
+  - two-stage rule (retired)
+- name: Factor A (plane type)
+  kind: coined
+  status: current
+  one_line: The first factor in the factorial design, with three levels (random, shuffled-feature, real-feature) representing
+    a semantic gradient from noise floor to intact structure.
+  why: Factor A captures the semantic dimension of the experiment — whether the plane directions have any meaningful relationship
+    to the base point's learned representation.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - factorial design
+  - plane arm
+- name: Factor B (magnitude level)
+  kind: coined
+  status: current
+  one_line: The second factor in the factorial design, with two levels (m_low at p25, m_high at p75) representing different
+    in-plane magnitudes within the common-support band.
+  why: Factor B captures the magnitude dimension — whether holonomy depends on how far from the base point we probe, independent
+    of semantic structure.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - factorial design
+  - magnitude level
+- name: matched (magnitude-matched)
+  kind: coined
+  status: current
+  one_line: The property that all three plane arms are evaluated at identical absolute in-plane magnitude values, eliminating
+    magnitude as a confound.
+  why: Without magnitude matching, any holonomy difference between arms could be attributed to the arms having different typical
+    magnitudes rather than different semantic content.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - common-support band
+  - magnitude level
+- name: survivor
+  kind: coined
+  status: current
+  one_line: A base point that passes all filters (64-token minimum, det M floor, valid plane selection) and enters the experiment
+    sample or reserve.
+  why: Not all drawn articles yield usable base points — some are too short, some have degenerate planes. "Survivor" distinguishes
+    points that make it through the full selection pipeline.
+  source: corpus/draw.py
+  depends_on:
+  - corpus draw
+  - det M degeneracy floor
+- name: drop
+  kind: coined
+  status: current
+  one_line: An article or base point that fails a filter (too short, degenerate plane, etc.) and is excluded from the experiment,
+    with the reason logged.
+  why: Tracking drops with reasons enables auditing the selection pipeline — verifying that exclusions follow the pre-registered
+    rules rather than being result-dependent.
+  source: corpus/draw.py
+  depends_on:
+  - survivor
+- name: frozen (pre-registration status)
+  kind: coined
+  status: current
+  one_line: The status indicating that the pre-registration document is locked and no substantive changes may be made, only
+    blind clarifications via addenda.
+  why: FROZEN status is the guarantee that hypotheses, methods, and analysis plans were committed before any holonomy was
+    observed, preventing post-hoc hypothesis modification.
+  source: PREREGISTRATION_v2.md header
+  depends_on:
+  - pre-registration
+- name: blind (to holonomy)
+  kind: coined
+  status: current
+  one_line: The property that a decision, computation, or artifact is made without access to any holonomy response values,
+    ensuring outcome-independence.
+  why: Blindness is the core integrity property — plane selection, band computation, covariate measurement, and manifest creation
+    all occur before any θ or H is computed.
+  source: PREREGISTRATION_v2.md throughout
+  depends_on:
+  - Stage A
+  - blind handoff
+- name: undefined at matched magnitude
+  kind: coined
+  status: current
+  one_line: The status assigned to H-grad (and H-sem under terminal collapse) when the common-support band is too narrow to
+    support matched comparison.
+  why: Rather than forcing an invalid comparison, the hypothesis is explicitly marked as unevaluable under the matched-magnitude
+    design, which is itself a reportable finding.
+  source: PREREGISTRATION_v2.md Section 2
+  depends_on:
+  - band-collapse contingency
+  - two-arm terminal collapse
+- name: blind manifest boundary
+  kind: coined
+  status: current
+  one_line: The partition point separating the 390 experiment-sample base points from the reserve, determined by draw order
+    and recorded before any holonomy is observed.
+  why: Ensures the sample partition is fixed blind to outcomes, preventing selection bias. The boundary is set by seed order,
+    excluding the 16 burned pilot points.
+  source: PREREGISTRATION_v2.md Section 9
+  depends_on: []
+- name: BandDecision
+  kind: coined
+  status: current
+  one_line: The structured record returned by bands/ containing band bounds, threshold, status (THREE_ARM_VALID/TWO_ARM_FALLBACK/TWO_ARM_TERMINAL),
+    m_low, m_high, and per-hypothesis matched flags.
+  why: The BandDecision schema captures the full evidence for the band decision — not just which branch fired but the three-arm
+    and two-arm widths that forced it, enabling audit verification.
+  source: bands/support.py
+  depends_on:
+  - common-support band
+  - three-arm band
+  - two-arm band
+- name: seed-42 determinism
+  kind: coined
+  status: current
+  one_line: The property that the corpus draw with SEED_CORPUS = 42 produces bitwise-identical article indices, token sequences,
+    and draw order across independent runs.
+  why: Full seed-42 reproducibility means any researcher can regenerate the exact same candidate pool and partition, making
+    the experiment verifiable without access to original artifacts.
+  source: corpus/draw.py
+  depends_on:
+  - random seed
+  - bitwise reproducibility
+  - corpus draw
+- name: det M degeneracy floor
+  kind: coined
+  status: current
+  one_line: A threshold (τ_detM = 0.413) below which planes are excluded because their pullback-metric area approaches zero,
+    making holonomy ill-defined.
+  formula: \det(M) > \tau_{\det M}
+  why: When det(M) approaches zero, the Jacobian maps the two plane directions toward collinear, causing A_enclosed to vanish.
+    This floor catches geometric degeneracy under the pullback metric, replacing the earlier Euclidean φ floor.
+  source: PREREGISTRATION_v2.md Section 7.2.1
+  depends_on:
+  - Gram matrix
+  - Jacobian-vector product (JVP)
+  - pullback metric
+- name: in-plane magnitude (pullback)
+  kind: coined
+  status: current
+  one_line: The G-norm of a vector's G-orthogonal projection onto a plane, computed as mag(h) = sqrt(a^T M a) where M is the
+    plane Gram matrix under the pullback metric.
+  formula: \operatorname{mag}(h) = \sqrt{a^\top M a}
+  why: Factor B (magnitude level) must be cut using a geometrically meaningful scalar. The pullback-metric in-plane magnitude
+    respects the model's learned geometry rather than imposing Euclidean assumptions.
+  source: PREREGISTRATION_v2.md Section 7.3
+  depends_on:
+  - pullback metric
+  - Gram matrix
+  - Jacobian-vector product (JVP)
+- name: enclosed area (wedge)
+  kind: coined
+  status: current
+  one_line: The pullback-metric area of the loop, computed as A_enclosed = ρ² √(det M), which normalizes the rotation angle
+    to yield holonomy.
+  formula: A_{\text{enclosed}} = \rho^2 \sqrt{\det M}
+  why: Using pullback-metric area rather than Euclidean area (ρ² sin φ) ensures all geometric quantities are computed under
+    a single consistent metric, following the one-metric principle.
+  source: PREREGISTRATION_v2.md Section 7.2
+  depends_on:
+  - Gram matrix
+  - pullback metric
+- name: G-projection coefficients
+  kind: coined
+  status: current
+  one_line: The coefficients a = M^{-1}(JD)^T(Jh) expressing the G-orthogonal projection of h onto the plane, used for center
+    placement.
+  formula: a = M^{-1}(JD)^\top(Jh)
+  why: The projection coefficients determine the in-plane component of the base activation under the pullback metric, enabling
+    magnitude-matched center construction that preserves out-of-plane context.
+  source: geometry/pullback.py
+  depends_on:
+  - Gram matrix
+  - Jacobian-vector product (JVP)
+- name: center placement
+  kind: coined
+  status: current
+  one_line: The procedure for constructing a loop center at a target in-plane magnitude while preserving the out-of-plane
+    component of the base activation.
+  formula: c = (h - v) + m \cdot \frac{v}{\|v\|_G}
+  why: Magnitude matching requires moving the center along the in-plane direction to hit the target magnitude while keeping
+    the out-of-plane context unchanged, ensuring fair comparison across arms.
+  source: geometry/pullback.py
+  depends_on:
+  - G-projection coefficients
+  - magnitude level
+- name: out-of-plane component
+  kind: coined
+  status: current
+  one_line: The portion of the base activation orthogonal to the plane under the pullback metric, preserved during center
+    placement.
+  formula: h_{\perp} = h - v
+  why: Preserving the out-of-plane component ensures the loop center maintains the same "context" as the base point, with
+    only the in-plane magnitude adjusted for Factor B.
+  source: geometry/pullback.py
+  depends_on:
+  - G-projection coefficients
+  - pullback metric
+- name: eps_mag fallback
+  kind: coined
+  status: current
+  one_line: When in-plane magnitude is below eps_mag = 2.66, the offset direction switches to G-normalized d1 instead of the
+    projection direction.
+  why: If the base activation has negligible in-plane component, the projection direction is numerically unstable. The fallback
+    uses a deterministic alternative to avoid division-by-near-zero.
+  source: PREREGISTRATION_v2.md Section 7.3
+  depends_on:
+  - in-plane magnitude (pullback)
+  - center placement
+- name: loop center
+  kind: coined
+  status: current
+  one_line: The center point c around which the holonomy loop is traced, positioned at the target in-plane magnitude via center
+    placement.
+  why: The loop center determines where in activation space the holonomy measurement occurs. Different centers at m_low vs
+    m_high test whether holonomy varies with in-plane magnitude.
+  source: transport/loop.py
+  depends_on:
+  - center placement
+  - magnitude level
+- name: loop radius (ρ)
+  kind: coined
+  status: current
+  one_line: The radius ρ = radius_relative × ||base activation|| used for the holonomy loop, scaled to the local activation
+    norm.
+  formula: \rho = 0.006 \times \|h\|
+  why: A relative radius keeps the loop size proportionate to the activation scale, ensuring the perturbation is "small" in
+    a scale-invariant sense across different base points.
+  source: PREREGISTRATION_v2.md Section 7.1
+  depends_on:
+  - base point
+- name: rotation angle (θ)
+  kind: coined
+  status: current
+  one_line: The signed angle θ extracted from the antisymmetric part of the transport operator, representing the accumulated
+    rotation around the loop.
+  formula: \theta = \frac{1}{2}[(H-I)_{21} - (H-I)_{12}]
+  why: The antisymmetric part captures pure rotation, while the symmetric part (diagnostic only) reflects non-rotational distortion.
+    The sign encodes loop orientation.
+  source: transport/loop.py
+  depends_on:
+  - transport operator
+- name: transport operator
+  kind: coined
+  status: current
+  one_line: The 2×2 matrix H accumulating the effect of parallel-transporting a probe frame around the loop via iterated restricted
+    Jacobian steps.
+  formula: H = \prod_{i=1}^{n} J_{i+1}^+ J_i
+  why: H encodes how much a tangent frame rotates after traversing the closed loop. The deviation from identity measures local
+    curvature; the holonomy is the rotation angle per enclosed area.
+  source: transport/loop.py
+  depends_on:
+  - restricted Jacobian
+  - parallel transport
+- name: restricted Jacobian
+  kind: coined
+  status: current
+  one_line: The 2-column matrix [J d1, J d2] giving the Jacobian of the readout map restricted to the plane directions, computed
+    via JVP.
+  why: Full Jacobian materialization is prohibitive for high-dimensional activations. The restricted Jacobian captures the
+    action of J on the plane subspace, sufficient for pullback metric and transport.
+  source: transport/loop.py
+  depends_on:
+  - Jacobian-vector product (JVP)
+- name: symmetric residual
+  kind: coined
+  status: current
+  one_line: The Frobenius norm of the symmetric part of (H - I), a diagnostic for non-rotational distortion in the transport
+    operator.
+  why: A pure rotation yields H - I purely antisymmetric. Non-zero symmetric residual indicates stretching or numerical error;
+    it is reported but never folded into the response.
+  source: transport/loop.py
+  depends_on:
+  - transport operator
+- name: one-metric principle
+  kind: coined
+  status: current
+  one_line: The design choice to compute all geometric quantities (magnitude, area, transport) under a single consistent pullback
+    metric G = J^T J.
+  why: Mixing Euclidean and pullback-metric quantities would introduce inconsistent notions of "distance" and "area." A unified
+    metric ensures geometric coherence throughout the measurement pipeline.
+  source: PREREGISTRATION_v2.md Section 7.2
+  depends_on:
+  - pullback metric
+- name: H-sem
+  kind: coined
+  status: current
+  one_line: The powered semantic hypothesis predicting that real-feature planes show materially greater holonomy than magnitude-matched
+    shuffled-feature planes after covariate adjustment.
+  why: 'H-sem is the load-bearing claim of the study: that semantic coherence (joint activation) contributes to holonomy beyond
+    what magnitude and feature geometry alone would explain.'
+  source: PREREGISTRATION_v2.md Section 3
+  depends_on:
+  - real-feature plane
+  - shuffled-feature plane
+  - covariate adjustment
+- name: H-mag
+  kind: coined
+  status: current
+  one_line: The magnitude hypothesis predicting that holonomy increases with in-plane pullback-metric magnitude, pooled across
+    plane types.
+  why: Tests whether activation magnitude is a main effect on holonomy, independent of semantic structure. A positive H-mag
+    would indicate curvature scales with how far from the base point we probe.
+  source: PREREGISTRATION_v2.md Section 3
+  depends_on:
+  - magnitude level
+  - holonomy
+- name: H-grad
+  kind: coined
+  status: current
+  one_line: 'The gradient hypothesis predicting a monotone ordering of holonomy: random < shuffled < real, indicating a semantic
+    gradient.'
+  why: If H-grad holds, it suggests holonomy increases smoothly with semantic coherence, not just as a binary real-vs-shuffled
+    effect. Requires three-arm band validity to test.
+  source: PREREGISTRATION_v2.md Section 3
+  depends_on:
+  - plane arm
+  - three-arm band
+- name: materiality threshold
+  kind: coined
+  status: current
+  one_line: The minimum effect size log(1.25) = 0.2231 on the log scale (a 25% multiplicative change) below which effects
+    are not considered material.
+  formula: \delta = \log(1.25) = 0.2231
+  why: Defines "material" for all three hypotheses. An effect below this threshold is too small to matter scientifically,
+    even if statistically significant. Powers the 0.90 power calculation.
+  source: PREREGISTRATION_v2.md Section 6.1
+  depends_on: []
+- name: CORROBORATED verdict
+  kind: coined
+  status: current
+  one_line: The verdict when the CI lower bound lies above the materiality threshold, indicating the hypothesis is supported
+    by the data.
+  why: A pre-registered three-way verdict system (CORROBORATED/FALSIFIED/INCONCLUSIVE) ensures honest reporting of whether
+    the effect is reliably material, reliably immaterial, or uncertain.
+  source: PREREGISTRATION_v2.md Section 6.2
+  depends_on:
+  - materiality threshold
+  - confidence interval
+- name: FALSIFIED verdict
+  kind: coined
+  status: current
+  one_line: The verdict when the CI upper bound lies below the materiality threshold, indicating the effect is reliably too
+    small to matter.
+  why: 'FALSIFIED is not "negative evidence" but positive evidence of absence: the effect is confidently below the materiality
+    bar, making the hypothesis materially false.'
+  source: PREREGISTRATION_v2.md Section 6.2
+  depends_on:
+  - materiality threshold
+  - confidence interval
+- name: INCONCLUSIVE verdict
+  kind: coined
+  status: current
+  one_line: The verdict when the CI spans the materiality threshold, indicating insufficient precision to determine materiality.
+  why: Distinguishes statistical insignificance from scientific inconclusiveness. The study is powered to make INCONCLUSIVE
+    unlikely for H-sem at the material effect size.
+  source: PREREGISTRATION_v2.md Section 6.2
+  depends_on:
+  - materiality threshold
+  - confidence interval
+- name: NULL-ATTRIBUTED verdict
+  kind: coined
+  status: current
+  one_line: A special FALSIFIED branch for H-sem when an unadjusted effect vanishes under covariate adjustment, attributing
+    the apparent effect to confounds.
+  why: If real-vs-shuffled differs unadjusted but not adjusted, the signal came from manifold distance or φ, not from meaning.
+    This is a publishable null, not a failure to detect.
+  source: PREREGISTRATION_v2.md Section 7.4
+  depends_on:
+  - covariate adjustment
+  - H-sem
+- name: fixed-N design
+  kind: coined
+  status: current
+  one_line: An experimental design where sample size (N = 390) is determined in advance and all observations are collected
+    before analysis, with no peeking or early stopping.
+  why: 'The N = 390 is fixed before data collection. This prevents optional-stopping problems that inflate false positives,
+    making the null verdict interpretable as material absence. Single-stage: all 390 points run to completion, then analyzed
+    once.'
+  source: PREREGISTRATION_v2.md Section 6.3
+  depends_on:
+  - power
+- name: two-stage rule (retired)
+  kind: coined
+  status: retired
+  one_line: '[RETIRED in v2] The v1 rescue mechanism where a second batch of N₂ = 96 would run if stage-1 H-sem was INCONCLUSIVE;
+    removed when N was re-derived to 390.'
+  why: v1 was powered at N = 96 with τ = 0.649 (resid_pre). After the hook-site correction, τ rose to 1.30 and N was re-derived
+    to 390 for adequate power. At this sample size, the two-stage rescue became unnecessary and was retired in v2 §6.3.
+  source: PREREGISTRATION_v2.md Section 6.3 (RETIRED)
+  depends_on:
+  - fixed-N design
+  - INCONCLUSIVE verdict
+- name: pre-data clarification
+  kind: coined
+  status: current
+  one_line: A post-freeze addition to the pre-registration that is provably outcome-independent because it is recorded before
+    any response values are computed.
+  why: Some operational details (pairing rule, article reconstruction, terminal collapse case) were refined after freeze but
+    before any holonomy was observed. Timestamped addenda preserve integrity.
+  source: PREREGISTRATION_v2.md Addenda section
+  depends_on:
+  - pre-registration
+- name: 97% deviation metric
+  kind: coined
+  status: current
+  one_line: The empirical finding from FishBack that the pullback metric deviates from Euclidean by over 97% in relative spectral
+    norm on GPT-2, justifying metric-aware geometry.
+  why: This quantifies why treating activation space as Euclidean is wrong — the model's learned geometry differs drastically
+    from flat space, making pullback-metric magnitude necessary.
+  source: FishBack (2026); arXiv
+  depends_on:
+  - pullback metric
+- name: holonomy-magnitude response
+  kind: coined
+  status: current
+  one_line: The measured relationship between in-plane magnitude and holonomy (rotation per enclosed area), the primary response
+    variable testing H-mag.
+  formula: H = \frac{|\theta|}{A_{\text{enclosed}}}
+  why: Quantifies how holonomy scales with magnitude to disentangle magnitude effects from semantic structure effects, enabling
+    the factorial design to isolate each factor's contribution.
+  source: PREREGISTRATION_v2.md Section 3 (H-mag)
+  depends_on:
+  - holonomy
+  - in-plane magnitude (pullback)
+  - enclosed area (wedge)
+- name: covariate adjustment
+  kind: coined
+  status: current
+  one_line: Regression adjustment for manifold distance and φ in the real-vs-shuffled contrast, applied by default regardless
+    of balance.
+  why: Even if balance diagnostics look good, adjustment removes any residual confounding. The adjusted contrast is the primary
+    H-sem test; unadjusted is reported alongside for comparison.
+  source: PREREGISTRATION_v2.md Section 7.4
+  depends_on:
+  - manifold distance
+  - φ (plane angle)
+- name: log-scale paired contrast
+  kind: coined
+  status: current
+  one_line: The within-base-point difference d_b = log H_real - log H_shuffled, the primary test statistic for H-sem.
+  formula: d_b = \log H_{\text{real}} - \log H_{\text{shuffled}}
+  why: Taking differences within each base point removes base-point-level variation, maximizing power. The log scale makes
+    the materiality threshold (0.2231) a multiplicative 25% change.
+  source: PREREGISTRATION_v2.md Section 7
+  depends_on:
+  - holonomy
+  - base point
+- name: planning tau
+  kind: coined
+  status: current
+  one_line: The assumed standard deviation (tau = 1.30) of the log-scale paired contrast used to power the study at N = 390.
+  why: Derived from the resid_post variance re-pilot on 16 reserve points (tau_pilot = 1.11, 95% CI [0.82, 1.72]). The planning
+    tau of 1.30 is a conservative choice near the 72% upper confidence bound.
+  source: PREREGISTRATION_v2.md Section 5
+  depends_on:
+  - log-scale paired contrast
+- name: magnitude-matched shuffled-feature plane
+  kind: coined
+  status: current
+  one_line: A control plane constructed by pairing one active SAE feature with one inactive real dictionary feature, matched
+    to real-feature planes in pullback-metric in-plane magnitude.
+  why: Provides a semantically degraded control that preserves magnitude structure, isolating the contribution of semantic
+    coherence to holonomy from the confounding effect of activation magnitude.
+  source: PREREGISTRATION_v2.md Section 2.1
+  depends_on:
+  - pairing rule
+  - in-plane magnitude (pullback)
+  - shuffled-feature plane
+- name: manifold distance
+  kind: coined
+  status: current
+  one_line: A nuisance covariate measuring how far loop points lie from the learned manifold, via SAE reconstruction error
+    and/or reference distribution distance.
+  why: If real-feature loops stay closer to the manifold than shuffled-feature loops, any holonomy difference could be confounded
+    by proximity to learned structure rather than semantic coherence.
+  source: PREREGISTRATION_v2.md Section 4.1
+  depends_on:
+  - SAE reconstruction error
+  - reference distribution
+- name: reference distribution
+  kind: coined
+  status: current
+  one_line: The Mahalanobis (or kNN fallback) distribution fitted to experiment-sample activations, used as a guard proxy
+    for manifold distance.
+  why: SAE reconstruction error alone can miss points that reconstruct cheaply but lie far from real activations. The reference
+    distribution catches this documented failure mode.
+  source: covariates/measure.py
+  depends_on:
+  - Mahalanobis distance
+  - kNN distance fallback
+- name: kNN distance fallback
+  kind: coined
+  status: current
+  one_line: A fallback guard-distance method using mean k-nearest-neighbor distance when the covariance matrix is ill-conditioned
+    for Mahalanobis.
+  why: In high-dimensional settings, the empirical covariance may be rank-deficient or ill-conditioned. kNN distance provides
+    a robust non-parametric alternative that still measures distance to the reference cloud.
+  source: covariates/measure.py
+  depends_on:
+  - Mahalanobis distance
+- name: φ (plane angle)
+  kind: coined
+  status: current
+  one_line: The mutual Euclidean angle between the two raw normalized plane directions, computed as arccos(d₁ · d₂).
+  formula: \varphi = \arccos(d_1 \cdot d_2)
+  why: Although the primary response uses pullback-metric area, φ captures native Euclidean feature geometry, which is semantically
+    loaded and must be balance-checked.
+  source: PREREGISTRATION_v2.md Section 4.2
+  depends_on: []
+- name: log sin φ check
+  kind: coined
+  status: current
+  one_line: A belt-and-suspenders balance diagnostic requiring |mean(log sin φ_real) - mean(log sin φ_shuffled)| < 0.045.
+  why: The 0.045 threshold is ~1/5 of the materiality threshold (0.223), ensuring φ imbalance is negligible relative to the
+    effect size of interest.
+  source: PREREGISTRATION_v2.md Section 4.3
+  depends_on:
+  - φ (plane angle)
+  - standardized mean difference (SMD)
+- name: balance diagnostic
+  kind: coined
+  status: current
+  one_line: Pre-unblinding checks (SMD, overlap, log sin φ) comparing real-vs-shuffled covariate distributions to characterize
+    imbalance.
+  why: Computed blind before holonomy is observed, balance diagnostics inform interpretation but do not gate the analysis.
+    Adjustment is applied by default regardless of balance.
+  source: PREREGISTRATION_v2.md Section 4.3
+  depends_on:
+  - standardized mean difference (SMD)
+  - common support / positivity
+- name: Stage A
+  kind: coined
+  status: current
+  one_line: The blind setup phase that extracts activations, selects planes, computes the magnitude band, constructs centers,
+    measures covariates, and produces the manifest.
+  why: Stage A is structurally incapable of computing or storing response values. This enforces the pre-registration principle
+    that all design decisions are frozen before holonomy is observed.
+  source: stage_a/run.py
+  depends_on:
+  - center placement
+  - base point
+- name: Stage B
+  kind: coined
+  status: current
+  one_line: The measurement phase that reads a Stage A manifest and writes holonomy response values to a separate artifact,
+    never mutating the manifest.
+  why: Separation of setup (Stage A) and measurement (Stage B) ensures the blind boundary is maintained. Stage B cannot influence
+    plane selection, band decisions, or covariate measurement.
+  source: stage_b/run.py
+  depends_on:
+  - run manifest
+  - holonomy
+- name: run manifest
+  kind: coined
+  status: current
+  one_line: The JSON artifact serializing all Stage A decisions (planes, centers, covariates, band) but structurally forbidding
+    response fields.
+  why: The manifest is the blind handoff between stages. Schema validation rejects any field whose name contains "holonomy",
+    "theta", or "transport", enforcing the blind boundary at the type level.
+  source: manifest/schema.py
+  depends_on:
+  - Stage A
+- name: blind handoff
+  kind: coined
+  status: current
+  one_line: The design principle that Stage A outputs are frozen and complete before Stage B begins, with no feedback loop
+    from responses to design.
+  why: Prevents any form of data peeking or result-dependent design modification. The manifest schema physically cannot carry
+    response values, making post-hoc manipulation impossible.
+  source: manifest/schema.py
+  depends_on:
+  - run manifest
+  - Stage A
+  - Stage B
+- name: resid_post
+  kind: coined
+  status: current
+  one_line: The residual-stream activation at the output of a transformer block (post-layernorm, pre-next-block), the extraction
+    site for this study.
+  why: The Gemma Scope SAE is trained on layer-12 resid_post, so base points must be extracted at the same site for SAE encoding
+    to be meaningful. v1's resid_pre error motivated the v2 correction.
+  source: extraction/extract.py
+  depends_on:
+  - residual stream
+- name: forward hook
+  kind: coined
+  status: current
+  one_line: A PyTorch hook registered on a module to capture intermediate activations during the forward pass, used for extraction
+    and JVP computation.
+  why: Forward hooks provide read access to internal layer outputs without modifying the model. They enable extracting resid_post
+    and computing the readout-map JVP for transport.
+  source: extraction/extract.py
+  depends_on:
+  - forward pass
+- name: readout map
+  kind: coined
+  status: current
+  one_line: 'The function F: resid_post_12 → resid_post_13 computed by patching layer-12 output and capturing layer-13 output,
+    whose Jacobian drives transport.'
+  why: The JVP of the readout map gives the local linear approximation of how layer-13 responds to perturbations at layer-12,
+    defining the pullback metric and connection for transport.
+  source: stage_a/run.py
+  depends_on:
+  - forward hook
+  - Jacobian-vector product (JVP)
+- name: loop sweep
+  kind: coined
+  status: current
+  one_line: The n_steps + 1 points traced along the γ(t) = c + ρ(cos(2πt) d₁ + sin(2πt) d₂) circle for transport and covariate
+    measurement.
+  why: The loop discretization must be fine enough for accurate transport accumulation (n_steps = 200) but coarse covariate
+    sampling (32 points) suffices for mean manifold distance.
+  source: transport/loop.py
+  depends_on:
+  - loop center
+  - loop radius (ρ)
+- name: sparse autoencoder (SAE)
+  kind: inherited
+  status: current
+  one_line: A neural network that learns a sparse overcomplete dictionary for reconstructing activations, decomposing them
+    into interpretable feature directions; provides the feature-based planes that define the semantic structure hypothesis.
+  why: null
+  source: Olshausen & Field (1996); Anthropic (2023); Gemma Scope (Google DeepMind)
+  depends_on: []
+- name: SAE decoder
+  kind: inherited
+  status: current
+  one_line: The W_dec matrix of the SAE whose rows are the learned dictionary directions; the feature directions from W_dec
+    span real-feature and shuffled-feature planes.
+  why: null
+  source: SAE architecture; sae-lens
+  depends_on:
+  - sparse autoencoder (SAE)
+- name: SAE encoder
+  kind: inherited
+  status: current
+  one_line: The W_enc matrix and bias b_enc of the SAE that maps activations to sparse codes; used to identify active vs inactive
+    features at each base point.
+  why: null
+  source: SAE architecture; sae-lens
+  depends_on:
+  - sparse autoencoder (SAE)
+- name: JumpReLU
+  kind: inherited
+  status: current
+  one_line: An activation function that outputs zero below a learned threshold and the pre-activation above it, used in Gemma
+    Scope SAEs.
+  formula: \text{JumpReLU}(x) = x \cdot \mathbf{1}[x > \tau]
+  why: null
+  source: Gemma Scope (Google DeepMind)
+  depends_on:
+  - sparse autoencoder (SAE)
+- name: SAE reconstruction error
+  kind: inherited
+  status: current
+  one_line: The L2 distance between an activation and its SAE reconstruction; used as a manifold-distance proxy to detect
+    loop points that drift off the learned activation manifold.
+  formula: \|x - \hat{x}\|_2
+  why: null
+  source: Sparse autoencoders (Olshausen & Field 1996); Gemma Scope (Google DeepMind)
+  depends_on:
+  - sparse autoencoder (SAE)
+- name: L0 sparsity
+  kind: inherited
+  status: current
+  one_line: The number of non-zero elements in the SAE code vector; determines how many active features are available for
+    forming real-feature plane pairs at each base point.
+  formula: L_0 = \|\text{code}\|_0
+  why: null
+  source: Compressed sensing; SAE literature
+  depends_on:
+  - sparse autoencoder (SAE)
+- name: residual stream
+  kind: inherited
+  status: current
+  one_line: The additive information flow through a transformer where each layer adds its contribution to the accumulated
+    hidden state; the resid_post site is where SAEs are trained and base points extracted.
+  why: null
+  source: Transformer architecture (Vaswani et al. 2017); Elhage et al. (2021)
+  depends_on: []
+- name: forward pass
+  kind: inherited
+  status: current
+  one_line: A single evaluation of the neural network from inputs to outputs, during which intermediate activations can be
+    captured via hooks.
+  why: null
+  source: Neural network fundamentals
+  depends_on: []
+- name: attention mask
+  kind: inherited
+  status: current
+  one_line: A tensor indicating which tokens should attend to which, used to prevent attending to padding or future tokens.
+  why: null
+  source: Transformer architecture (Vaswani et al. 2017)
+  depends_on: []
+- name: token
+  kind: inherited
+  status: current
+  one_line: A discrete unit of text (word, subword, or character) produced by the tokenizer and consumed by the model.
+  why: null
+  source: NLP fundamentals; BPE (Sennrich et al. 2016)
+  depends_on: []
+- name: tokenizer
+  kind: inherited
+  status: current
+  one_line: The algorithm that converts raw text to token IDs and vice versa, determining the vocabulary and segmentation.
+  why: null
+  source: NLP fundamentals; Hugging Face transformers
+  depends_on: []
+- name: pullback metric
+  kind: inherited
+  status: current
+  one_line: The induced metric G = JᵀJ on the input space, pulled back from the output space via the Jacobian J; defines how
+    the model "perceives" distances and areas, making it the natural metric for all geometric quantities in this study.
+  formula: G = J^\top J
+  why: null
+  source: Curved Inference (2025); FishBack (2026)
+  depends_on:
+  - Gram matrix
+  - Jacobian-vector product (JVP)
+- name: holonomy
+  kind: inherited
+  status: current
+  one_line: The rotation angle θ accumulated by parallel-transporting a vector around a closed loop, divided by the enclosed
+    area; the primary response variable measuring local curvature in the model's learned geometry.
+  formula: H = \frac{\theta}{A}
+  why: null
+  source: Differential geometry (Riemannian holonomy); Ambrose-Singer theorem
+  depends_on:
+  - parallel transport
+  - enclosed area (wedge)
+- name: parallel transport
+  kind: inherited
+  status: current
+  one_line: The procedure for moving a tangent vector along a curve while keeping it as parallel as possible according to
+    the connection; the mechanism by which holonomy accumulates rotation around the loop.
+  why: null
+  source: Differential geometry (affine connections)
+  depends_on:
+  - pullback metric
+- name: tangent vector
+  kind: inherited
+  status: current
+  one_line: A vector in the tangent space at a point, representing an infinitesimal direction of motion on the manifold.
+  why: null
+  source: Differential geometry
+  depends_on: []
+- name: connection
+  kind: inherited
+  status: current
+  one_line: A rule for parallel-transporting tangent vectors along curves, defining how to compare vectors at different points.
+  why: null
+  source: Differential geometry (affine/Levi-Civita connections)
+  depends_on:
+  - pullback metric
+- name: curvature
+  kind: inherited
+  status: current
+  one_line: A measure of how a manifold deviates from being flat, detected by the failure of parallel transport around closed
+    loops to return vectors unchanged.
+  why: null
+  source: Differential geometry (Riemann curvature tensor)
+  depends_on:
+  - connection
+- name: closed loop
+  kind: inherited
+  status: current
+  one_line: A curve that starts and ends at the same point, around which parallel transport may accumulate a non-trivial rotation
+    (holonomy).
+  why: null
+  source: Differential geometry
+  depends_on: []
+- name: Gram matrix
+  kind: inherited
+  status: current
+  one_line: A matrix M = DᵀGD encoding inner products of plane directions D under metric G; its determinant determines the
+    enclosed area and the det M degeneracy floor.
+  formula: M = D^\top G D
+  why: null
+  source: Linear algebra (Gramian matrix)
+  depends_on: []
+- name: Jacobian-vector product (JVP)
+  kind: inherited
+  status: current
+  one_line: The product Jv of the Jacobian matrix J with a vector v, computed efficiently via forward-mode autodiff; enables
+    computing the restricted Jacobian and pullback metric without materializing the full Jacobian.
+  formula: Jv = \frac{\partial f}{\partial x} v
+  why: null
+  source: Automatic differentiation (forward mode); JAX/PyTorch documentation
+  depends_on: []
+- name: determinant
+  kind: inherited
+  status: current
+  one_line: A scalar value encoding the signed volume scaling factor of a linear transformation, with det = 0 indicating singularity.
+  formula: \det(M)
+  why: null
+  source: Linear algebra
+  depends_on: []
+- name: pseudoinverse
+  kind: inherited
+  status: current
+  one_line: A generalization of the matrix inverse that exists for non-square or singular matrices; used to compute the transport-step
+    operator J⁺ᵢ₊₁Jᵢ from the restricted Jacobian.
+  formula: A^+ = (A^\top A)^{-1} A^\top
+  why: null
+  source: Linear algebra (Moore-Penrose pseudoinverse)
+  depends_on: []
+- name: matrix condition number
+  kind: inherited
+  status: current
+  one_line: The ratio of the largest to smallest singular value; monitored at each transport step to flag numerical instability
+    in the restricted Jacobian.
+  formula: \kappa(A) = \frac{\sigma_{\max}}{\sigma_{\min}}
+  why: null
+  source: Numerical linear algebra
+  depends_on: []
+- name: Frobenius norm
+  kind: inherited
+  status: current
+  one_line: The square root of the sum of squared matrix elements; used to compute the symmetric residual diagnostic for non-rotational
+    distortion in the transport operator.
+  formula: \|A\|_F = \sqrt{\sum_{ij} A_{ij}^2}
+  why: null
+  source: Linear algebra
+  depends_on: []
+- name: vector norm
+  kind: inherited
+  status: current
+  one_line: A function assigning a non-negative length to a vector, typically the Euclidean (L2) norm.
+  formula: \|v\|_2 = \sqrt{\sum_i v_i^2}
+  why: null
+  source: Linear algebra
+  depends_on: []
+- name: inner product
+  kind: inherited
+  status: current
+  one_line: A generalization of the dot product defining angles and lengths in a vector space, here given by the pullback
+    metric.
+  formula: \langle u, v \rangle_G = u^\top G v
+  why: null
+  source: Linear algebra
+  depends_on: []
+- name: orthogonal projection
+  kind: inherited
+  status: current
+  one_line: The closest point in a subspace to a given vector, obtained by minimizing the distance under the chosen metric.
+  why: null
+  source: Linear algebra
+  depends_on:
+  - inner product
+- name: unit vector
+  kind: inherited
+  status: current
+  one_line: A vector normalized to have length 1 under the relevant norm, used to represent directions.
+  formula: \hat{v} = \frac{v}{\|v\|}
+  why: null
+  source: Linear algebra
+  depends_on:
+  - vector norm
+- name: standardized mean difference (SMD)
+  kind: inherited
+  status: current
+  one_line: The difference in group means divided by the pooled standard deviation; used to assess covariate balance between
+    real and shuffled arms before unblinding, flagging potential confounding if |SMD| > 0.1.
+  formula: \text{SMD} = \frac{\bar{x}_1 - \bar{x}_2}{s_{\text{pooled}}}
+  why: null
+  source: Cohen's d; propensity-score balance literature (Austin; Stuart)
+  depends_on: []
+- name: Mahalanobis distance
+  kind: inherited
+  status: current
+  one_line: A distance metric that accounts for correlations in the data by scaling by the inverse covariance matrix; used
+    to detect loop points that drift far from the reference activation distribution, guarding against off-manifold confounding.
+  formula: d_M(x) = \sqrt{(x - \mu)^\top \Sigma^{-1} (x - \mu)}
+  why: null
+  source: Mahalanobis (1936); multivariate statistics
+  depends_on: []
+- name: mixed-effects model
+  kind: inherited
+  status: current
+  one_line: A regression model containing both fixed effects (population-level coefficients) and random effects (group-level
+    variation); models within-base-point blocking to maximize power for H-sem.
+  formula: y = X\beta + Zu + \varepsilon
+  why: null
+  source: Laird & Ware (1982); lme4/statsmodels
+  depends_on: []
+- name: common support / positivity
+  kind: inherited
+  status: current
+  one_line: The requirement that all treatment groups have overlapping covariate distributions; the conceptual basis for the
+    common-support band ensuring magnitude matching does not extrapolate.
+  why: null
+  source: Causal inference (Rosenbaum & Rubin); propensity-score methods
+  depends_on: []
+- name: confidence interval
+  kind: inherited
+  status: current
+  one_line: An interval estimate of a parameter such that repeated sampling would capture the true value a specified proportion
+    (e.g., 95%) of the time; compared against the materiality threshold to assign verdicts.
+  why: null
+  source: Frequentist statistics (Neyman)
+  depends_on: []
+- name: effect size
+  kind: inherited
+  status: current
+  one_line: A standardized measure of the magnitude of a phenomenon, independent of sample size; the materiality threshold
+    δ = 0.2231 defines what effect size counts as scientifically meaningful.
+  why: null
+  source: Cohen (1988); meta-analysis literature
+  depends_on: []
+- name: power
+  kind: inherited
+  status: current
+  one_line: The probability of correctly rejecting a false null hypothesis; set at 0.90 for detecting the material effect
+    size δ at the planning τ, determining the required N = 390.
+  formula: 1 - \beta
+  why: null
+  source: Neyman-Pearson hypothesis testing
+  depends_on: []
+- name: alpha (significance level)
+  kind: inherited
+  status: current
+  one_line: The pre-specified probability of falsely rejecting a true null hypothesis (Type I error rate), here 0.05.
+  why: null
+  source: Neyman-Pearson hypothesis testing
+  depends_on: []
+- name: variance
+  kind: inherited
+  status: current
+  one_line: The expected squared deviation from the mean, measuring the spread of a distribution.
+  formula: \text{Var}(X) = E[(X - \mu)^2]
+  why: null
+  source: Probability theory
+  depends_on: []
+- name: standard deviation
+  kind: inherited
+  status: current
+  one_line: The square root of the variance, a measure of spread in the same units as the data.
+  formula: \sigma = \sqrt{\text{Var}(X)}
+  why: null
+  source: Probability theory
+  depends_on:
+  - variance
+- name: percentile
+  kind: inherited
+  status: current
+  one_line: The value below which a given percentage of observations fall, used to define magnitude level cutpoints.
+  why: null
+  source: Descriptive statistics
+  depends_on: []
+- name: interquartile range (IQR)
+  kind: inherited
+  status: current
+  one_line: The difference between the 75th and 25th percentiles; pooled across arms to set the minimum band width threshold
+    (0.5 × pooled IQR).
+  formula: \text{IQR} = Q_3 - Q_1
+  why: null
+  source: Descriptive statistics
+  depends_on:
+  - percentile
+- name: covariance matrix
+  kind: inherited
+  status: current
+  one_line: A matrix whose (i,j) entry is the covariance between variables i and j, capturing the full correlation structure.
+  why: null
+  source: Multivariate statistics
+  depends_on: []
+- name: chi-squared distribution
+  kind: inherited
+  status: current
+  one_line: The distribution of the sum of squared standard normal random variables; used to compute the confidence interval
+    on τ_pilot from the reserve sample variance.
+  why: null
+  source: Probability theory
+  depends_on: []
+- name: factorial design
+  kind: inherited
+  status: current
+  one_line: An experimental design that crosses multiple factors; here 3 plane types × 2 magnitude levels enables separating
+    H-sem (semantic effect) from H-mag (magnitude effect).
+  why: null
+  source: Fisher (1935); experimental design
+  depends_on: []
+- name: blocking unit
+  kind: inherited
+  status: current
+  one_line: The unit within which all treatment combinations are observed; each base point serves as a blocking unit, enabling
+    the powerful within-base-point paired contrast.
+  why: null
+  source: Experimental design (randomized complete block)
+  depends_on: []
+- name: randomization
+  kind: inherited
+  status: current
+  one_line: The use of random assignment to treatment conditions, ensuring unbiased estimation and validity of statistical
+    inference.
+  why: null
+  source: Fisher (1935); experimental design
+  depends_on: []
+- name: pre-registration
+  kind: inherited
+  status: current
+  one_line: The practice of publicly committing to hypotheses, methods, and analysis plans before observing data, preventing
+    post-hoc hypothesizing.
+  why: null
+  source: Open science movement; registered reports
+  depends_on: []
+- name: confounding
+  kind: inherited
+  status: current
+  one_line: A situation where a third variable influences both the treatment and outcome, creating a spurious association.
+  why: null
+  source: Causal inference
+  depends_on: []
+- name: treatment effect
+  kind: inherited
+  status: current
+  one_line: The causal difference in outcomes attributable to a treatment, here the holonomy difference between plane types.
+  why: null
+  source: Causal inference (Rubin causal model)
+  depends_on: []
+- name: random seed
+  kind: inherited
+  status: current
+  one_line: An integer initializing a pseudorandom number generator, ensuring reproducible random sequences.
+  why: null
+  source: Computational statistics
+  depends_on: []
+- name: bitwise reproducibility
+  kind: inherited
+  status: current
+  one_line: The property that repeated runs produce identical outputs down to the bit level, given the same inputs, code,
+    and hardware.
+  why: null
+  source: Scientific computing best practices
+  depends_on: []
+- name: MPS backend
+  kind: inherited
+  status: current
+  one_line: Apple's Metal Performance Shaders backend for PyTorch, enabling GPU-accelerated computation on Apple Silicon.
+  why: null
+  source: PyTorch documentation
+  depends_on: []
+- name: PyTorch tensor
+  kind: inherited
+  status: current
+  one_line: A multi-dimensional array supporting automatic differentiation, the fundamental data structure for neural network
+    computation.
+  why: null
+  source: PyTorch documentation
+  depends_on: []
+- name: autograd
+  kind: inherited
+  status: current
+  one_line: PyTorch's automatic differentiation engine that records operations on tensors and computes gradients via backpropagation.
+  why: null
+  source: PyTorch documentation
+  depends_on: []
+- name: WikiText-103
+  kind: inherited
+  status: current
+  one_line: A large-scale language modeling dataset of Wikipedia articles; the corpus from which 64-token passages are drawn
+    to generate base-point activations.
+  why: null
+  source: Merity et al. (2016); Salesforce/wikitext on Hugging Face
+  depends_on: []
+- name: Gemma 2 2B
+  kind: inherited
+  status: current
+  one_line: A 2-billion parameter decoder-only language model from Google DeepMind, the model under study.
+  why: null
+  source: Google DeepMind (2024)
+  depends_on: []
+- name: Gemma Scope
+  kind: inherited
+  status: current
+  one_line: A suite of sparse autoencoders trained on Gemma model activations, providing interpretable feature dictionaries.
+  why: null
+  source: Google DeepMind (2024)
+  depends_on:
+  - sparse autoencoder (SAE)
