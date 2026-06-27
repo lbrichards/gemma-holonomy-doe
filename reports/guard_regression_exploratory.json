@@ -1,0 +1,153 @@
+{
+  "definitions": {
+    "centering": "All covariates are centered at their sample means before OLS, so the intercept is the adjusted mean paired gap at the sample covariate centroid.",
+    "guard_distance_diff": "manifest.manifold_distance_mahalanobis(real) - manifest.manifold_distance_mahalanobis(shuffled); in this run the field stores the preregistered k-NN fallback distance.",
+    "outcome": "d_b = 0.5 * [(log_H_real_low - log_H_shuffled_low) + (log_H_real_high - log_H_shuffled_high)]",
+    "reconstruction_distance_diff": "manifest.manifold_distance_recon(real) - manifest.manifold_distance_recon(shuffled)"
+  },
+  "models": {
+    "guard_only": {
+      "covariates": [
+        "guard_distance_diff"
+      ],
+      "df_resid": 388.0,
+      "intercept": {
+        "ci_high": -0.1486087263330883,
+        "ci_low": -0.44017411295420694,
+        "estimate": -0.2943914196436476,
+        "se": 0.07414827566820398
+      },
+      "r_squared": 0.008883148278272635,
+      "slopes": {
+        "guard_distance_diff": {
+          "ci_high": 0.07347494681395872,
+          "ci_low": -0.0019424391549553097,
+          "estimate": 0.0357662538295017,
+          "se": 0.01917946841977206
+        }
+      }
+    },
+    "guard_plus_phi": {
+      "covariates": [
+        "guard_distance_diff",
+        "phi_diff"
+      ],
+      "df_resid": 387.0,
+      "intercept": {
+        "ci_high": -0.14943257335628665,
+        "ci_low": -0.43935026593100857,
+        "estimate": -0.2943914196436476,
+        "se": 0.07372865289776029
+      },
+      "r_squared": 0.022594933418566998,
+      "slopes": {
+        "guard_distance_diff": {
+          "ci_high": 0.07250683847097501,
+          "ci_low": -0.0024953306159095773,
+          "estimate": 0.03500575392753272,
+          "se": 0.01907371999989554
+        },
+        "phi_diff": {
+          "ci_high": -0.5059513711633596,
+          "ci_low": -5.972598563530687,
+          "estimate": -3.239274967347023,
+          "se": 1.39021709845006
+        }
+      }
+    },
+    "primary_reference_reconstruction_plus_phi": {
+      "covariates": [
+        "reconstruction_distance_diff",
+        "phi_diff"
+      ],
+      "df_resid": 387.0,
+      "intercept": {
+        "ci_high": -0.14889482877089733,
+        "ci_low": -0.4398880105163979,
+        "estimate": -0.2943914196436476,
+        "se": 0.07400215937838737
+      },
+      "r_squared": 0.015329848498761622,
+      "slopes": {
+        "phi_diff": {
+          "ci_high": -0.5913190684267966,
+          "ci_low": -6.0864775827835125,
+          "estimate": -3.3388983256051548,
+          "se": 1.3974677817179333
+        },
+        "reconstruction_distance_diff": {
+          "ci_high": 1.7378559182943083,
+          "ci_low": -3.653599521506234,
+          "estimate": -0.9578718016059629,
+          "se": 1.371095165681704
+        }
+      }
+    },
+    "reconstruction_only": {
+      "covariates": [
+        "reconstruction_distance_diff"
+      ],
+      "df_resid": 388.0,
+      "intercept": {
+        "ci_high": -0.1480158494709825,
+        "ci_low": -0.44076698981631274,
+        "estimate": -0.2943914196436476,
+        "se": 0.07444982584546041
+      },
+      "r_squared": 0.0008053017511158167,
+      "slopes": {
+        "reconstruction_distance_diff": {
+          "ci_high": 1.9374624911456704,
+          "ci_low": -3.4776455219815348,
+          "estimate": -0.7700915154179321,
+          "se": 1.37712135992405
+        }
+      }
+    },
+    "reconstruction_plus_guard_plus_phi": {
+      "covariates": [
+        "reconstruction_distance_diff",
+        "guard_distance_diff",
+        "phi_diff"
+      ],
+      "df_resid": 386.0,
+      "intercept": {
+        "ci_high": -0.14967823602468613,
+        "ci_low": -0.43910460326260914,
+        "estimate": -0.2943914196436476,
+        "se": 0.07360310631030834
+      },
+      "r_squared": 0.028437788690556243,
+      "slopes": {
+        "guard_distance_diff": {
+          "ci_high": 0.08758220696509901,
+          "ci_low": 0.006513204461187319,
+          "estimate": 0.047047705713143165,
+          "se": 0.02061640225356852
+        },
+        "phi_diff": {
+          "ci_high": -0.6228649465620291,
+          "ci_low": -6.088512075694059,
+          "estimate": -3.3556885111280437,
+          "se": 1.3899514772592745
+        },
+        "reconstruction_distance_diff": {
+          "ci_high": 0.6533992984071468,
+          "ci_low": -5.15262611357241,
+          "estimate": -2.2496134075826317,
+          "se": 1.4765120044746545
+        }
+      }
+    }
+  },
+  "n_base_points": 390,
+  "paired_gap_mean": -0.29439141964364773,
+  "purpose": "Check whether the k-nearest-neighbour guard-distance difference or reconstruction-distance difference predicts the paired active-feature minus mixed-feature holonomy gap.",
+  "sources": {
+    "manifest_path": "run/manifest_n390.json",
+    "manifest_sha256": "f8f36b258420e2571c67a2229024402051aeb1d5f4156b853b63a7b33073c6d5",
+    "results_path": "run/holonomy_results_n390.parquet",
+    "results_sha256": "4c1a71bcfbf0331b2b5c15e51d33fdcfb21b54304cb0c1192bf61ed77ab8427a"
+  },
+  "status": "EXPLORATORY_POST_HOC_NOT_CONFIRMATORY"
+}
