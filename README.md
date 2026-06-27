@@ -1,5 +1,7 @@
 # Gemma Holonomy DOE
 
+[![DOI](https://zenodo.org/badge/1268180115.svg)](https://doi.org/10.5281/zenodo.20960026)
+
 This repository contains the source code and frozen experimental artifacts for replicating the results reported in the paper **"Holonomy in Transformer Activation Space Does Not Concentrate Along Semantic Directions: A Preregistered Reversal in Gemma."**
 
 The repository is the experiment record, not the manuscript source. It contains the preregistration, analysis plan, measurement pipeline, frozen run artifacts, integrity checks, and analysis reports used by the paper.
