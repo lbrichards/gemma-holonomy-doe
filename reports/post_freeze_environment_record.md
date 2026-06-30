@@ -28,16 +28,16 @@ Hardware:
 
       Model Name: MacBook Pro
       Model Identifier: Mac14,6
-      Model Number: Z176000NVJ/A
+      Model Number: REDACTED
       Chip: Apple M2 Max
       Total Number of Cores: 12 (8 performance and 4 efficiency)
       Memory: 96 GB
       System Firmware Version: 13822.81.10
       OS Loader Version: 11881.140.96
-      Serial Number (system): L17TLXHL4F
-      Hardware UUID: AB478583-EABE-50A8-9F21-AE87AA65D43E
-      Provisioning UDID: 00006021-001448581EEBC01E
-      Activation Lock Status: Enabled
+      Serial Number (system): REDACTED
+      Hardware UUID: REDACTED
+      Provisioning UDID: REDACTED
+      Activation Lock Status: REDACTED
 
 Software:
 
