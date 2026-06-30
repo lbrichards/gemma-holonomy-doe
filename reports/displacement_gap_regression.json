@@ -1,0 +1,124 @@
+{
+  "covariate_means": {
+    "displacement_over_rho_diff": -5.065012700589224,
+    "high_displacement_over_rho_diff": -11.365079147685904,
+    "low_displacement_over_rho_diff": 1.235053746507455
+  },
+  "definitions": {
+    "centering": "All covariates are centered at their sample means before OLS, so the intercept is the adjusted mean paired gap at the sample covariate centroid.",
+    "displacement_over_rho_diff": "0.5 * [((||c_real_low-h||/rho) - (||c_shuffled_low-h||/rho)) + ((||c_real_high-h||/rho) - (||c_shuffled_high-h||/rho))]",
+    "outcome": "d_b = 0.5 * [(log_H_real_low - log_H_shuffled_low) + (log_H_real_high - log_H_shuffled_high)]"
+  },
+  "models": {
+    "average_displacement": {
+      "covariates": [
+        "displacement_over_rho_diff"
+      ],
+      "df_resid": 388.0,
+      "intercept": {
+        "ci_high": -0.14842980382650628,
+        "ci_low": -0.44035303546078897,
+        "estimate": -0.2943914196436476,
+        "p_value": 8.723523883254361e-05,
+        "se": 0.07423927957984819
+      },
+      "r_squared": 0.006448813585556157,
+      "slopes": {
+        "displacement_over_rho_diff": {
+          "ci_high": 0.016274302193598,
+          "ci_low": -0.00173668451397729,
+          "estimate": 0.007268808839810355,
+          "p_value": 0.113340690909572,
+          "se": 0.004580391461847544
+        }
+      }
+    },
+    "high_displacement": {
+      "covariates": [
+        "high_displacement_over_rho_diff"
+      ],
+      "df_resid": 388.0,
+      "intercept": {
+        "ci_high": -0.1483167606041865,
+        "ci_low": -0.4404660786831087,
+        "estimate": -0.2943914196436476,
+        "p_value": 8.832001908988075e-05,
+        "se": 0.07429677584240614
+      },
+      "r_squared": 0.004909261982900648,
+      "slopes": {
+        "high_displacement_over_rho_diff": {
+          "ci_high": 0.0127297575505102,
+          "ci_low": -0.002213901081991555,
+          "estimate": 0.005257928234259322,
+          "p_value": 0.16729393486745053,
+          "se": 0.003800336290309222
+        }
+      }
+    },
+    "low_displacement": {
+      "covariates": [
+        "low_displacement_over_rho_diff"
+      ],
+      "df_resid": 388.0,
+      "intercept": {
+        "ci_high": -0.1484199524178927,
+        "ci_low": -0.44036288686940256,
+        "estimate": -0.2943914196436476,
+        "p_value": 8.732933600751744e-05,
+        "se": 0.07424429022236695
+      },
+      "r_squared": 0.006314693269492855,
+      "slopes": {
+        "low_displacement_over_rho_diff": {
+          "ci_high": 0.01691616753084518,
+          "ci_low": -0.001893563300709603,
+          "estimate": 0.007511302115067789,
+          "p_value": 0.11717311452748867,
+          "se": 0.004783520853095044
+        }
+      }
+    },
+    "low_plus_high_displacement": {
+      "covariates": [
+        "low_displacement_over_rho_diff",
+        "high_displacement_over_rho_diff"
+      ],
+      "df_resid": 387.0,
+      "intercept": {
+        "ci_high": -0.14825919352415076,
+        "ci_low": -0.4405236457631445,
+        "estimate": -0.2943914196436476,
+        "p_value": 8.890414756155015e-05,
+        "se": 0.07432545479413633
+      },
+      "r_squared": 0.006707540232925302,
+      "slopes": {
+        "high_displacement_over_rho_diff": {
+          "ci_high": 0.012632850667701513,
+          "ci_low": -0.008439725546360154,
+          "estimate": 0.0020965625606706793,
+          "p_value": 0.6958448942840187,
+          "se": 0.005358943924913177
+        },
+        "low_displacement_over_rho_diff": {
+          "ci_high": 0.01892161825457511,
+          "ci_low": -0.0076213925505099755,
+          "estimate": 0.0056501128520325666,
+          "p_value": 0.40308759100268504,
+          "se": 0.006750124192593857
+        }
+      }
+    }
+  },
+  "n_base_points": 390,
+  "paired_gap_mean": -0.29439141964364773,
+  "purpose": "Check whether active-feature minus mixed-feature matched-center displacement, measured in loop-radius units, predicts the paired active-feature minus mixed-feature holonomy gap.",
+  "sources": {
+    "displacement_path": "reports/center_displacement_diagnostic.json",
+    "displacement_sha256": "89422479d5cb6371f9574d9658f1ce824836aac540578510735a40061a602c35",
+    "results_path": "run/holonomy_results_n390.parquet",
+    "results_sha256": "4c1a71bcfbf0331b2b5c15e51d33fdcfb21b54304cb0c1192bf61ed77ab8427a"
+  },
+  "status": "POST_FREEZE_DIAGNOSTIC_NOT_CONFIRMATORY"
+}
