@@ -1,0 +1,194 @@
+{
+  "definitions": {
+    "centering": "Each metric difference is centered at its sample mean before OLS; the intercept equals the mean paired gap.",
+    "gap_b": "0.5 * [(log_H_real_low - log_H_shuffled_low) + (log_H_real_high - log_H_shuffled_high)]",
+    "metric_diff_b": "0.5 * [(metric_real_low - metric_shuffled_low) + (metric_real_high - metric_shuffled_high)]",
+    "primary_metric": "symmetric_residual_norm"
+  },
+  "n_checkpoint_rows": 1560,
+  "primary_metric": "symmetric_residual_norm",
+  "primary_result": {
+    "df_resid": 388.0,
+    "hc3_intercept": {
+      "ci_high": -0.14680115240200647,
+      "ci_low": -0.44198168688528877,
+      "estimate": -0.2943914196436476,
+      "p_value": 0.00010396837613921319,
+      "se": 0.07506764742001401
+    },
+    "hc3_slope": {
+      "ci_high": 39097.90887907204,
+      "ci_low": -10186.819206189906,
+      "estimate": 14455.54483644107,
+      "p_value": 0.2494812196888521,
+      "se": 12533.646900436926
+    },
+    "intercept": {
+      "ci_high": -0.15896266626302663,
+      "ci_low": -0.4298201730242686,
+      "estimate": -0.2943914196436476,
+      "p_value": 2.420561709583081e-05,
+      "se": 0.06888203469856012
+    },
+    "mean_metric_difference": -2.4875371976442995e-06,
+    "mean_paired_gap": -0.29439141964364773,
+    "metric": "symmetric_residual_norm",
+    "n_base_points": 390,
+    "r_squared": 0.14466807338768362,
+    "slope": {
+      "ci_high": 17963.907725962246,
+      "ci_low": 10947.18194691989,
+      "estimate": 14455.54483644107,
+      "p_value": 7.158698046503499e-15,
+      "se": 1784.4303241273055
+    }
+  },
+  "regressions": {
+    "max_condition": {
+      "df_resid": 388.0,
+      "hc3_intercept": {
+        "ci_high": -0.1533711598258115,
+        "ci_low": -0.43541167946148374,
+        "estimate": -0.2943914196436476,
+        "p_value": 4.9441746745141305e-05,
+        "se": 0.07172599752632833
+      },
+      "hc3_slope": {
+        "ci_high": 1.3474899635242497,
+        "ci_low": 0.49051550951803524,
+        "estimate": 0.9190027365211424,
+        "p_value": 3.086570045167914e-05,
+        "se": 0.21793800283582362
+      },
+      "intercept": {
+        "ci_high": -0.15405802150469725,
+        "ci_low": -0.43472481778259797,
+        "estimate": -0.2943914196436476,
+        "p_value": 4.548449575969136e-05,
+        "se": 0.07137664460963163
+      },
+      "mean_metric_difference": -0.010120029693960515,
+      "mean_paired_gap": -0.29439141964364773,
+      "metric": "max_condition",
+      "n_base_points": 390,
+      "r_squared": 0.0815933815587947,
+      "slope": {
+        "ci_high": 1.2267511987982664,
+        "ci_low": 0.6112542742440183,
+        "estimate": 0.9190027365211424,
+        "p_value": 9.299645828293185e-09,
+        "se": 0.15652761860270312
+      }
+    },
+    "non_orthogonality_norm": {
+      "df_resid": 388.0,
+      "hc3_intercept": {
+        "ci_high": -0.14681236734172665,
+        "ci_low": -0.4419704719455686,
+        "estimate": -0.2943914196436476,
+        "p_value": 0.00010384476040101747,
+        "se": 0.0750619432556644
+      },
+      "hc3_slope": {
+        "ci_high": 19548.05852488469,
+        "ci_low": -5088.267827322621,
+        "estimate": 7229.895348781036,
+        "p_value": 0.24922662829543332,
+        "se": 6265.287999323139
+      },
+      "intercept": {
+        "ci_high": -0.15896479381016707,
+        "ci_low": -0.4298180454771282,
+        "estimate": -0.2943914196436476,
+        "p_value": 2.41986544863503e-05,
+        "se": 0.06888095258141519
+      },
+      "mean_metric_difference": -4.9744061655700926e-06,
+      "mean_paired_gap": -0.29439141964364773,
+      "metric": "non_orthogonality_norm",
+      "n_base_points": 390,
+      "r_squared": 0.14469494721846488,
+      "slope": {
+        "ci_high": 8984.401510600128,
+        "ci_low": 5475.389186961944,
+        "estimate": 7229.895348781036,
+        "p_value": 7.114556565083321e-15,
+        "se": 892.3803202825146
+      }
+    },
+    "symmetric_residual_norm": {
+      "df_resid": 388.0,
+      "hc3_intercept": {
+        "ci_high": -0.14680115240200647,
+        "ci_low": -0.44198168688528877,
+        "estimate": -0.2943914196436476,
+        "p_value": 0.00010396837613921319,
+        "se": 0.07506764742001401
+      },
+      "hc3_slope": {
+        "ci_high": 39097.90887907204,
+        "ci_low": -10186.819206189906,
+        "estimate": 14455.54483644107,
+        "p_value": 0.2494812196888521,
+        "se": 12533.646900436926
+      },
+      "intercept": {
+        "ci_high": -0.15896266626302663,
+        "ci_low": -0.4298201730242686,
+        "estimate": -0.2943914196436476,
+        "p_value": 2.420561709583081e-05,
+        "se": 0.06888203469856012
+      },
+      "mean_metric_difference": -2.4875371976442995e-06,
+      "mean_paired_gap": -0.29439141964364773,
+      "metric": "symmetric_residual_norm",
+      "n_base_points": 390,
+      "r_squared": 0.14466807338768362,
+      "slope": {
+        "ci_high": 17963.907725962246,
+        "ci_low": 10947.18194691989,
+        "estimate": 14455.54483644107,
+        "p_value": 7.158698046503499e-15,
+        "se": 1784.4303241273055
+      }
+    },
+    "transport_residual_norm": {
+      "df_resid": 388.0,
+      "hc3_intercept": {
+        "ci_high": -0.17831797649889075,
+        "ci_low": -0.4104648627884045,
+        "estimate": -0.2943914196436476,
+        "p_value": 9.288733162982928e-07,
+        "se": 0.05903749933965335
+      },
+      "hc3_slope": {
+        "ci_high": 15819.098734427182,
+        "ci_low": 7604.119156167363,
+        "estimate": 11711.608945297272,
+        "p_value": 3.9384621689626704e-08,
+        "se": 2089.159407556901
+      },
+      "intercept": {
+        "ci_high": -0.18052077021900426,
+        "ci_low": -0.408262069068291,
+        "estimate": -0.2943914196436476,
+        "p_value": 5.790456480644927e-07,
+        "se": 0.05791711013370545
+      },
+      "mean_metric_difference": 8.12426171470213e-07,
+      "mean_paired_gap": -0.29439141964364773,
+      "metric": "transport_residual_norm",
+      "n_base_points": 390,
+      "r_squared": 0.39530480664334056,
+      "slope": {
+        "ci_high": 13157.407626268978,
+        "ci_low": 10265.810264325566,
+        "estimate": 11711.608945297272,
+        "p_value": 2.661799751461134e-44,
+        "se": 735.3649237981997
+      }
+    }
+  },
+  "source_checkpoint": "reports/full_transport_shear_diagnostic.checkpoint.jsonl",
+  "status": "POST_FREEZE_DIAGNOSTIC_NOT_CONFIRMATORY"
+}
