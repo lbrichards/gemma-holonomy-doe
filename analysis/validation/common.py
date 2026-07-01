@@ -109,6 +109,8 @@ def run_loop_measurement(
         "theta": theta,
         "abs_theta": abs(theta),
         "area": area,
+        "A_enclosed": area,
+        "det_M": float(result.det_m.detach().cpu()),
         "H": holonomy,
         "log_H": math.log(max(holonomy, torch.finfo(torch.float64).tiny)),
         "theta_over_rho2": theta / safe_rho2,
