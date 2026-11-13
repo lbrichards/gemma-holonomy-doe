@@ -75,6 +75,11 @@ def run(results_path: Path, manifest_path: Path) -> dict[str, Any]:
             "band_status": band.status.value,
             "m_low": band.m_low,
             "m_high": band.m_high,
+            "balance": {
+                "recon_smd": manifest.balance_diagnostics.manifold_distance_recon.smd,
+                "guard_smd": manifest.balance_diagnostics.manifold_distance_mahalanobis.smd,
+                "phi_smd": manifest.balance_diagnostics.phi.smd,
+            },
             "n_base_points": bos["n"],
             "rows": int(len(bos["results"])),
             "h_sem_primary": bos["primary"],
@@ -100,8 +105,10 @@ def write_reports(result: dict[str, Any], out_dir: Path, stem: str) -> None:
     (out_dir / f"{stem}.json").write_text(json.dumps(result, indent=2, sort_keys=True, default=json_default) + "\n")
     bos = result["bos_run"]
     frozen = result["frozen_same_bases"]
+    pilot = bos["n_base_points"] < FROZEN_FULL["n"]
+    label = "pilot" if pilot else "full run"
     lines = [
-        f"# H-sem with <bos> prepended: {bos['n_base_points']}-base pilot",
+        f"# H-sem with <bos> prepended: {bos['n_base_points']}-base {label}",
         "",
         f"**Status: {STATUS}.** Post-freeze robustness check prompted by external review. "
         "No verdict label is applied; the preregistered result in `reports/hsem_results.md` is unchanged.",
@@ -114,10 +121,10 @@ def write_reports(result: dict[str, Any], out_dir: Path, stem: str) -> None:
         f"| Frozen, no <bos> (preregistered) | 390 | {_ci(result['frozen_full'])} |",
         f"| Frozen, no <bos>, same {frozen['n_base_points']} bases | {frozen['n_base_points']} "
         f"| {_ci(frozen['h_sem_primary']['adjusted_ols_t'])} |",
-        f"| **This pilot, with <bos>** | {bos['n_base_points']} | **{_ci(bos['h_sem_primary']['adjusted_ols_t'])}** |",
+        f"| **This {label}, with <bos>** | {bos['n_base_points']} | **{_ci(bos['h_sem_primary']['adjusted_ols_t'])}** |",
         f"| External reviewer (Tebow), with <bos> | n/a | {_ci(result['tebow'])} |",
         "",
-        "Pilot detail:",
+        f"{label.capitalize()} detail:",
         "",
         f"- HC3: {_ci(bos['h_sem_primary']['adjusted_hc3'])}; unadjusted: {_ci(bos['h_sem_primary']['unadjusted'])}",
         f"- Within-magnitude, low: {_ci(bos['h_sem_primary']['within_magnitude_contrasts']['low'])}; "
@@ -126,12 +133,17 @@ def write_reports(result: dict[str, Any], out_dir: Path, stem: str) -> None:
         f"- Rows: {bos['rows']}; manifest kind `{bos['manifest_kind']}`; band `{bos['band_status']}` "
         f"(m_low={bos['m_low']}, m_high={bos['m_high']})",
         f"- Smoke magnitude source: `{bos['smoke_magnitude_source']}`",
-        "",
-        "Caveats: the band (m_low/m_high) and covariate reference distribution are fit on these "
-        f"{bos['n_base_points']} bases only, so centers differ from what a full 390-base <bos> run would "
-        "construct. The CI is wide at this n; this pilot sizes the effect, it does not settle it.",
+        f"- Stage A balance SMDs (real vs shuffled): recon {bos['balance']['recon_smd']:+.3f}, "
+        f"guard {bos['balance']['guard_smd']:+.3f}, phi {bos['balance']['phi_smd']:+.3f}",
         "",
     ]
+    if pilot:
+        lines += [
+            "Caveats: the band (m_low/m_high) and covariate reference distribution are fit on these "
+            f"{bos['n_base_points']} bases only, so centers differ from what a full 390-base <bos> run would "
+            "construct. The CI is wide at this n; this pilot sizes the effect, it does not settle it.",
+            "",
+        ]
     (out_dir / f"{stem}.md").write_text("\n".join(lines))
 
 
