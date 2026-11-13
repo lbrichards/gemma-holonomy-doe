@@ -2,6 +2,7 @@
 
 import json
 from dataclasses import replace
+from pathlib import Path
 
 import pytest
 import torch
@@ -78,3 +79,33 @@ def test_bos_extractor_matches_manual_forward_at_final_content_token():
     assert without_bos.token_position == 63
     assert torch.allclose(with_bos.activation, captured["h"][0, 64])
     assert not torch.allclose(with_bos.activation, without_bos.activation)
+
+
+def test_stage_b_refuses_to_write_prepend_bos_results_into_frozen_run_dir(tmp_path, monkeypatch):
+    from tests.test_stage_b import synthetic_manifest as stage_b_manifest
+    from tests.test_stage_b import synthetic_measure, write_manifest
+    from stage_b.run import run_stage_b
+
+    manifest = stage_b_manifest(n_base_points=1, kind="smoke")
+    manifest = replace(manifest, metadata=replace(manifest.metadata, prepend_bos=True))
+    manifest_path = write_manifest(tmp_path / "manifest.json", manifest)
+    (tmp_path / "run").mkdir()
+    monkeypatch.chdir(tmp_path)
+
+    with pytest.raises(RuntimeError, match="outside run/"):
+        run_stage_b(
+            manifest_path=manifest_path,
+            results_path=Path("run/results.parquet"),
+            allow_smoke=True,
+            measure_fn=synthetic_measure,
+        )
+    assert not (tmp_path / "run" / "results.parquet.checkpoint.jsonl").exists()
+
+    (tmp_path / "run_bos").mkdir()
+    run_stage_b(
+        manifest_path=manifest_path,
+        results_path=tmp_path / "run_bos" / "results.parquet",
+        allow_smoke=True,
+        measure_fn=synthetic_measure,
+    )
+    assert (tmp_path / "run_bos" / "results.parquet").exists()

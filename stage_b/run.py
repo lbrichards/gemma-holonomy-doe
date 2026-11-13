@@ -221,6 +221,8 @@ def run_stage_b(
     """Run or resume Stage B and return a summary."""
 
     manifest = load_manifest(manifest_path, allow_smoke=allow_smoke)
+    if manifest.metadata.prepend_bos and results_path.resolve().parent == Path("run").resolve():
+        raise RuntimeError("prepend_bos manifest is post-freeze; write results outside run/")
     checkpoint_path = checkpoint_path_for(results_path)
     rows = load_checkpoint_rows(checkpoint_path)
     completed = completed_base_points(rows)
