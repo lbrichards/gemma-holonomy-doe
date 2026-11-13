@@ -1,0 +1,1579 @@
+{
+  "status": "POST_FREEZE_NOT_CONFIRMATORY",
+  "feature": 10762,
+  "manifest": "run/manifest_n390.json",
+  "n_base_points": 20,
+  "bos_token_id": 2,
+  "no_bos_source": "frozen manifest activations and planes",
+  "with_bos_source": "Stage A pass-1 rerun with prepend_bos (same seeds, same final content token)",
+  "summary": {
+    "no_bos": {
+      "n": 20,
+      "n_active": 20,
+      "n_top_feature": 3,
+      "median_activation": 26.265679359436035,
+      "median_l1_share": 0.044359393000017386,
+      "real_contains_feature": 10,
+      "real_median_projection_sq": 0.5045367112191429,
+      "shuffled_contains_feature": 5,
+      "shuffled_median_projection_sq": 0.0011045279541273799,
+      "random_contains_feature": 0,
+      "random_median_projection_sq": 0.0008537771036936817
+    },
+    "with_bos": {
+      "n": 20,
+      "n_active": 0,
+      "n_top_feature": 0,
+      "median_activation": 0.0,
+      "median_l1_share": 0.0,
+      "real_contains_feature": 0,
+      "real_median_projection_sq": 0.0010645768778059098,
+      "shuffled_contains_feature": 0,
+      "shuffled_median_projection_sq": 0.00024930858268368446,
+      "random_contains_feature": 0,
+      "random_median_projection_sq": 0.0008537771036936817
+    }
+  },
+  "rows": [
+    {
+      "base_point_id": "bp-000",
+      "no_bos": {
+        "activation_norm": 120.48158264160156,
+        "code": {
+          "activation": 19.962276458740234,
+          "active": true,
+          "rank_among_active": 5,
+          "l0": 64,
+          "l1_share": 0.044960329529109846,
+          "top_feature": 2230
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              2230,
+              12342
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.005005599141980367
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              2230,
+              15864
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.004881518867542833
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0012065463916057174
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 119.26290130615234,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 77,
+          "l1_share": 0.0,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              12416
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0012314386727485785
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              1202
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00036799769720453245
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0012065463916057174
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-001",
+      "no_bos": {
+        "activation_norm": 126.3492660522461,
+        "code": {
+          "activation": 22.61363983154297,
+          "active": true,
+          "rank_among_active": 1,
+          "l0": 73,
+          "l1_share": 0.04501413741590978,
+          "top_feature": 10762
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              10762,
+              12358
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              10762,
+              1364
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0010426943489994195
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 136.7589111328125,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 56,
+          "l1_share": 0.0,
+          "top_feature": 6314
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6314,
+              12358
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0007715178832187282
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6314,
+              6497
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.000204426993308496
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0010426943489994195
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-002",
+      "no_bos": {
+        "activation_norm": 124.85285949707031,
+        "code": {
+          "activation": 22.10519027709961,
+          "active": true,
+          "rank_among_active": 3,
+          "l0": 74,
+          "l1_share": 0.045831074232908386,
+          "top_feature": 785
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              785,
+              12342
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.002886447772125568
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              785,
+              8136
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0013109174362803538
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.00019074425458912242
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 133.5043182373047,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 57,
+          "l1_share": 0.0,
+          "top_feature": 785
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              785,
+              15596
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.006544507038462511
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              785,
+              3724
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0014166041628086207
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.00019074425458912242
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-003",
+      "no_bos": {
+        "activation_norm": 128.74351501464844,
+        "code": {
+          "activation": 26.788122177124023,
+          "active": true,
+          "rank_among_active": 3,
+          "l0": 97,
+          "l1_share": 0.04608104964920359,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              3750,
+              10762
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999998
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              4493
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00028909101882806606
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.00010068436685791235
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 168.17445373535156,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 142,
+          "l1_share": 0.0,
+          "top_feature": 3750
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              3750,
+              7507
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0009536119444577602
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              3750,
+              16116
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00016928588832910846
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.00010068436685791235
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-004",
+      "no_bos": {
+        "activation_norm": 115.87145233154297,
+        "code": {
+          "activation": 23.625469207763672,
+          "active": true,
+          "rank_among_active": 4,
+          "l0": 70,
+          "l1_share": 0.047008025920090124,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              5327
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0001886932704297315
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              9835
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00012495648843661216
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.000340521598458712
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 120.31346893310547,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 55,
+          "l1_share": 0.0,
+          "top_feature": 5327
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              5327,
+              14356
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00023022598702369327
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              5327,
+              2897
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00017513813909595364
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.000340521598458712
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-005",
+      "no_bos": {
+        "activation_norm": 126.40667724609375,
+        "code": {
+          "activation": 26.47432518005371,
+          "active": true,
+          "rank_among_active": 3,
+          "l0": 73,
+          "l1_share": 0.05063288687326113,
+          "top_feature": 2564
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              2564,
+              6810
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0009778978268968536
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              2564,
+              1739
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0008965226832850403
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.000957298411161572
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 132.24966430664062,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 72,
+          "l1_share": 0.0,
+          "top_feature": 2564
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              2564,
+              14493
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0011755418111540593
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              2564,
+              12583
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0008915214736474588
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.000957298411161572
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-006",
+      "no_bos": {
+        "activation_norm": 119.02938079833984,
+        "code": {
+          "activation": 20.103851318359375,
+          "active": true,
+          "rank_among_active": 5,
+          "l0": 72,
+          "l1_share": 0.03935267673682974,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              5511,
+              12342
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.009073422438287187
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              5511,
+              6216
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.006570215626349855
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0016862740456075045
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 106.48725891113281,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 42,
+          "l1_share": 0.0,
+          "top_feature": 5511
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              5511,
+              6810
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.006684119159075285
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              5511,
+              10732
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.006546541995094352
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0016862740456075045
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-007",
+      "no_bos": {
+        "activation_norm": 135.280517578125,
+        "code": {
+          "activation": 27.634206771850586,
+          "active": true,
+          "rank_among_active": 2,
+          "l0": 122,
+          "l1_share": 0.03849984856974413,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              10762,
+              2009
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              10762,
+              8837
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.00024259046129263367
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 103.43785858154297,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 66,
+          "l1_share": 0.0,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              8716
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.003496009914342025
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              1196
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0001046221761534071
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.00024259046129263367
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-008",
+      "no_bos": {
+        "activation_norm": 148.65655517578125,
+        "code": {
+          "activation": 26.452451705932617,
+          "active": true,
+          "rank_among_active": 2,
+          "l0": 113,
+          "l1_share": 0.039671877966484116,
+          "top_feature": 3240
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              3240,
+              10762
+            ],
+            "contains_feature": true,
+            "projection_sq": 1.0000000000000004
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              3240,
+              7732
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0008981384719744059
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 4.476733413012842e-05
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 143.68521118164062,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 86,
+          "l1_share": 0.0,
+          "top_feature": 12555
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              12555,
+              3240
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0002592410681090406
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              12555,
+              3058
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00029419017205887285
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 4.476733413012842e-05
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-009",
+      "no_bos": {
+        "activation_norm": 135.8374786376953,
+        "code": {
+          "activation": 27.488380432128906,
+          "active": true,
+          "rank_among_active": 2,
+          "l0": 110,
+          "l1_share": 0.03979776316249017,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              10762,
+              7541
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              10762,
+              14360
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 8.019398873649793e-05
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 150.7024383544922,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 85,
+          "l1_share": 0.0,
+          "top_feature": 7507
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              7507,
+              2620
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.9122867629011608
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              7507,
+              5364
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0009348184155085832
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 8.019398873649793e-05
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-010",
+      "no_bos": {
+        "activation_norm": 130.33160400390625,
+        "code": {
+          "activation": 26.078907012939453,
+          "active": true,
+          "rank_among_active": 3,
+          "l0": 91,
+          "l1_share": 0.045541641667803015,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              1322
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0001284624161230813
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              10678
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0003356304016185046
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0009344961884687861
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 174.29493713378906,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 102,
+          "l1_share": 0.0,
+          "top_feature": 1041
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              1041,
+              1322
+            ],
+            "contains_feature": false,
+            "projection_sq": 7.954882272412492e-05
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              1041,
+              3481
+            ],
+            "contains_feature": false,
+            "projection_sq": 3.8437383832958396e-05
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0009344961884687861
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-011",
+      "no_bos": {
+        "activation_norm": 157.29579162597656,
+        "code": {
+          "activation": 29.13813018798828,
+          "active": true,
+          "rank_among_active": 2,
+          "l0": 109,
+          "l1_share": 0.043758456470924925,
+          "top_feature": 12395
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              12395,
+              10762
+            ],
+            "contains_feature": true,
+            "projection_sq": 1.0000000000000004
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              12395,
+              2971
+            ],
+            "contains_feature": false,
+            "projection_sq": 1.2360621686078954e-05
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 9.648255551313407e-06
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 177.74635314941406,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 117,
+          "l1_share": 0.0,
+          "top_feature": 12395
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              12395,
+              12492
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0018725676262180352
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              12395,
+              14758
+            ],
+            "contains_feature": false,
+            "projection_sq": 5.9961526201490764e-05
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 9.648255551313407e-06
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-012",
+      "no_bos": {
+        "activation_norm": 134.80435180664062,
+        "code": {
+          "activation": 27.12591552734375,
+          "active": true,
+          "rank_among_active": 2,
+          "l0": 86,
+          "l1_share": 0.0451815538103243,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              8287
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0012810827613995187
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              2708
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0028886576769608973
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.00033539672911478657
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 121.6537094116211,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 38,
+          "l1_share": 0.0,
+          "top_feature": 15869
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              15869,
+              5463
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00019652648164138382
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              15869,
+              4315
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0016306728570969046
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.00033539672911478657
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-013",
+      "no_bos": {
+        "activation_norm": 144.13217163085938,
+        "code": {
+          "activation": 27.534358978271484,
+          "active": true,
+          "rank_among_active": 2,
+          "l0": 138,
+          "l1_share": 0.032876635919879875,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              10762
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999987
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              3626
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00020149806673753833
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0018093372418690474
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 150.5523223876953,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 111,
+          "l1_share": 0.0,
+          "top_feature": 5055
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              5055,
+              2291
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.005389412664520378
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              5055,
+              12776
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00016396598465411442
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0018093372418690474
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-014",
+      "no_bos": {
+        "activation_norm": 128.06455993652344,
+        "code": {
+          "activation": 26.5606632232666,
+          "active": true,
+          "rank_among_active": 3,
+          "l0": 85,
+          "l1_share": 0.04645513419681686,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              13430
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0005659333068619627
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              13430,
+              7286
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.000873481050427235
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 5.156534146526361e-05
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 95.998779296875,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 42,
+          "l1_share": 0.0,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              13430
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0005659333068619627
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              7755
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00010518274102937276
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 5.156534146526361e-05
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-015",
+      "no_bos": {
+        "activation_norm": 91.49351501464844,
+        "code": {
+          "activation": 18.479354858398438,
+          "active": true,
+          "rank_among_active": 4,
+          "l0": 41,
+          "l1_share": 0.06475952793127634,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              8641
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0012348711372043614
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              10107
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0007450731191484222
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0007730580189185774
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 133.19284057617188,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 60,
+          "l1_share": 0.0,
+          "top_feature": 6468
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6468,
+              8517
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0009170392214893975
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6468,
+              10187
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0013214740393902359
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0007730580189185774
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-016",
+      "no_bos": {
+        "activation_norm": 160.92929077148438,
+        "code": {
+          "activation": 32.55561065673828,
+          "active": true,
+          "rank_among_active": 1,
+          "l0": 164,
+          "l1_share": 0.03269252207422948,
+          "top_feature": 10762
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              10762,
+              13295
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              10762,
+              13490
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0010731763300442071
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 184.2324981689453,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 140,
+          "l1_share": 0.0,
+          "top_feature": 1041
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              1041,
+              1322
+            ],
+            "contains_feature": false,
+            "projection_sq": 7.954882272412492e-05
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              1041,
+              10458
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.00015496995369173707
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0010731763300442071
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-017",
+      "no_bos": {
+        "activation_norm": 148.08462524414062,
+        "code": {
+          "activation": 22.783599853515625,
+          "active": true,
+          "rank_among_active": 1,
+          "l0": 128,
+          "l1_share": 0.03025903604816559,
+          "top_feature": 10762
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              10762,
+              2167
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              10762,
+              6082
+            ],
+            "contains_feature": true,
+            "projection_sq": 0.9999999999999991
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0018539529101141373
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 158.358154296875,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 101,
+          "l1_share": 0.0,
+          "top_feature": 2167
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              2167,
+              2620
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.9122720201140441
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              2167,
+              1018
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.000694956191712918
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0018539529101141373
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-018",
+      "no_bos": {
+        "activation_norm": 121.09272003173828,
+        "code": {
+          "activation": 22.241392135620117,
+          "active": true,
+          "rank_among_active": 3,
+          "l0": 84,
+          "l1_share": 0.04143210044281516,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              12342,
+              10762
+            ],
+            "contains_feature": true,
+            "projection_sq": 1.0
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              12342,
+              10940
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0017120959109653228
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0014930438803389483
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 119.57694244384766,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 64,
+          "l1_share": 0.0,
+          "top_feature": 15663
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              15663,
+              12358
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0027686442166351406
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              15663,
+              16026
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.002411132471792846
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.0014930438803389483
+          }
+        ]
+      }
+    },
+    {
+      "base_point_id": "bp-019",
+      "no_bos": {
+        "activation_norm": 135.4645538330078,
+        "code": {
+          "activation": 22.5986328125,
+          "active": true,
+          "rank_among_active": 4,
+          "l0": 95,
+          "l1_share": 0.03506889571651698,
+          "top_feature": 8081
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              8081,
+              15030
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.002876525211031274
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              8081,
+              12394
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0006495406892037406
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.001441760414197962
+          }
+        ]
+      },
+      "with_bos": {
+        "activation_norm": 108.92805480957031,
+        "code": {
+          "activation": 0.0,
+          "active": false,
+          "rank_among_active": null,
+          "l0": 55,
+          "l1_share": 0.0,
+          "top_feature": 6810
+        },
+        "planes": [
+          {
+            "arm": "real",
+            "feature_ids": [
+              6810,
+              5074
+            ],
+            "contains_feature": false,
+            "projection_sq": 0.0002111355835442664
+          },
+          {
+            "arm": "shuffled",
+            "feature_ids": [
+              6810,
+              1210
+            ],
+            "contains_feature": false,
+            "projection_sq": 9.199864700740948e-05
+          },
+          {
+            "arm": "random",
+            "feature_ids": null,
+            "contains_feature": false,
+            "projection_sq": 0.001441760414197962
+          }
+        ]
+      }
+    }
+  ]
+}
