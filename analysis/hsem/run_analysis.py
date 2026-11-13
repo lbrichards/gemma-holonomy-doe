@@ -150,7 +150,7 @@ def prepare_frames(results_path: Path, manifest_path: Path) -> tuple[pd.DataFram
     return results, merged
 
 
-def hsem_primary(results: pd.DataFrame, covariates: pd.DataFrame) -> dict[str, Any]:
+def hsem_primary(results: pd.DataFrame, covariates: pd.DataFrame, *, n_expected: int = 390) -> dict[str, Any]:
     cells = results[results["arm"].isin(["real", "shuffled"])].pivot(
         index="base_point_id",
         columns=["arm", "magnitude_level"],
@@ -159,8 +159,8 @@ def hsem_primary(results: pd.DataFrame, covariates: pd.DataFrame) -> dict[str, A
     low = cells[("real", "low")] - cells[("shuffled", "low")]
     high = cells[("real", "high")] - cells[("shuffled", "high")]
     d_b = 0.5 * (low + high)
-    if len(d_b) != 390 or d_b.isna().any():
-        raise RuntimeError("failed to define all 390 H-sem paired contrasts")
+    if len(d_b) != n_expected or d_b.isna().any():
+        raise RuntimeError(f"failed to define all {n_expected} H-sem paired contrasts")
 
     cov_wide = covariates[covariates["arm"].isin(["real", "shuffled"])].pivot(
         index="base_point_id",
