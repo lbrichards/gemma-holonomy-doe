@@ -26,14 +26,15 @@ import torch
 from bands import BandDecision, compute_common_support_band
 from covariates import ReferenceDistribution, measure_plane_covariates
 from extraction import (
-    FINAL_TOKEN_POSITION,
     LAYER_INDEX,
     MODEL_NAME,
     SAE_PATH,
     SAE_REPO,
     ResidPostExtractor,
+    final_token_position,
     load_model_and_tokenizer,
     load_sae,
+    model_input_ids,
 )
 from geometry import g_projection_coeffs, in_plane_magnitude
 from manifest import (
@@ -104,9 +105,10 @@ def load_experiment_records(path: Path, *, limit: int | None) -> list[dict[str, 
     return selected
 
 
-def make_readout_jvp(model: Any, token_ids: list[int], *, device: torch.device):
-    input_ids = torch.tensor([token_ids], dtype=torch.long, device=device)
+def make_readout_jvp(model: Any, token_ids: list[int], *, device: torch.device, bos_token_id: int | None = None):
+    input_ids = torch.tensor([model_input_ids(token_ids, bos_token_id=bos_token_id)], dtype=torch.long, device=device)
     attention_mask = torch.ones_like(input_ids, device=device)
+    position = final_token_position(bos_token_id=bos_token_id)
 
     def readout_map(h: torch.Tensor) -> torch.Tensor:
         state: dict[str, torch.Tensor] = {}
@@ -114,7 +116,7 @@ def make_readout_jvp(model: Any, token_ids: list[int], *, device: torch.device):
         def patch_hook(_module: torch.nn.Module, _args: tuple[Any, ...], output: torch.Tensor):
             tensor = output[0] if isinstance(output, tuple) else output
             patched = tensor.clone()
-            patched[0, FINAL_TOKEN_POSITION, :] = h.to(device=patched.device, dtype=patched.dtype)
+            patched[0, position, :] = h.to(device=patched.device, dtype=patched.dtype)
             if isinstance(output, tuple):
                 return (patched, *output[1:])
             return patched
@@ -130,7 +132,7 @@ def make_readout_jvp(model: Any, token_ids: list[int], *, device: torch.device):
         finally:
             patch_handle.remove()
             capture_handle.remove()
-        return state["out"][0, FINAL_TOKEN_POSITION, :]
+        return state["out"][0, position, :]
 
     def path_jvp(point: torch.Tensor, direction: torch.Tensor) -> torch.Tensor:
         point = point.detach().requires_grad_(True)
@@ -168,7 +170,7 @@ def pass1_select_and_magnitude(
     token_ids = [int(item) for item in record["token_ids"]]
     activation = extractor.extract(token_ids).activation
     code = sae.encode(activation)
-    path_jvp = make_readout_jvp(model, token_ids, device=activation.device)
+    path_jvp = make_readout_jvp(model, token_ids, device=activation.device, bos_token_id=extractor.bos_token_id)
     base_jvp = lambda direction: path_jvp(activation, direction)
     selected = select_three_arm_planes(
         activation=activation,
@@ -363,7 +365,12 @@ def _balance_metric(real_values: list[float], shuffled_values: list[float]) -> B
     )
 
 
-def metadata(*, manifest_kind: str, smoke_magnitude_source: str | None = None) -> ManifestMetadata:
+def metadata(
+    *,
+    manifest_kind: str,
+    smoke_magnitude_source: str | None = None,
+    prepend_bos: bool = False,
+) -> ManifestMetadata:
     return ManifestMetadata(
         prereg_version="PREREGISTRATION_v2.md",
         prereg_status_line=PREREG_STATUS_LINE,
@@ -386,6 +393,7 @@ def metadata(*, manifest_kind: str, smoke_magnitude_source: str | None = None) -
         ),
         manifest_kind=manifest_kind,  # type: ignore[arg-type]
         smoke_magnitude_source=smoke_magnitude_source,
+        prepend_bos=prepend_bos,
     )
 
 
@@ -441,6 +449,11 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=None, help="Smoke limit; writes run/manifest_smoke.json")
     parser.add_argument("--corpus", type=Path, default=Path("run/corpus_draw_n390.json"))
     parser.add_argument("--output", type=Path, default=None)
+    parser.add_argument(
+        "--prepend-bos",
+        action="store_true",
+        help="POST-FREEZE robustness check: prepend tokenizer.bos_token_id to the 64 content tokens",
+    )
     args = parser.parse_args()
 
     if args.limit is not None and args.limit <= 0:
@@ -463,9 +476,11 @@ def main() -> None:
         flush=True,
     )
     print(f"loading model={MODEL_NAME} and SAE={SAE_REPO}/{SAE_PATH}", flush=True)
-    model, _tokenizer = load_model_and_tokenizer()
+    model, tokenizer = load_model_and_tokenizer()
     sae = load_sae(device=next(model.parameters()).device)
-    extractor = ResidPostExtractor(model)
+    bos_token_id = int(tokenizer.bos_token_id) if args.prepend_bos else None
+    extractor = ResidPostExtractor(model, bos_token_id=bos_token_id)
+    print(f"prepend_bos={args.prepend_bos} bos_token_id={bos_token_id}", flush=True)
     print(f"model and SAE loaded on device={next(model.parameters()).device}", flush=True)
 
     pass1: list[Pass1Base] = []
@@ -576,7 +591,11 @@ def main() -> None:
 
     balance = build_balance_diagnostics(base_records)
     manifest = RunManifest(
-        metadata=metadata(manifest_kind=manifest_kind, smoke_magnitude_source=magnitude_resolution.smoke_magnitude_source),
+        metadata=metadata(
+            manifest_kind=manifest_kind,
+            smoke_magnitude_source=magnitude_resolution.smoke_magnitude_source,
+            prepend_bos=args.prepend_bos,
+        ),
         band_decision=band_decision,
         balance_diagnostics=balance,
         base_points=base_records,

@@ -46,6 +46,8 @@ class ManifestMetadata:
     reproducibility_claim: str
     manifest_kind: ManifestKind = "official"
     smoke_magnitude_source: str | None = None
+    # POST-FREEZE robustness flag; absent from (and False for) the frozen run.
+    prepend_bos: bool = False
 
 
 @dataclass(frozen=True)
@@ -369,8 +371,12 @@ def _base_point_from_dict(value: dict[str, Any]) -> BasePointRecord:
 def manifest_to_dict(manifest: RunManifest) -> dict[str, Any]:
     """Return a human-readable JSON-ready dict."""
 
+    metadata = asdict(manifest.metadata)
+    if not metadata["prepend_bos"]:
+        # Keep frozen-path manifests byte-identical to their pre-flag serialization.
+        del metadata["prepend_bos"]
     return {
-        "metadata": asdict(manifest.metadata),
+        "metadata": metadata,
         "band_decision": _band_decision_to_dict(manifest.band_decision),
         "balance_diagnostics": _balance_diagnostics_to_dict(manifest.balance_diagnostics),
         "base_points": [_base_point_to_dict(base) for base in manifest.base_points],

@@ -11,9 +11,11 @@ from extraction.extract import (
     ExtractedActivation,
     GemmaScopeSAE,
     ResidPostExtractor,
+    final_token_position,
     load_corpus_token_ids,
     load_model_and_tokenizer,
     load_sae,
+    model_input_ids,
 )
 
 __all__ = [
@@ -27,7 +29,9 @@ __all__ = [
     "ExtractedActivation",
     "GemmaScopeSAE",
     "ResidPostExtractor",
+    "final_token_position",
     "load_corpus_token_ids",
     "load_model_and_tokenizer",
     "load_sae",
+    "model_input_ids",
 ]
