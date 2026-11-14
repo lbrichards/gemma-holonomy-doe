@@ -16,6 +16,6 @@ Full run detail:
 - HC3: +0.0783 [-0.0440, +0.2007]; unadjusted: +0.0783 [-0.0430, +0.1997]
 - Within-magnitude, low: +0.0832 [-0.0502, +0.2166]; high: +0.0735 [-0.0603, +0.2073]
 - Paired per-base change in d_b (with <bos> minus frozen): +0.3727 [+0.1880, +0.5574]
-- Rows: 2340; manifest kind `official`; band `TWO_ARM_FALLBACK` (m_low=48.328951224036594, m_high=63.33329149095895)
+- Rows: 2340; manifest kind `post_freeze`; band `TWO_ARM_FALLBACK` (m_low=48.328951224036594, m_high=63.33329149095895)
 - Smoke magnitude source: `None`
 - Stage A balance SMDs (real vs shuffled): recon -0.053, guard -0.174, phi -0.792

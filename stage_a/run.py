@@ -461,7 +461,10 @@ def main() -> None:
     output = args.output or (Path("run/manifest_smoke.json") if args.limit is not None else Path("run/manifest_n390.json"))
     if args.prepend_bos and output.resolve().parent == Path("run").resolve():
         raise ValueError("--prepend-bos is post-freeze; write it outside run/ (e.g. --output run_bos/...)")
-    manifest_kind = "smoke" if args.limit is not None else "official"
+    if args.limit is not None:
+        manifest_kind = "smoke"
+    else:
+        manifest_kind = "post_freeze" if args.prepend_bos else "official"
     records = load_experiment_records(args.corpus, limit=args.limit)
 
     started = time.time()

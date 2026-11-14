@@ -44,12 +44,12 @@ def load_manifest(path: Path, *, allow_smoke: bool = False) -> RunManifest:
     """Load and guard a manifest for Stage B measurement."""
 
     manifest = manifest_from_json(path.read_text())
-    if manifest.metadata.manifest_kind != "official" and not allow_smoke:
+    if manifest.metadata.manifest_kind not in ("official", "post_freeze") and not allow_smoke:
         raise RuntimeError("Stage B refuses non-official manifest unless --allow-smoke is set")
     if manifest.band_decision.status == BandStatus.TWO_ARM_TERMINAL:
         if not (allow_smoke and manifest.metadata.manifest_kind == "smoke" and manifest.metadata.smoke_magnitude_source):
             raise RuntimeError("Stage B refuses TERMINAL manifest: no matched centers to measure")
-    if manifest.metadata.manifest_kind == "official" and len(manifest.base_points) != manifest.metadata.n_base_points:
+    if manifest.metadata.manifest_kind in ("official", "post_freeze") and len(manifest.base_points) != manifest.metadata.n_base_points:
         raise RuntimeError("Stage B official manifest is incomplete")
     return manifest
 

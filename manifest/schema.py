@@ -17,7 +17,7 @@ from bands import ArmPercentiles, BandDecision, BandStatus
 
 
 ArmName = Literal["real", "shuffled", "random"]
-ManifestKind = Literal["official", "smoke"]
+ManifestKind = Literal["official", "smoke", "post_freeze"]
 ReferenceDistanceMethod = Literal["mahalanobis", "knn"]
 
 FORBIDDEN_RESPONSE_FIELD_TOKENS = ("holonomy", "theta", "transport")
@@ -135,7 +135,9 @@ def validate_manifest(manifest: RunManifest) -> None:
     metadata = manifest.metadata
     if metadata.n_base_points != 390:
         raise ValueError(f"metadata.n_base_points must be 390, got {metadata.n_base_points}")
-    if metadata.manifest_kind == "official" and len(manifest.base_points) != metadata.n_base_points:
+    if metadata.prepend_bos and metadata.manifest_kind == "official":
+        raise ValueError("prepend_bos manifests are post-freeze and cannot be manifest_kind='official'")
+    if metadata.manifest_kind in ("official", "post_freeze") and len(manifest.base_points) != metadata.n_base_points:
         raise ValueError(f"expected {metadata.n_base_points} base points, got {len(manifest.base_points)}")
     if metadata.manifest_kind == "smoke" and not (0 < len(manifest.base_points) <= metadata.n_base_points):
         raise ValueError(f"smoke manifest must contain 1..{metadata.n_base_points} base points")

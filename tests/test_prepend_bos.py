@@ -109,3 +109,13 @@ def test_stage_b_refuses_to_write_prepend_bos_results_into_frozen_run_dir(tmp_pa
         measure_fn=synthetic_measure,
     )
     assert (tmp_path / "run_bos" / "results.parquet").exists()
+
+
+def test_prepend_bos_manifest_cannot_be_labelled_official():
+    manifest = synthetic_manifest(n_base_points=390)
+    bos = replace(manifest, metadata=replace(manifest.metadata, prepend_bos=True))
+
+    with pytest.raises(ValueError, match="post-freeze"):
+        manifest_to_json(bos)
+    relabelled = replace(bos, metadata=replace(bos.metadata, manifest_kind="post_freeze"))
+    assert manifest_from_json(manifest_to_json(relabelled)).metadata.manifest_kind == "post_freeze"
