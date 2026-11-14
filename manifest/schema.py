@@ -17,7 +17,7 @@ from bands import ArmPercentiles, BandDecision, BandStatus
 
 
 ArmName = Literal["real", "shuffled", "random"]
-ManifestKind = Literal["official", "smoke"]
+ManifestKind = Literal["official", "smoke", "post_freeze"]
 ReferenceDistanceMethod = Literal["mahalanobis", "knn"]
 
 FORBIDDEN_RESPONSE_FIELD_TOKENS = ("holonomy", "theta", "transport")
@@ -46,6 +46,8 @@ class ManifestMetadata:
     reproducibility_claim: str
     manifest_kind: ManifestKind = "official"
     smoke_magnitude_source: str | None = None
+    # POST-FREEZE robustness flag; absent from (and False for) the frozen run.
+    prepend_bos: bool = False
 
 
 @dataclass(frozen=True)
@@ -133,7 +135,9 @@ def validate_manifest(manifest: RunManifest) -> None:
     metadata = manifest.metadata
     if metadata.n_base_points != 390:
         raise ValueError(f"metadata.n_base_points must be 390, got {metadata.n_base_points}")
-    if metadata.manifest_kind == "official" and len(manifest.base_points) != metadata.n_base_points:
+    if metadata.prepend_bos and metadata.manifest_kind == "official":
+        raise ValueError("prepend_bos manifests are post-freeze and cannot be manifest_kind='official'")
+    if metadata.manifest_kind in ("official", "post_freeze") and len(manifest.base_points) != metadata.n_base_points:
         raise ValueError(f"expected {metadata.n_base_points} base points, got {len(manifest.base_points)}")
     if metadata.manifest_kind == "smoke" and not (0 < len(manifest.base_points) <= metadata.n_base_points):
         raise ValueError(f"smoke manifest must contain 1..{metadata.n_base_points} base points")
@@ -369,8 +373,12 @@ def _base_point_from_dict(value: dict[str, Any]) -> BasePointRecord:
 def manifest_to_dict(manifest: RunManifest) -> dict[str, Any]:
     """Return a human-readable JSON-ready dict."""
 
+    metadata = asdict(manifest.metadata)
+    if not metadata["prepend_bos"]:
+        # Keep frozen-path manifests byte-identical to their pre-flag serialization.
+        del metadata["prepend_bos"]
     return {
-        "metadata": asdict(manifest.metadata),
+        "metadata": metadata,
         "band_decision": _band_decision_to_dict(manifest.band_decision),
         "balance_diagnostics": _balance_diagnostics_to_dict(manifest.balance_diagnostics),
         "base_points": [_base_point_to_dict(base) for base in manifest.base_points],

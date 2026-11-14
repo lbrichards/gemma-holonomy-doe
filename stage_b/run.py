@@ -20,7 +20,7 @@ import pandas as pd
 import torch
 
 from bands import BandStatus
-from extraction import FINAL_TOKEN_POSITION, LAYER_INDEX, load_model_and_tokenizer
+from extraction import LAYER_INDEX, final_token_position, load_model_and_tokenizer, model_input_ids
 from manifest import BasePointRecord, PlaneRecord, RunManifest, manifest_from_json
 from transport import loop_transport
 
@@ -44,20 +44,29 @@ def load_manifest(path: Path, *, allow_smoke: bool = False) -> RunManifest:
     """Load and guard a manifest for Stage B measurement."""
 
     manifest = manifest_from_json(path.read_text())
-    if manifest.metadata.manifest_kind != "official" and not allow_smoke:
+    if manifest.metadata.manifest_kind not in ("official", "post_freeze") and not allow_smoke:
         raise RuntimeError("Stage B refuses non-official manifest unless --allow-smoke is set")
     if manifest.band_decision.status == BandStatus.TWO_ARM_TERMINAL:
         if not (allow_smoke and manifest.metadata.manifest_kind == "smoke" and manifest.metadata.smoke_magnitude_source):
             raise RuntimeError("Stage B refuses TERMINAL manifest: no matched centers to measure")
-    if manifest.metadata.manifest_kind == "official" and len(manifest.base_points) != manifest.metadata.n_base_points:
+    if manifest.metadata.manifest_kind in ("official", "post_freeze") and len(manifest.base_points) != manifest.metadata.n_base_points:
         raise RuntimeError("Stage B official manifest is incomplete")
     return manifest
 
 
-def make_model_transport_measure(model: Any, manifest: RunManifest) -> TransportMeasureFn:
+def make_model_transport_measure(
+    model: Any,
+    manifest: RunManifest,
+    *,
+    bos_token_id: int | None = None,
+) -> TransportMeasureFn:
     """Return a measurement function using the Gemma resid_post readout JVP."""
 
     device = next(model.parameters()).device
+    if manifest.metadata.prepend_bos and bos_token_id is None:
+        raise RuntimeError("manifest has prepend_bos=True but no bos_token_id was supplied")
+    if not manifest.metadata.prepend_bos:
+        bos_token_id = None
 
     def measure(base: BasePointRecord, plane: PlaneRecord, magnitude_level: MagnitudeLevel) -> dict[str, float]:
         center_values = plane.center_low if magnitude_level == "low" else plane.center_high
@@ -65,7 +74,7 @@ def make_model_transport_measure(model: Any, manifest: RunManifest) -> Transport
         directions = torch.tensor([plane.direction_1, plane.direction_2], dtype=torch.float32, device=device)
         base_activation = torch.tensor(base.activation, dtype=torch.float32, device=device)
         rho = manifest.metadata.radius_relative * torch.linalg.vector_norm(base_activation)
-        jvp_fn = make_readout_jvp(model, base.token_ids, device=device)
+        jvp_fn = make_readout_jvp(model, base.token_ids, device=device, bos_token_id=bos_token_id)
         result = loop_transport(
             center=center,
             directions=directions,
@@ -86,9 +95,10 @@ def make_model_transport_measure(model: Any, manifest: RunManifest) -> Transport
     return measure
 
 
-def make_readout_jvp(model: Any, token_ids: list[int], *, device: torch.device):
-    input_ids = torch.tensor([token_ids], dtype=torch.long, device=device)
+def make_readout_jvp(model: Any, token_ids: list[int], *, device: torch.device, bos_token_id: int | None = None):
+    input_ids = torch.tensor([model_input_ids(token_ids, bos_token_id=bos_token_id)], dtype=torch.long, device=device)
     attention_mask = torch.ones_like(input_ids, device=device)
+    position = final_token_position(bos_token_id=bos_token_id)
 
     def readout_map(h: torch.Tensor) -> torch.Tensor:
         state: dict[str, torch.Tensor] = {}
@@ -96,7 +106,7 @@ def make_readout_jvp(model: Any, token_ids: list[int], *, device: torch.device):
         def patch_hook(_module: torch.nn.Module, _args: tuple[Any, ...], output: torch.Tensor):
             tensor = output[0] if isinstance(output, tuple) else output
             patched = tensor.clone()
-            patched[0, FINAL_TOKEN_POSITION, :] = h.to(device=patched.device, dtype=patched.dtype)
+            patched[0, position, :] = h.to(device=patched.device, dtype=patched.dtype)
             if isinstance(output, tuple):
                 return (patched, *output[1:])
             return patched
@@ -112,7 +122,7 @@ def make_readout_jvp(model: Any, token_ids: list[int], *, device: torch.device):
         finally:
             patch_handle.remove()
             capture_handle.remove()
-        return state["out"][0, FINAL_TOKEN_POSITION, :]
+        return state["out"][0, position, :]
 
     def jvp_fn(point: torch.Tensor, direction: torch.Tensor) -> torch.Tensor:
         point = point.detach().requires_grad_(True)
@@ -211,13 +221,16 @@ def run_stage_b(
     """Run or resume Stage B and return a summary."""
 
     manifest = load_manifest(manifest_path, allow_smoke=allow_smoke)
+    if manifest.metadata.prepend_bos and results_path.resolve().parent == Path("run").resolve():
+        raise RuntimeError("prepend_bos manifest is post-freeze; write results outside run/")
     checkpoint_path = checkpoint_path_for(results_path)
     rows = load_checkpoint_rows(checkpoint_path)
     completed = completed_base_points(rows)
     if measure_fn is None:
         print("loading model for Stage B transport", flush=True)
-        model, _tokenizer = load_model_and_tokenizer()
-        measure_fn = make_model_transport_measure(model, manifest)
+        model, tokenizer = load_model_and_tokenizer()
+        measure_fn = make_model_transport_measure(model, manifest, bos_token_id=int(tokenizer.bos_token_id))
+        print(f"manifest prepend_bos={manifest.metadata.prepend_bos}", flush=True)
         print("model loaded; starting/resuming measurements", flush=True)
 
     started = time.time()

@@ -127,21 +127,47 @@ def load_sae(
     return sae
 
 
-def _as_input_ids(token_ids: list[int] | torch.Tensor, *, device: torch.device) -> torch.Tensor:
+def final_token_position(*, bos_token_id: int | None = None) -> int:
+    """Return the sequence index of the final content token.
+
+    The frozen run feeds the 64 content tokens with no ``<bos>``. The post-freeze
+    ``prepend_bos`` robustness check shifts every content token right by one, so
+    the same final content token is read at index 64.
+    """
+
+    return FINAL_TOKEN_POSITION if bos_token_id is None else FINAL_TOKEN_POSITION + 1
+
+
+def model_input_ids(token_ids: list[int] | torch.Tensor, *, bos_token_id: int | None = None) -> list[int]:
+    """Return model input ids: the 64 content tokens, optionally after ``<bos>``."""
+
+    ids = [int(item) for item in torch.as_tensor(token_ids).reshape(-1).tolist()]
+    if len(ids) != TOKEN_LENGTH:
+        raise ValueError(f"expected {TOKEN_LENGTH} token ids, got {len(ids)}")
+    return ids if bos_token_id is None else [int(bos_token_id), *ids]
+
+
+def _as_input_ids(
+    token_ids: list[int] | torch.Tensor,
+    *,
+    device: torch.device,
+    bos_token_id: int | None = None,
+) -> torch.Tensor:
     ids = torch.as_tensor(token_ids, dtype=torch.long, device=device)
     if ids.ndim != 1:
         raise ValueError(f"token_ids must be 1D, got shape {tuple(ids.shape)}")
     if ids.numel() != TOKEN_LENGTH:
         raise ValueError(f"expected {TOKEN_LENGTH} token ids, got {ids.numel()}")
-    return ids.unsqueeze(0)
+    return torch.tensor([model_input_ids(ids.cpu(), bos_token_id=bos_token_id)], dtype=torch.long, device=device)
 
 
 class ResidPostExtractor:
     """Extract base activations from layer-12 resid_post via a forward hook."""
 
-    def __init__(self, model: Any, *, layer_index: int = LAYER_INDEX):
+    def __init__(self, model: Any, *, layer_index: int = LAYER_INDEX, bos_token_id: int | None = None):
         self.model = model
         self.layer_index = layer_index
+        self.bos_token_id = bos_token_id
         if not hasattr(model, "model") or not hasattr(model.model, "layers"):
             raise ValueError("Expected HuggingFace Gemma2ForCausalLM with model.layers")
         if len(model.model.layers) != N_LAYERS:
@@ -159,11 +185,18 @@ class ResidPostExtractor:
         self,
         token_ids: list[int] | torch.Tensor,
         *,
-        token_position: int = FINAL_TOKEN_POSITION,
+        token_position: int | None = None,
     ) -> ExtractedActivation:
-        """Run one forward pass and capture the requested resid_post token."""
+        """Run one forward pass and capture the requested resid_post token.
 
-        input_ids = _as_input_ids(token_ids, device=self.device)
+        ``token_position`` indexes the model input, which includes ``<bos>``
+        when the extractor was built with ``bos_token_id``. It defaults to the
+        final content token.
+        """
+
+        input_ids = _as_input_ids(token_ids, device=self.device, bos_token_id=self.bos_token_id)
+        if token_position is None:
+            token_position = final_token_position(bos_token_id=self.bos_token_id)
         if token_position < 0:
             token_position = input_ids.shape[1] + token_position
         if not 0 <= token_position < input_ids.shape[1]:
